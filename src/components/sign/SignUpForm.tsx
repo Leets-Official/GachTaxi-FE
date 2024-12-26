@@ -13,7 +13,7 @@ const SignUpForm = () => {
       password: '',
       passwordConfirm: '',
     },
-    mode: 'onChange',
+    mode: 'onBlur',
   });
 
   const handleSubmitToSignUp: SubmitHandler<SignUpTypes> = (data) => {

@@ -8,7 +8,9 @@ const SignInPage = () => {
       <SignInForm />
       <div className="flex items-center justify-center gap-3">
         <p>회원이 아니신가요?</p>
-        <Link to="/signup">회원가입 하기</Link>
+        <Link onMouseDown={(e) => e.preventDefault()} to="/signup">
+          회원가입 하기
+        </Link>
       </div>
     </div>
   );

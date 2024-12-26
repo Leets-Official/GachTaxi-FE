@@ -11,7 +11,7 @@ const SignInForm = () => {
       email: '',
       password: '',
     },
-    mode: 'onChange',
+    mode: 'onBlur',
   });
 
   const handleSubmitToSignIn: SubmitHandler<SignInTypes> = (data) => {
