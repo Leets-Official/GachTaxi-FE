@@ -1,8 +1,9 @@
 import z from 'zod';
-import { SubmitHandler, useForm, Controller } from 'react-hook-form';
+import { SubmitHandler, useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { signUpValidationSchema } from '../../libs/schemas/auth';
 import { SignUpTypes } from 'gachTaxi-types';
+import Input from '../commons/Input';
 
 const SignUpForm = () => {
   const signUpForm = useForm<z.infer<typeof signUpValidationSchema>>({
@@ -27,88 +28,32 @@ const SignUpForm = () => {
       className="flex flex-col gap-2 w-full"
       onSubmit={signUpForm.handleSubmit(handleSubmitToSignUp)}
     >
-      <Controller
+      <Input
         control={signUpForm.control}
         name="studentId"
-        render={({ field }) => (
-          <>
-            <label htmlFor="studentId">학번</label>
-            <input
-              autoFocus
-              maxLength={8}
-              id="studentId"
-              type="text"
-              className={`border outline-none ${signUpForm.formState.errors.studentId ? 'border-red-500' : ''}`}
-              {...field}
-            />
-          </>
-        )}
+        label="학번"
+        type="text"
+        maxLength={8}
+        autoFocus
       />
-      {signUpForm.formState.errors.studentId && (
-        <p className="text-red-500">
-          {signUpForm.formState.errors.studentId.message}
-        </p>
-      )}
-      <Controller
+      <Input
         control={signUpForm.control}
         name="email"
-        render={({ field }) => (
-          <>
-            <label htmlFor="email">이메일</label>
-            <input
-              id="email"
-              type="email"
-              className={`border outline-none ${signUpForm.formState.errors.email ? 'border-red-500' : ''}`}
-              {...field}
-            />
-          </>
-        )}
+        label="이메일"
+        type="email"
       />
-      {signUpForm.formState.errors.email && (
-        <p className="text-red-500">
-          {signUpForm.formState.errors.email.message}
-        </p>
-      )}
-      <Controller
+      <Input
         control={signUpForm.control}
         name="password"
-        render={({ field }) => (
-          <>
-            <label htmlFor="password">비밀번호</label>
-            <input
-              id="password"
-              type="password"
-              className={`border outline-none ${signUpForm.formState.errors.password ? 'border-red-500' : ''}`}
-              {...field}
-            />
-          </>
-        )}
+        label="비밀번호"
+        type="password"
       />
-      {signUpForm.formState.errors.password && (
-        <p className="text-red-500">
-          {signUpForm.formState.errors.password.message}
-        </p>
-      )}
-      <Controller
+      <Input
         control={signUpForm.control}
         name="passwordConfirm"
-        render={({ field }) => (
-          <>
-            <label htmlFor="passwordConfirm">비밀번호 확인</label>
-            <input
-              id="passwordConfirm"
-              type="password"
-              className={`border outline-none ${signUpForm.formState.errors.passwordConfirm ? 'border-red-500' : ''}`}
-              {...field}
-            />
-          </>
-        )}
+        label="비밀번호 확인"
+        type="password"
       />
-      {signUpForm.formState.errors.passwordConfirm && (
-        <p className="text-red-500">
-          {signUpForm.formState.errors.passwordConfirm.message}
-        </p>
-      )}
       <button type="submit" className="border mt-6">
         회원가입
       </button>
