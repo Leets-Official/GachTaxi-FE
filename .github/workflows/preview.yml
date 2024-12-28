@@ -24,8 +24,12 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: Install Vercel CLI
+      - name: Install pnpm
+        uses: pnpm/action-setup@v2
+        with:
+          version: 8
 
+      - name: Install Vercel CLI
         run: pnpm add -g vercel@latest
 
       - name: Get Vercel Environment Variables
