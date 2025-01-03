@@ -1,4 +1,4 @@
-import UserInfoVerification from '../../components/sign/UserInfoVerification';
+import UserInfoVerification from '../../components/sign/userInfoVerification';
 
 const UserInfoPage = () => {
   return (
