@@ -18,7 +18,7 @@ function Input<T extends FieldValues>({
   name,
   label,
   type,
-  autoFocus,
+  autoFocus = false,
   maxLength,
   className,
   labelClassName,
