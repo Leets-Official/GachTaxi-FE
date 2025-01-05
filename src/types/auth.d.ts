@@ -1,13 +1,17 @@
 declare module 'gachTaxi-types' {
-  interface SignInTypes {
+  interface EmailVerificationTypes {
     email: string;
-    password: string;
   }
 
-  interface SignUpTypes {
+  interface AuthCodeTypes {
+    authCode: string;
+  }
+
+  interface UserInfoVerificationTypes {
+    profileImage: file | string;
+    nickName: string;
+    realName: string;
     studentId: string;
-    email: string;
-    password: string;
-    passwordConfirm: string;
+    gender: string;
   }
 }

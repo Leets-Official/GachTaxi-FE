@@ -1,11 +1,33 @@
-import SignUpForm from '../../components/sign/SignUpForm';
+import BackIcon from '../../assets/icon/backIcon.svg?react';
+import { useNavigate, Routes, Route, useLocation } from 'react-router-dom';
+import VerificationPage from './VerificationPage';
+import NotFoundPage from '../NotFound';
+import Button from '../../components/commons/Button';
+import UserInfoPage from './UserInfoPage';
 
 const SignUpPage = () => {
+  const navigate = useNavigate();
+  const { pathname } = useLocation();
+
+  const handleBack = () => {
+    navigate(-1);
+  };
+
   return (
-    <div className="max-w-[375px] mx-auto flex flex-col gap-4">
-      <h1 className="text-2xl">회원가입</h1>
-      <SignUpForm />
-    </div>
+    <section className="max-w-[360px] w-full mx-auto p-[16px] flex flex-col gap-[32px] mb-vertical">
+      {pathname !== '/signup/user-info' && (
+        <Button variant="icon" onClick={handleBack}>
+          <BackIcon />
+        </Button>
+      )}
+      <Routes>
+        {/** 소셜 로그인 Route */}
+        <Route path="/verification" element={<VerificationPage />} />
+        <Route path="/user-info" element={<UserInfoPage />} />
+        {/* not-found 페이지 */}
+        <Route path="*" element={<NotFoundPage />} />
+      </Routes>
+    </section>
   );
 };
 
