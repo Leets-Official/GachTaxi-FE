@@ -1,15 +1,10 @@
-import GoogleSocialLogin from '../components/oauth/GoogleSocialLogin';
-import { GoogleOAuthProvider } from '@react-oauth/google';
+import { Outlet } from 'react-router-dom';
 
 const Layout = () => {
-  const CLIENT_ID = import.meta.env.VITE_GOOGLE_CLIENT_ID;
-
   return (
-    <div>
-      <GoogleOAuthProvider clientId={CLIENT_ID}>
-        <GoogleSocialLogin />
-      </GoogleOAuthProvider>
-    </div>
+    <main className="max-w-[360px] w-full h-screen mx-auto">
+      <Outlet />
+    </main>
   );
 };
 
