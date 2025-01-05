@@ -8,6 +8,9 @@ interface GenderSelectProps {
   gender: string;
 }
 
+const labelStyle =
+  'text-[16px] w-full h-full flex items-center justify-center cursor-pointer';
+
 const GenderSelect = ({ control, gender }: GenderSelectProps) => {
   return (
     <div className="flex items-center w-full h-[50px] border border-[#787272] rounded-[10px] overflow-hidden">
@@ -22,7 +25,7 @@ const GenderSelect = ({ control, gender }: GenderSelectProps) => {
           type="radio"
           value="male"
           label="남"
-          labelClassName="text-[16px] w-full h-full flex items-center justify-center cursor-pointer"
+          labelClassName={labelStyle}
           className="hidden"
         />
       </div>
@@ -37,7 +40,7 @@ const GenderSelect = ({ control, gender }: GenderSelectProps) => {
           type="radio"
           value="female"
           label="여"
-          labelClassName="text-[16px] w-full h-full flex items-center justify-center cursor-pointer"
+          labelClassName={labelStyle}
           className="hidden"
         />
       </div>
