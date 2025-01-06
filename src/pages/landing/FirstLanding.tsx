@@ -13,7 +13,7 @@ const FirstLanding = () => {
       <img src={GachiTaxi} alt="gachTaxi" className="float-right mb-[150px]" />
       <Button
         variant="primary"
-        className="bg-[#FFE001] text-black w-full flex justify-center"
+        className="bg-yellow-300 text-black w-full flex justify-center"
         onClick={onClickKakao}
       >
         <img src={Kakao} alt="kakao" className="mr-2" />
