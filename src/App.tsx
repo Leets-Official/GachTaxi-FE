@@ -2,6 +2,7 @@ import { BrowserRouter, Route, Routes } from 'react-router-dom';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
 import Layout from './pages/Layout';
+import LandingPage from '@/pages/landing/index';
 import SignUpPage from './pages/sign-up';
 
 function App() {
@@ -12,12 +13,15 @@ function App() {
       <ReactQueryDevtools initialIsOpen={false} />
       <BrowserRouter>
         <Routes>
-          {/* 레이아웃 라우트 */}
-          <Route path="/">
-            <Route index element={<Layout />} />
-          </Route>
-          {/* 회원가입 라우트 */}
+          {/* 네비바 포함안됨 */}
+          <Route path="/" element={<LandingPage />} />
           <Route path="/signup/*" element={<SignUpPage />} />
+
+          {/* 네비바 포함함 */}
+          <Route path="/*" element={<Layout />}>
+            {/* <Route path="dashboard" element={<Dashboard />} />
+            <Route path="profile" element={<Profile />} /> */}
+          </Route>
         </Routes>
       </BrowserRouter>
     </QueryClientProvider>
