@@ -7,7 +7,7 @@ const handleKakaoLogin = () => {
   return (
     <Button
       variant="primary"
-      className="bg-yellow-300 text-black w-full flex justify-center"
+      className="bg-yellow-300 text-black w-full flex justify-center items-center"
       onClick={onClickKakao}
     >
       <KakaoIcon className="mr-2" />
