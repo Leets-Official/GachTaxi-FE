@@ -50,9 +50,9 @@ const EmailVerification = ({
         placeholder="gachon.ac 이메일을 입력해주세요"
       />
       <Button
-        variant={isEmailVerified ? 'secondary' : 'primary'}
+        variant="primary"
         type="submit"
-        className={`mt-3 ${isEmailVerified && 'border border-white'}`}
+        className="mt-3"
         disabled={timer === 0 && isEmailVerified} // 타이머 종료 시 버튼 비활성화
       >
         {isEmailVerified
