@@ -6,7 +6,7 @@
 
 const Header = () => {
   return (
-    <div className="text-left ml-8 mt-[20%]">
+    <div className="text-left ml-8 mt-[15%]">
       <h1 className="text-[60px] font-bold leading-[1.3]">
         Gachi <br /> Taxi
       </h1>
