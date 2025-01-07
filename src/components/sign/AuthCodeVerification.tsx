@@ -1,7 +1,7 @@
 import { zodResolver } from '@hookform/resolvers/zod';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import { z } from 'zod';
-import { authCodeVerificationSchema } from '../../libs/schemas/auth';
+import { authCodeVerificationSchema } from '@/libs/schemas/auth';
 import { AuthCodeTypes } from 'gachTaxi-types';
 import Input from '../commons/Input';
 import Button from '../commons/Button';
