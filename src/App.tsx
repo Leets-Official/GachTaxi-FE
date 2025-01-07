@@ -16,7 +16,7 @@ function App() {
         <ModalProvider>
           <Routes>
             {/* 네비바 포함안됨 */}
-            <Route path="/" element={<LandingPage />} />
+            <Route index element={<LandingPage />} />
             <Route path="/signup/*" element={<SignUpPage />} />
 
             {/* 네비바 포함함 */}
