@@ -14,4 +14,10 @@ declare module 'gachTaxi-types' {
     studentId: string;
     gender: string;
   }
+
+  interface AgreementsTypes {
+    termsAgreement: boolean;
+    privacyAgreement: boolean;
+    marketingAgreement: boolean;
+  }
 }

@@ -1,6 +1,6 @@
 import { z } from 'zod';
 
-// 단일 스키마
+// 개별 스키마
 const studentIdSchema = z
   .string()
   .min(1, '학번을 입력해주세요!')
@@ -16,7 +16,7 @@ const nickNameSchema = z.string().min(1, '닉네임을 입력해주세요!');
 
 const realNameSchema = z.string().min(1, '본명을 입력해주세요!');
 
-const genderSchema = z.enum(['male', 'female']);
+const genderSchema = z.enum(['MALE', 'FEMALE']);
 
 const profileImageSchema = z.optional(
   z
@@ -46,6 +46,13 @@ const emailSchema = z
 
 const authCodeSchema = z.string().min(1, '인증번호를 입력해주세요!');
 
+// 약관 개별 스키마
+const requiredAgreementSchema = z.boolean().refine((value) => value === true, {
+  message: '필수 약관에 동의해주세요!',
+});
+
+const optionalAgreementSchema = z.boolean().default(false);
+
 // 복합 스키마
 export const emailVerificationSchema = z.object({
   email: emailSchema,
@@ -61,4 +68,10 @@ export const userInfoVerificationSchema = z.object({
   realName: realNameSchema,
   studentId: studentIdSchema,
   gender: genderSchema,
+});
+
+export const agreementsSchema = z.object({
+  termsAgreement: requiredAgreementSchema,
+  privacyAgreement: requiredAgreementSchema,
+  marketingAgreement: optionalAgreementSchema,
 });
