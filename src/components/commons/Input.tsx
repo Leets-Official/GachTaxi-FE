@@ -35,7 +35,7 @@ function Input<T extends FieldValues>({
             <>
               <label
                 htmlFor={`${name}-${value}`}
-                className={`${field.value === value ? 'text-black' : 'text-white'} font-medium text-[14px] ${labelClassName}`}
+                className={`${field.value === value ? 'text-black' : 'text-white'} font-medium text-body ${labelClassName}`}
               >
                 {label}
               </label>
@@ -64,7 +64,7 @@ function Input<T extends FieldValues>({
                 id={name.toString()}
                 type={type}
                 placeholder={placeholder}
-                className={`border outline-none border-[#787272] bg-transparent rounded-[10px] p-3 text-white placeholder:text-[14px] ${className ? className : ''}`}
+                className={`border outline-none border-textDarkGray bg-transparent rounded-common p-3 pl-4 text-textDarkGray placeholder:text-body ${className ? className : ''}`}
                 {...field}
               />
               {fieldState.error && (
