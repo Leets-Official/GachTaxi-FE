@@ -1,8 +1,8 @@
 import { Control, Controller } from 'react-hook-form';
-import { userInfoVerificationSchema } from '../../../libs/schemas/auth';
+import { userInfoVerificationSchema } from '@/libs/schemas/auth';
 import { z } from 'zod';
-import BasicProfileIcon from '../../../assets/icon/basicProfileIcon.svg?react';
-import CameraIcon from '../../../assets/icon/cameraIcon.svg?react';
+import BasicProfileIcon from '@/assets/icon/basicProfileIcon.svg?react';
+import CameraIcon from '@/assets/icon/cameraIcon.svg?react';
 
 interface ProfileImageUploadProps {
   control: Control<z.infer<typeof userInfoVerificationSchema>>;
