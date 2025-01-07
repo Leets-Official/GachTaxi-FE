@@ -16,7 +16,7 @@ const GenderSelect = ({ control, gender }: GenderSelectProps) => {
     <div className="flex items-center w-full h-[50px] border border-[#787272] rounded-[10px] overflow-hidden">
       <div
         className={`flex-1 h-full cursor-pointer ${
-          gender === 'male' ? 'bg-primary' : 'text-[#787272]'
+          gender === 'MALE' ? 'bg-primary' : 'text-[#787272]'
         }`}
       >
         <Input
@@ -31,7 +31,7 @@ const GenderSelect = ({ control, gender }: GenderSelectProps) => {
       </div>
       <div
         className={`flex-1 h-full cursor-pointer ${
-          gender === 'female' ? 'bg-primary' : 'text-[#787272]'
+          gender === 'FEMALE' ? 'bg-primary' : 'text-[#787272]'
         }`}
       >
         <Input

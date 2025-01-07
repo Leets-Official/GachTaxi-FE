@@ -18,7 +18,7 @@ const UserInfoVerification = () => {
       nickName: '',
       realName: '',
       studentId: '',
-      gender: 'male',
+      gender: 'MALE',
     },
     mode: 'onBlur',
   });
