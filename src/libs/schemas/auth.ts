@@ -16,7 +16,7 @@ const nickNameSchema = z.string().min(1, '닉네임을 입력해주세요!');
 
 const realNameSchema = z.string().min(1, '본명을 입력해주세요!');
 
-const genderSchema = z.enum(['MALE', 'FEMALE']);
+const genderSchema = z.enum(['MALE', 'FEMALE']).default('MALE');
 
 const profileImageSchema = z.optional(
   z
@@ -60,6 +60,7 @@ export const emailVerificationSchema = z.object({
 
 export const authCodeVerificationSchema = z.object({
   authCode: authCodeSchema,
+  email: z.string(),
 });
 
 export const userInfoVerificationSchema = z.object({
