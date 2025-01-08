@@ -8,20 +8,20 @@ import Button from '../commons/Button';
 import { useModal } from '../../contexts/ModalContext';
 import AgreementModal from '../modal/AgreementModal';
 
-const AuthCodeVerification = () => {
+const AuthCodeVerification = ({ emailInfo }: { emailInfo: string }) => {
   const { openModal } = useModal();
 
   const authForm = useForm<z.infer<typeof authCodeVerificationSchema>>({
     resolver: zodResolver(authCodeVerificationSchema),
     defaultValues: {
       authCode: '',
+      email: emailInfo!,
     },
     mode: 'onSubmit',
   });
 
   const handleSubmitToAuth: SubmitHandler<AuthCodeTypes> = (data) => {
     // API 구현 시 추가 구현
-    alert('인증번호 입력 성공!');
     console.table(data);
     // 약관 동의 모달 오픈 로직
     openModal(<AgreementModal />);

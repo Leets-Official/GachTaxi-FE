@@ -4,6 +4,7 @@ import EmailVerification from '../../components/sign/EmailVerification';
 
 const VerificationPage = () => {
   const [isEmailVerified, setIsEmailVerified] = useState(false);
+  const [emailInfo, setEmailInfo] = useState<string>('');
 
   return (
     <>
@@ -18,8 +19,9 @@ const VerificationPage = () => {
       <EmailVerification
         isEmailVerified={isEmailVerified}
         setIsEmailVerified={setIsEmailVerified}
+        setEmailInfo={setEmailInfo}
       />
-      {isEmailVerified && <AuthCodeVerification />}
+      {isEmailVerified && <AuthCodeVerification emailInfo={emailInfo} />}
     </>
   );
 };
