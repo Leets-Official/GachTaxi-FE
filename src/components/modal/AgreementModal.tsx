@@ -1,4 +1,4 @@
-import Modal from '.';
+import Modal from '@/components/modal';
 import Button from '../commons/Button';
 import Checkbox from '../commons/Checkbox';
 import AgreeLinkIcon from '../../../src/assets/icon/agreeLinkIcon.svg?react';
@@ -9,6 +9,7 @@ import { agreementsSchema } from '@/libs/schemas/auth';
 import { z } from 'zod';
 import { useNavigate } from 'react-router-dom';
 import { useModal } from '@/contexts/ModalContext';
+import { AGREE_VALUES } from '@/constants';
 
 const AgreementModal = () => {
   const navigate = useNavigate();
@@ -65,36 +66,23 @@ const AgreementModal = () => {
               label="약관 모두 동의"
             />
           </div>
-          <div className="flex items-center justify-between">
-            <Checkbox
-              control={agreementForm.control}
-              name="termsAgreement"
-              label="이용 약관 동의(필수)"
-            />
-            <Button variant="icon">
-              <AgreeLinkIcon />
-            </Button>
-          </div>
-          <div className="flex items-center justify-between">
-            <Checkbox
-              control={agreementForm.control}
-              name="privacyAgreement"
-              label="개인정보 수집 및 이용 동의(필수)"
-            />
-            <Button variant="icon">
-              <AgreeLinkIcon />
-            </Button>
-          </div>
-          <div className="flex items-center justify-between">
-            <Checkbox
-              control={agreementForm.control}
-              name="marketingAgreement"
-              label="광고성 정보 수신 동의(선택)"
-            />
-            <Button variant="icon">
-              <AgreeLinkIcon />
-            </Button>
-          </div>
+          {AGREE_VALUES.map((values) => {
+            return (
+              <div
+                key={values.name}
+                className="flex items-center justify-between"
+              >
+                <Checkbox
+                  control={agreementForm.control}
+                  name={values.name}
+                  label={values.label}
+                />
+                <Button variant="icon">
+                  <AgreeLinkIcon />
+                </Button>
+              </div>
+            );
+          })}
           {(agreementForm.formState.errors.privacyAgreement ||
             agreementForm.formState.errors.termsAgreement) && (
             <p className="text-red-500">필수 약관에 동의해주세요!</p>
