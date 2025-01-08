@@ -3,9 +3,9 @@ import FirstLanding from '@/pages/landing/FirstLanding';
 
 const LandingPage = () => {
   return (
-    <main className="max-w-[360px] w-full h-screen mx-auto text-white p-[16px]">
+    <section className="flex-1 w-full p-horizontal">
       <FirstLanding />
-    </main>
+    </section>
   );
 };
 

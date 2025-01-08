@@ -3,7 +3,7 @@ import UserInfoVerification from '../../components/sign/userInfoVerification';
 const UserInfoPage = () => {
   return (
     <>
-      <div className="flex flex-col gap-[16px] text-white mt-vertical">
+      <div className="flex flex-col gap-[16px] mb-vertical">
         <h1 className="text-header font-bold">
           사진과 이름을 <br /> 등록해주세요
         </h1>
