@@ -16,14 +16,14 @@ const GenderSelect = ({ control, gender }: GenderSelectProps) => {
     <div className="flex items-center w-full h-[50px] border border-[#787272] rounded-[10px] overflow-hidden">
       <div
         className={`flex-1 h-full cursor-pointer ${
-          gender === 'MALE' ? 'bg-primary' : 'text-[#787272]'
+          gender === 'MALE' ? 'bg-primary text-textDarkGray' : 'text-white'
         }`}
       >
         <Input
           control={control}
           name="gender"
           type="radio"
-          value="male"
+          value="MALE"
           label="남"
           labelClassName={labelStyle}
           className="hidden"
@@ -31,14 +31,14 @@ const GenderSelect = ({ control, gender }: GenderSelectProps) => {
       </div>
       <div
         className={`flex-1 h-full cursor-pointer ${
-          gender === 'FEMALE' ? 'bg-primary' : 'text-[#787272]'
+          gender === 'FEMALE' ? 'bg-primary text-textDarkGray' : 'text-white'
         }`}
       >
         <Input
           control={control}
           name="gender"
           type="radio"
-          value="female"
+          value="FEMALE"
           label="여"
           labelClassName={labelStyle}
           className="hidden"
