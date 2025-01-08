@@ -20,10 +20,10 @@ const Button = ({
   // variantStyle 조건부 설정
   if (variant === 'primary') {
     variantStyle =
-      'bg-primary rounded-[10px] font-semibold text-[16px] p-3 text-neutral';
+      'bg-primary h-[50px] rounded-common font-semibold text-button text-neutral';
   } else if (variant === 'secondary') {
     variantStyle =
-      'bg-transparent rounded-[10px] font-semibold text-[16px] p-3 text-white';
+      'bg-transparent h-[50px] rounded-common font-semibold text-button text-textLightGray';
   } else if (variant === 'icon') {
     variantStyle = 'bg-transparent';
   }

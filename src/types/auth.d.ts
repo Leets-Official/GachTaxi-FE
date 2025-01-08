@@ -5,6 +5,7 @@ declare module 'gachTaxi-types' {
 
   interface AuthCodeTypes {
     authCode: string;
+    email: string;
   }
 
   interface UserInfoVerificationTypes {
@@ -12,6 +13,12 @@ declare module 'gachTaxi-types' {
     nickName: string;
     realName: string;
     studentId: string;
-    gender: string;
+    gender: 'MALE' | 'FEMALE';
+  }
+
+  interface AgreementsTypes {
+    termsAgreement: boolean;
+    privacyAgreement: boolean;
+    marketingAgreement: boolean;
   }
 }

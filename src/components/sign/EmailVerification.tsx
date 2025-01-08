@@ -13,9 +13,11 @@ const TIMER_DURATION = 300;
 const EmailVerification = ({
   isEmailVerified,
   setIsEmailVerified,
+  setEmailInfo,
 }: {
   isEmailVerified: boolean;
   setIsEmailVerified: (value: boolean) => void;
+  setEmailInfo: (value: string) => void;
 }) => {
   const { timer, startTimer } = useVerificationTimer(TIMER_DURATION);
   const signUpForm = useForm<z.infer<typeof emailVerificationSchema>>({
@@ -31,8 +33,8 @@ const EmailVerification = ({
     data,
   ) => {
     // 이메일 전송 로직 구현 (예: API 호출)
-    alert('이메일 보내기 성공!');
     setIsEmailVerified(true);
+    setEmailInfo(data.email);
     startTimer(); // 타이머 시작
     console.table(data);
   };
@@ -50,9 +52,9 @@ const EmailVerification = ({
         placeholder="gachon.ac 이메일을 입력해주세요"
       />
       <Button
-        variant={isEmailVerified ? 'secondary' : 'primary'}
+        variant="primary"
         type="submit"
-        className={`mt-3 ${isEmailVerified && 'border border-white'}`}
+        className="mt-3"
         disabled={timer === 0 && isEmailVerified} // 타이머 종료 시 버튼 비활성화
       >
         {isEmailVerified

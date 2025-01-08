@@ -8,7 +8,7 @@ const useVerificationTimer = (timerDuration: number) => {
 
   // 타이머 시작 또는 초기화
   const startTimer = () => {
-    setTimer(300); // 5분으로 초기화
+    setTimer(timerDuration); // 5분으로 초기화
     clearInterval(timerRef.current!); // 기존 타이머 초기화
     timerRef.current = setInterval(() => {
       setTimer((prev) => {
