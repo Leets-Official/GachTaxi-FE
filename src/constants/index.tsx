@@ -16,4 +16,7 @@ const AGREE_VALUES = [
   },
 ] as const;
 
+export const OFFSET_THRESHOLD = 150;
+export const DELTA_THRESHOLD = 5;
+
 export { AGREE_VALUES };
