@@ -20,7 +20,7 @@ interface NavbarProps {
 
 const Navbar = ({ modalContent, setModalContent }: NavbarProps) => {
   return (
-    <nav className="flex justify-between items-center bg-neutral fixed left-0 right-0 bottom-0 max-w-[430px] w-full h-[64px] px-8 mx-auto">
+    <nav className="flex justify-between items-center bg-neutral fixed left-0 right-0 bottom-0 max-w-[430px] w-full h-[64px] px-8 mx-auto pb-[env(safe-area-inset-bottom)]">
       <Button
         variant="icon"
         className="flex flex-col items-center justify-center gap-1"
