@@ -13,6 +13,10 @@
   }
   body {
     background-color: #012619;
+    margin: 0;
+    padding: 0 !important;
+    height: 100vh;
+    width: 100vw;
   }
 }
 
