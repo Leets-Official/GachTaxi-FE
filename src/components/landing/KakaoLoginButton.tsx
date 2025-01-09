@@ -2,11 +2,11 @@ import Button from '../commons/Button';
 import KakaoIcon from '@/assets/icon/kakao.svg?react';
 
 const KakaoLoginButton = () => {
-  const REST_API_KEY = import.meta.env.REST_API_KEY;
-  const REDIRECT_URI = import.meta.env.REDIRECT_URI;
-  const link = `https://kauth.kakao.com/oauth/authorize?response_type=code&client_id=${REST_API_KEY}&redirect_uri=${REDIRECT_URI}`;
+  const handleKakaoLogin = async () => {
+    const REST_API_KEY = import.meta.env.VITE_REST_API_KEY;
+    const REDIRECT_URI = import.meta.env.VITE_REDIRECT_URI;
+    const link = `https://kauth.kakao.com/oauth/authorize?client_id=${REST_API_KEY}&redirect_uri=${REDIRECT_URI}&response_type=code`;
 
-  const handleKakaoLogin = () => {
     window.location.href = link;
   };
 
@@ -14,7 +14,7 @@ const KakaoLoginButton = () => {
     <Button
       variant="primary"
       className="bg-yellow-300 text-black w-full flex justify-center items-center"
-      onClick={handleKakaoLogin}
+      onClick={() => handleKakaoLogin()}
     >
       <KakaoIcon className="mr-2" />
       카카오로 시작하기
