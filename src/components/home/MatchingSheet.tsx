@@ -3,6 +3,7 @@ import { motion, useDragControls } from 'framer-motion';
 import { useState } from 'react';
 import ViewerControlIcon from '@/assets/icon/viewerControlIcon.svg?react';
 import AutoMatching from '@/components/home/autoMatching';
+import ManualMatching from '@/components/home/manualMatching';
 
 interface MatchingSheetProps {
   modalContent: {
@@ -20,7 +21,7 @@ const MatchingSheet = ({ modalContent }: MatchingSheetProps) => {
   return (
     <motion.div
       role="Viewer"
-      className="absolute left-0 top-0 w-full mx-auto h-[100lvh] touch-none bg-neutral rounded-t-modal will-change-transform p-vertical px-[32px] flex flex-col gap-[16px]"
+      className="absolute left-0 top-0 w-full mx-auto h-[100lvh] touch-none bg-neutral rounded-t-common will-change-transform p-vertical px-[32px] flex flex-col gap-[16px]"
       drag="y"
       dragConstraints={{
         top: 0, // opend 상태일 때 드래그 제한 적용
@@ -59,7 +60,7 @@ const MatchingSheet = ({ modalContent }: MatchingSheetProps) => {
         className={`${isOpen ? 'overflow-scroll scroll-hidden' : 'overflow-hidden'}`}
       >
         {modalContent.home && <AutoMatching isOpen={isOpen} />}
-        {/* {modalContent.match && <ManualMatching isOpen={isOpen} />} */}
+        {modalContent.match && <ManualMatching isOpen={isOpen} />}
       </div>
     </motion.div>
   );

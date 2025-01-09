@@ -9,7 +9,7 @@ const SelectTags = ({ matchingData }: { matchingData: any }) => {
           return (
             <span
               key={tag}
-              className="text-assistive text-black font-medium px-3 py-1 rounded-full bg-primary"
+              className="text-assistive min-w-fit text-black font-medium px-3 py-1 rounded-full bg-primary"
             >
               # {tag}
             </span>
