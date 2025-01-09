@@ -8,6 +8,7 @@ import { ModalProvider } from './contexts/ModalContext';
 import HomePage from '@/pages/home';
 import NotFoundPage from '@/pages/NotFound';
 import Layout from '@/pages/Layout';
+import MyPage from '@/pages/my-page';
 
 function App() {
   const queryClient = new QueryClient();
@@ -23,6 +24,7 @@ function App() {
               <Route path="/kakao/callback" element={<KakaoLoginLoading />} />
               <Route path="/signup/*" element={<SignUpPage />} />
               <Route path="/home" element={<HomePage />} />
+              <Route path="/mypage/*" element={<MyPage />} />
               <Route path="/*" element={<NotFoundPage />} />
             </Route>
           </Routes>
