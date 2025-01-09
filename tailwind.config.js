@@ -22,6 +22,7 @@ export default {
         addDarkGreen: '#02733E', // 추가 색상 2
         textLightGray: '#D9D9D9 ', // 텍스트 연회색
         textDarkGray: '#838383', // 텍스트 진회색
+        addRed: '#FE3B34',
       },
       margin: {
         vertical: '16px',
