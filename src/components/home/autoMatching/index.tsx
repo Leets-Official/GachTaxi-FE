@@ -5,7 +5,7 @@ import RouteSetting from '@/components/home/autoMatching/RouteSetting';
 import SelectTags from '@/components/home/autoMatching/SelectTags';
 import { useState } from 'react';
 
-interface MatchingData {
+export interface MatchingData {
   start: string;
   end: string;
   friends: string[];

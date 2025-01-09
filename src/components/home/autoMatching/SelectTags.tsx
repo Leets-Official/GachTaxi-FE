@@ -1,4 +1,6 @@
-const SelectTags = ({ matchingData }: { matchingData: any }) => {
+import { MatchingData } from '@/components/home/autoMatching';
+
+const SelectTags = ({ matchingData }: { matchingData: MatchingData }) => {
   const tags: string[] = matchingData.tags;
 
   return (

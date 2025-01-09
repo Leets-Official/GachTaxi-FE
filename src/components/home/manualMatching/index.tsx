@@ -3,8 +3,19 @@ import { useState } from 'react';
 import MatchingPage from '@/components/home/manualMatching/MatchingPage';
 import HistoryPage from '@/components/home/manualMatching/HistoryPage';
 
-const ManualMatching = ({ isOpen }: { isOpen: boolean }) => {
-  const [manualInfos, setManualInfos] = useState([
+interface ManualMatchingProps {
+  isOpen: boolean;
+}
+
+export interface ManualInfo {
+  time: string;
+  memberCount: number;
+  route: string;
+  tags: string[];
+}
+
+const ManualMatching = ({ isOpen }: ManualMatchingProps) => {
+  const [manualInfos, setManualInfos] = useState<ManualInfo[]>([
     {
       // 임시 mock 데이터
       time: '오전 08:50',

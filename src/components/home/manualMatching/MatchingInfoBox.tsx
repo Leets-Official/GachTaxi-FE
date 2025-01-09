@@ -1,6 +1,7 @@
 import RouteSettingIcon from '@/assets/icon/smallRouteChangeIcon.svg?react';
+import { ManualInfo } from '@/components/home/manualMatching';
 
-const MatchingInfoBox = ({ manualInfo }: { manualInfo: any }) => {
+const MatchingInfoBox = ({ manualInfo }: { manualInfo: ManualInfo }) => {
   return (
     <div className="min-h-[144px] flex-shrink-0 bg-secondary rounded-box p-vertical flex flex-col gap-3">
       <div className="flex w-full justify-between items-center">
@@ -23,7 +24,7 @@ const MatchingInfoBox = ({ manualInfo }: { manualInfo: any }) => {
       </div>
 
       <div className="flex overflow-x-scroll scroll-hidden gap-2">
-        {manualInfo.tags.map((tag: any) => {
+        {manualInfo.tags.map((tag) => {
           return (
             <span
               key={tag}

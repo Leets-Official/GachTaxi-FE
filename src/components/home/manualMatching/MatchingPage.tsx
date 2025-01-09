@@ -2,16 +2,19 @@ import Button from '@/components/commons/Button';
 import LargePlusIcon from '@/assets/icon/largePlusIcon.svg?react';
 import { Link } from 'react-router-dom';
 import MatchingInfoBox from '@/components/home/manualMatching/MatchingInfoBox';
+import { ManualInfo } from '@/components/home/manualMatching';
+
+interface MatchingPageProps {
+  isOpen: boolean;
+  manualInfos: ManualInfo[];
+  setManualInfos: (manualInfos: ManualInfo[]) => void;
+}
 
 const MatchingPage = ({
   isOpen,
   manualInfos,
   setManualInfos,
-}: {
-  isOpen: boolean;
-  manualInfos: any;
-  setManualInfos: (any) => void;
-}) => {
+}: MatchingPageProps) => {
   return (
     <>
       <div
