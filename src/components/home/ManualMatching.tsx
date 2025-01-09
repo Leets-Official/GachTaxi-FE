@@ -1,4 +1,4 @@
-const ManualMatching = ({ isOpen }: { isOpen: boolean }) => {
+const ManualMatching = () => {
   return <div></div>;
 };
 

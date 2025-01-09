@@ -3,7 +3,6 @@ import { motion, useDragControls } from 'framer-motion';
 import { useState } from 'react';
 import ViewerControlIcon from '@/assets/icon/viewerControlIcon.svg?react';
 import AutoMatching from '@/components/home/autoMatching';
-import ManualMatching from '@/components/home/ManualMatching';
 
 interface MatchingSheetProps {
   modalContent: {
@@ -60,7 +59,7 @@ const MatchingSheet = ({ modalContent }: MatchingSheetProps) => {
         className={`${isOpen ? 'overflow-scroll scroll-hidden' : 'overflow-hidden'}`}
       >
         {modalContent.home && <AutoMatching isOpen={isOpen} />}
-        {modalContent.match && <ManualMatching isOpen={isOpen} />}
+        {/* {modalContent.match && <ManualMatching isOpen={isOpen} />} */}
       </div>
     </motion.div>
   );
