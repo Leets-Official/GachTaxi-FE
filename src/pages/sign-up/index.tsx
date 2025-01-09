@@ -14,7 +14,7 @@ const SignUpPage = () => {
   };
 
   return (
-    <section className="max-w-[360px] w-full mx-auto p-[16px] flex flex-col gap-[32px] mb-vertical">
+    <section className="flex-1 w-full flex flex-col gap-[32px] p-horizontal">
       {pathname !== '/signup/user-info' && (
         <Button variant="icon" onClick={handleBack}>
           <BackIcon />

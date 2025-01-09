@@ -5,23 +5,26 @@ import { authCodeVerificationSchema } from '@/libs/schemas/auth';
 import { AuthCodeTypes } from 'gachTaxi-types';
 import Input from '../commons/Input';
 import Button from '../commons/Button';
-import { useNavigate } from 'react-router-dom';
+import { useModal } from '../../contexts/ModalContext';
+import AgreementModal from '../modal/AgreementModal';
 
-const AuthCodeVerification = () => {
-  const navigate = useNavigate();
+const AuthCodeVerification = ({ emailInfo }: { emailInfo: string }) => {
+  const { openModal } = useModal();
+
   const authForm = useForm<z.infer<typeof authCodeVerificationSchema>>({
     resolver: zodResolver(authCodeVerificationSchema),
     defaultValues: {
       authCode: '',
+      email: emailInfo!,
     },
     mode: 'onSubmit',
   });
 
   const handleSubmitToAuth: SubmitHandler<AuthCodeTypes> = (data) => {
     // API 구현 시 추가 구현
-    alert('인증번호 입력 성공!');
-    navigate('/signup/user-info');
     console.table(data);
+    // 약관 동의 모달 오픈 로직
+    openModal(<AgreementModal />);
   };
 
   return (

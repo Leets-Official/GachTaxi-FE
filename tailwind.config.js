@@ -16,16 +16,25 @@ export default {
       },
       colors: {
         primary: '#08F283', // Primary 색상
-        secondary: '#05A55A', // Secondary 색상
-        neutral: '#012619', // Neutral 배경 색상
+        secondary: '#2A3328', // Secondary 색상
+        neutral: '#011A11', // Neutral 배경 색상
         addGreen: '#05D976', // 추가 색상 1
         addDarkGreen: '#02733E', // 추가 색상 2
-        textLightGray: '#D9D9D9', // 텍스트 연회색
+        textLightGray: '#D9D9D9 ', // 텍스트 연회색
         textDarkGray: '#838383', // 텍스트 진회색
       },
       margin: {
         vertical: '16px',
         horizontal: '16px',
+      },
+      padding: {
+        vertical: '16px',
+        horizontal: '16px',
+      },
+      borderRadius: {
+        common: '32px',
+        modal: '16px',
+        box: '24px',
       },
     },
   },
