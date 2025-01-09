@@ -1,8 +1,7 @@
 import Button from '@/components/commons/Button';
-import MatchingInfoBox from '@/components/home/manualMatching/MatchingInfoBox';
 import { useState } from 'react';
-import LargePlusIcon from '@/assets/icon/largePlusIcon.svg?react';
-import { Link } from 'react-router-dom';
+import MatchingPage from '@/components/home/manualMatching/MatchingPage';
+import HistoryPage from '@/components/home/manualMatching/HistoryPage';
 
 const ManualMatching = ({ isOpen }: { isOpen: boolean }) => {
   const [manualInfos, setManualInfos] = useState([
@@ -64,44 +63,37 @@ const ManualMatching = ({ isOpen }: { isOpen: boolean }) => {
       tags: ['태그1', '태그2', '태그3'],
     },
   ]);
+  const [currentPage, setCurrentPage] = useState<'manual' | 'history'>(
+    'manual',
+  );
+
+  const handlePageChange = () => {
+    setCurrentPage((prev) => (prev === 'manual' ? 'history' : 'manual'));
+  };
 
   return (
     <div className="flex flex-col gap-[32px] justify-between relative">
-      <div className="flex items-center justify-between">
-        <h2 className="text-header font-bold">수동 매칭</h2>
+      <div className="flex items-center justify-start gap-3">
+        <h2 className="text-header font-bold">
+          {currentPage === 'manual' ? '수동 매칭' : '매칭 내역'}
+        </h2>
+        <Button
+          variant="icon"
+          className="underline text-textDarkGray"
+          onClick={handlePageChange}
+        >
+          {currentPage === 'manual' ? '매칭 내역' : '수동 매칭'}
+        </Button>
       </div>
 
-      <div
-        className={`flex flex-col gap-[16px] ${isOpen ? '' : 'pb-vertical h-[200px]'} h-fit max-h-[calc(100dvh-225px)] overflow-y-scroll scroll-hidden`}
-      >
-        {manualInfos.map((manualInfo) => {
-          return (
-            <Link to={`/signup/verification`}>
-              <MatchingInfoBox manualInfo={manualInfo} />
-            </Link>
-          );
-        })}
-      </div>
-      {isOpen && (
-        <div className="w-full flex absolute bottom-2">
-          <Button
-            variant="icon"
-            className="ml-auto"
-            onClick={() =>
-              setManualInfos([
-                {
-                  // 임시 mock 데이터
-                  time: '오전 08:50',
-                  memberCount: 3,
-                  route: 'basic',
-                  tags: ['태그1', '태그2', '태그3'],
-                },
-              ])
-            }
-          >
-            <LargePlusIcon />
-          </Button>
-        </div>
+      {currentPage === 'manual' ? (
+        <MatchingPage
+          isOpen={isOpen}
+          manualInfos={manualInfos}
+          setManualInfos={setManualInfos}
+        />
+      ) : (
+        <HistoryPage />
       )}
     </div>
   );
