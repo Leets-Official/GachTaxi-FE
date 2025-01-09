@@ -1,7 +1,6 @@
 import RouteSettingIcon from '@/assets/icon/routeSettingIcon.svg?react';
 import RouteChangeIcon from '@/assets/icon/routeChangeIcon.svg?react';
 import Button from '@/components/commons/Button';
-import { memo } from 'react';
 
 interface RouteSettingProps {
   matchingData: any;
@@ -31,4 +30,4 @@ const RouteSetting = ({
   );
 };
 
-export default memo(RouteSetting);
+export default RouteSetting;
