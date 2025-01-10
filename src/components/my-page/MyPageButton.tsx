@@ -1,46 +1,33 @@
-import { useNavigate } from 'react-router-dom';
-import Button from '../commons/Button';
+import { Link } from 'react-router-dom';
 import BackIcon from '@/assets/icon/backIcon.svg?react';
-import { useState } from 'react';
+import { BUTTON_DATA } from '@/constants';
 
 const MyPageButton = () => {
-  const nav = useNavigate();
-
-  const [isVerified, setIsVerified] = useState(false);
-
-  const handleVerification = () => {
-    // 인증 확인 API 로직
-    setIsVerified((prev) => !prev);
-  };
-
-  const buttonData = [
-    { label: '공지 사항', path: '/mypage/notice' },
-    { label: '문의 사항', path: '/mypage/inquiry' },
-    { label: '이용 기록', path: '/mypage/useage' },
-    { label: '알림 설정', path: '/mypage/notification' },
-  ];
-
   return (
-    <div className="w-[98%] flex flex-col gap-[25px] text-captionHeader font-bold pb-[30px]">
-      {buttonData.map((item, index) => (
+    <div className="w-[98%] flex flex-col gap-[25px] font-bold pb-[30px]">
+      {BUTTON_DATA.map((item, index) => (
         <div key={index} className="flex justify-between">
-          <span>{item.label}</span>
-          <Button variant="icon" onClick={() => nav(item.path)}>
-            <BackIcon className="rotate-180" />
-          </Button>
+          <Link
+            to={item.path}
+            className="flex justify-between items-center w-full text-captionHeader"
+          >
+            <span>{item.label}</span>
+            {item.label === '전화번호 인증' ? (
+              <span
+                className={`text-assistive h-[26px] p-4 rounded-full flex items-center justify-center ${
+                  item.isVerified
+                    ? 'bg-primary text-addRed'
+                    : 'bg-addRed text-white'
+                }`}
+              >
+                인증확인
+              </span>
+            ) : (
+              <BackIcon className="rotate-180" />
+            )}
+          </Link>
         </div>
       ))}
-      <div className="flex justify-between ">
-        <span>전화번호 인증</span>
-        <Button
-          className={`w-[77px] h-[26px] text-assistive ${
-            isVerified ? 'bg-primary text-addRed' : 'bg-addRed text-white'
-          }`}
-          onClick={handleVerification}
-        >
-          인증확인
-        </Button>
-      </div>
     </div>
   );
 };
