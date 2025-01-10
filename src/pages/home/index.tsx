@@ -10,7 +10,7 @@ const HomePage = () => {
   });
 
   return (
-    <section className="w-full flex-1 overflow-hidden p-[16px] relative">
+    <section className="w-full flex-1 overflow-hidden p-[16px] relative bg-neutral">
       <MatchingSheet modalContent={modalContent} />
       <Navbar modalContent={modalContent} setModalContent={setModalContent} />
     </section>
