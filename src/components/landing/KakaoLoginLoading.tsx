@@ -7,20 +7,21 @@ const KakaoLoginLoading = () => {
   useEffect(() => {
     const fetchAuthCode = async () => {
       const authCode = new URLSearchParams(window.location.search).get('code');
-      console.log('authCode: ', authCode);
 
       try {
         const res = await axios.post(
           `${import.meta.env.VITE_API_BASE_URL}/auth/login/kakao`,
-          authCode,
-          { withCredentials: true },
+          { authCode: authCode },
+          {
+            withCredentials: true,
+            headers: { 'Content-Type': 'application/json' },
+          },
         );
-        console.log('res: ', res);
 
         const accessToken = res.headers['authorization'];
         localStorage.setItem('accessToken', accessToken);
 
-        const status = res.data.status;
+        const status = res.data.data.status;
         if (status === 'LOGIN') {
           nav('/dashboard');
         } else if (status === 'UN_REGISTER') {
