@@ -23,6 +23,7 @@ export default {
         textLightGray: '#D9D9D9 ', // 텍스트 연회색
         textDarkGray: '#838383', // 텍스트 진회색
         matchLine: '#80C576',
+        addRed: '#FE3B34',
       },
       margin: {
         vertical: '16px',
