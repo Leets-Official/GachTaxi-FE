@@ -74,38 +74,44 @@ const ManualMatching = ({ isOpen }: ManualMatchingProps) => {
       tags: ['태그1', '태그2', '태그3'],
     },
   ]);
-  const [currentPage, setCurrentPage] = useState<'manual' | 'history'>(
-    'manual',
+  const [currentPage, setCurrentPage] = useState<'MANUAL' | 'HISTORY'>(
+    'MANUAL',
   );
 
   const handlePageChange = () => {
-    setCurrentPage((prev) => (prev === 'manual' ? 'history' : 'manual'));
+    setCurrentPage((prev) => (prev === 'MANUAL' ? 'HISTORY' : 'MANUAL'));
+  };
+
+  const renderConditionalComponents = () => {
+    if (currentPage === 'MANUAL') {
+      return (
+        <MatchingPage
+          isOpen={isOpen}
+          manualInfos={manualInfos}
+          setManualInfos={setManualInfos}
+        />
+      );
+    } else {
+      return <HistoryPage />;
+    }
   };
 
   return (
     <div className="flex flex-col gap-[32px] justify-between relative">
       <div className="flex items-center justify-start gap-3">
         <h2 className="text-header font-bold">
-          {currentPage === 'manual' ? '수동 매칭' : '매칭 내역'}
+          {currentPage === 'MANUAL' ? '수동 매칭' : '매칭 내역'}
         </h2>
         <Button
           variant="icon"
           className="underline text-textDarkGray"
           onClick={handlePageChange}
         >
-          {currentPage === 'manual' ? '매칭 내역' : '수동 매칭'}
+          {currentPage === 'MANUAL' ? '매칭 내역' : '수동 매칭'}
         </Button>
       </div>
 
-      {currentPage === 'manual' ? (
-        <MatchingPage
-          isOpen={isOpen}
-          manualInfos={manualInfos}
-          setManualInfos={setManualInfos}
-        />
-      ) : (
-        <HistoryPage />
-      )}
+      {renderConditionalComponents()}
     </div>
   );
 };
