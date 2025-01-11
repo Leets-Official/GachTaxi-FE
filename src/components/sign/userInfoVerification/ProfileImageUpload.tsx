@@ -22,7 +22,7 @@ const ProfileImageUpload = ({
           <div className="flex items-center justify-center my-6">
             <label
               htmlFor="profileImage"
-              className="flex items-center gap-[10px] cursor-pointer relative rounded-full bg-[#D9D9D9]"
+              className="flex items-center gap-[10px] cursor-pointer relative rounded-full bg-textDarkGray"
             >
               {imagePreview ? (
                 <img

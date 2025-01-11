@@ -3,7 +3,7 @@
 <circle cx="52.1035" cy="51.5779" r="51.1277" fill="#D9D9D9"/>
 </mask>
 <g mask="url(#mask0_212_516)">
-<circle cx="52.1054" cy="34.7665" r="16.8114" fill="white"/>
-<circle cx="52.1063" cy="100.272" r="43.8887" fill="white"/>
+<circle cx="52.1054" cy="34.7665" r="16.8114" fill="currentColor"/>
+<circle cx="52.1063" cy="100.272" r="43.8887" fill="currentColor"/>
 </g>
 </svg>

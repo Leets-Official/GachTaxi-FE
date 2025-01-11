@@ -1,3 +1,5 @@
+import { motion, MotionProps } from 'framer-motion';
+
 interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
   variant?: 'primary' | 'secondary' | 'icon';
   children: React.ReactNode;
@@ -20,23 +22,25 @@ const Button = ({
   // variantStyle 조건부 설정
   if (variant === 'primary') {
     variantStyle =
-      'bg-primary h-[50px] rounded-common font-semibold text-button text-neutral';
+      'bg-primary h-[50px] rounded-common font-semibold text-button text-neutral outline-none';
   } else if (variant === 'secondary') {
     variantStyle =
-      'bg-transparent h-[50px] rounded-common font-semibold text-button text-textLightGray';
+      'bg-transparent h-[50px] rounded-common font-semibold text-button text-textLightGray outline-none';
   } else if (variant === 'icon') {
-    variantStyle = 'bg-transparent';
+    variantStyle = 'bg-transparent outline-none';
   }
 
   return (
-    <button
+    <motion.button
       type={type}
       disabled={isDisabled}
+      initial={{ scale: 1 }}
+      whileTap={{ scale: 0.95 }}
       className={`${variantStyle} ${className || ''}`}
-      {...props}
+      {...(props as MotionProps)}
     >
       {children}
-    </button>
+    </motion.button>
   );
 };
 
