@@ -1,39 +1,36 @@
 import { useEffect } from 'react';
-import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
+import { kakaoLogin } from '@/libs/apis/kakaoLogin.api';
 
 const KakaoLoginLoading = () => {
   const nav = useNavigate();
+
   useEffect(() => {
-    const fetchAuthCode = async () => {
+    const handleLogin = async () => {
       const authCode = new URLSearchParams(window.location.search).get('code');
 
+      if (!authCode) {
+        console.error('Authorization code not found');
+        return;
+      }
+
       try {
-        const res = await axios.post(
-          `${import.meta.env.VITE_API_BASE_URL}/auth/login/kakao`,
-          { authCode: authCode },
-          {
-            withCredentials: true,
-            headers: { 'Content-Type': 'application/json' },
-          },
-        );
+        const { authorization, status } = await kakaoLogin(authCode);
 
-        const accessToken = res.headers['authorization'];
-        localStorage.setItem('accessToken', accessToken);
+        localStorage.setItem('accessToken', authorization);
 
-        const status = res.data.data.status;
         if (status === 'LOGIN') {
-          nav('/dashboard');
+          nav('/home');
         } else if (status === 'UN_REGISTER') {
           nav('/signup/verification');
         }
       } catch (error) {
-        console.log('post 실패: ', error);
+        console.error('Login failed:', error);
       }
     };
 
-    fetchAuthCode();
-  }, []);
+    handleLogin();
+  }, [nav]);
 
   return <>로딩중...</>;
 };
