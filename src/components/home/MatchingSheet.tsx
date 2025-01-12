@@ -21,7 +21,7 @@ const MatchingSheet = ({ modalContent }: MatchingSheetProps) => {
   return (
     <motion.div
       role="Viewer"
-      className="absolute left-0 top-0 w-full mx-auto h-[100lvh] touch-none bg-neutral rounded-t-common will-change-transform p-vertical px-[32px] flex flex-col gap-[16px]"
+      className="absolute left-0 top-0 w-full mx-auto h-[100lvh] touch-none bg-neutral rounded-t-common will-change-transform p-vertical px-[32px] flex flex-col gap-[16px] z-30"
       drag="y"
       dragConstraints={{
         top: 0, // opend 상태일 때 드래그 제한 적용
