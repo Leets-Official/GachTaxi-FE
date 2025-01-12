@@ -20,9 +20,9 @@ const MatchingPage = ({
       <div
         className={`flex flex-col gap-[16px] ${isOpen ? '' : 'pb-[calc(100dvh-430px)]'} min-h-[200px] max-h-[calc(100dvh-225px)] overflow-y-scroll scroll-hidden`}
       >
-        {manualInfos.map((manualInfo) => {
+        {manualInfos.map((manualInfo, idx) => {
           return (
-            <Link to={`/signup/verification`}>
+            <Link key={idx} to={`/signup/verification`}>
               <MatchingInfoBox manualInfo={manualInfo} />
             </Link>
           );

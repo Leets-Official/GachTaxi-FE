@@ -32,3 +32,6 @@ export const BUTTON_DATA = [
     isVerified: false,
   },
 ];
+
+export const ORIGIN = '127.12692157601926,37.45052385846493';
+export const DESTINATION = '127.13467190126833,37.45543030528147';
