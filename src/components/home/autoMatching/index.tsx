@@ -2,43 +2,30 @@ import MiniTaxiLogoIcon from '@/assets/icon/miniTaxiLogoIcon.svg?react';
 import Button from '@/components/commons/Button';
 import InviteMembers from '@/components/home/autoMatching/InviteMembers';
 import RouteSetting from '@/components/home/autoMatching/RouteSetting';
-import SelectTags from '@/components/home/autoMatching/SelectTags';
-import { useState } from 'react';
-
-export interface MatchingData {
-  start: string;
-  end: string;
-  friends: string[];
-  tags: string[];
-}
+import SelectTags from '@/components/home/autoMatching/selectTags';
+import { AutoMatchingTypes } from 'gachTaxi-types';
+import z from 'zod';
+import { useForm, SubmitHandler } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { autoMatchingSchema } from '@/libs/schemas/match';
 
 const AutoMatching = ({ isOpen }: { isOpen: boolean }) => {
-  const [matchingData, setMatchingData] = useState<MatchingData>({
-    start: 'main gate',
-    end: 'AI building',
-    friends: [],
-    tags: ['태그1', '태그2', '태그3'],
+  const autoMatchingForm = useForm<z.infer<typeof autoMatchingSchema>>({
+    resolver: zodResolver(autoMatchingSchema),
+    defaultValues: {
+      route: 'BASIC',
+      members: [],
+      tags: [],
+    },
+    mode: 'onBlur',
   });
 
-  const handleRouteChange = () => {
-    setMatchingData((prev) => {
-      return {
-        ...prev,
-        start: prev.end,
-        end: prev.start,
-      };
-    });
+  const handleSubmitToAutoMatching: SubmitHandler<AutoMatchingTypes> = (
+    data,
+  ) => {
+    // API 호출
+    console.log(data);
   };
-
-  // 친구 추가 로직 확인 후 사용 예정
-  // const handleInviteMembers = (member: string) => {
-  //   setMatchingData((prev) => ({
-  //     ...prev,
-  //     friends: prev.friends.includes(member)
-  //       ? prev.friends
-  //       : [...prev.friends, member],
-  //   }));
-  // };
 
   return (
     <div
@@ -49,24 +36,24 @@ const AutoMatching = ({ isOpen }: { isOpen: boolean }) => {
         <MiniTaxiLogoIcon />
       </div>
 
-      <div className="flex flex-col gap-[16px] h-fit max-h-[calc(100dvh-310px)] overflow-y-scroll scroll-hidden">
-        <RouteSetting
-          matchingData={matchingData}
-          handleRouteChange={handleRouteChange}
-        />
+      <form
+        className="flex flex-col gap-[16px] h-fit max-h-[calc(100dvh-310px)] overflow-y-scroll scroll-hidden"
+        onSubmit={autoMatchingForm.handleSubmit(handleSubmitToAutoMatching)}
+      >
+        <RouteSetting control={autoMatchingForm.control} />
         {isOpen && (
           <>
             <InviteMembers />
-            <SelectTags matchingData={matchingData} />
+            <SelectTags control={autoMatchingForm.control} />
           </>
         )}
-      </div>
 
-      <div className="w-full">
-        <Button variant="primary" className="w-full">
-          매칭 시작
-        </Button>
-      </div>
+        <div className="w-full">
+          <Button variant="primary" className="w-full mt-[16px]" type="submit">
+            매칭 시작
+          </Button>
+        </div>
+      </form>
     </div>
   );
 };
