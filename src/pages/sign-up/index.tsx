@@ -1,25 +1,15 @@
-import BackIcon from '../../assets/icon/backIcon.svg?react';
-import { useNavigate, Routes, Route, useLocation } from 'react-router-dom';
+import { Routes, Route, useLocation } from 'react-router-dom';
 import VerificationPage from './VerificationPage';
 import NotFoundPage from '../NotFound';
-import Button from '../../components/commons/Button';
 import UserInfoPage from './UserInfoPage';
+import BackButton from '@/components/commons/BackButton';
 
 const SignUpPage = () => {
-  const navigate = useNavigate();
   const { pathname } = useLocation();
-
-  const handleBack = () => {
-    navigate(-1);
-  };
 
   return (
     <section className="flex-1 w-full flex flex-col gap-[32px] p-horizontal">
-      {pathname !== '/signup/user-info' && (
-        <Button variant="icon" onClick={handleBack}>
-          <BackIcon />
-        </Button>
-      )}
+      {pathname !== '/signup/user-info' && <BackButton />}
       <Routes>
         {/** 소셜 로그인 Route */}
         <Route path="/verification" element={<VerificationPage />} />
