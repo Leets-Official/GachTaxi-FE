@@ -3,6 +3,7 @@ import RouteChangeIcon from '@/assets/icon/routeChangeIcon.svg?react';
 import Button from '@/components/commons/Button';
 
 interface RouteSettingProps {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   matchingData: any;
   handleRouteChange: () => void;
 }
