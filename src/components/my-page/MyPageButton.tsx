@@ -1,23 +1,18 @@
 import { Link } from 'react-router-dom';
 import BackIcon from '@/assets/icon/backIcon.svg?react';
-import { BUTTON_DATA } from '@/constants';
+import { useButtonData } from '@/constants';
 
 const MyPageButton = () => {
+  const BUTTON_DATA = useButtonData();
   return (
     <div className="w-[98%] flex flex-col gap-[25px] pb-[30px]">
       {BUTTON_DATA.map((item, index) => (
         <div key={index} className="flex justify-between">
-          {item.onClick ? (
-            <button
-              onClick={item.onClick}
-              className="flex justify-between items-center w-full text-captionHeader"
-            >
-              <span>{item.label}</span>
-              <BackIcon className="rotate-180" />
-            </button>
+          {item.component ? (
+            item.component
           ) : (
             <Link
-              to={item.path}
+              to={item.path!}
               className="flex justify-between items-center w-full text-captionHeader"
             >
               <span>{item.label}</span>
