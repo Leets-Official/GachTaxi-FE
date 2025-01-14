@@ -29,50 +29,6 @@ const ManualMatching = ({ isOpen }: ManualMatchingProps) => {
       route: 'basic',
       tags: ['태그1', '태그2', '태그3'],
     },
-    {
-      time: '오전 08:50',
-      memberCount: 3,
-      route: 'basic',
-      tags: ['태그1', '태그2', '태그3'],
-    },
-    {
-      // 임시 mock 데이터
-      time: '오전 08:50',
-      memberCount: 3,
-      route: 'basic',
-      tags: ['태그1', '태그2', '태그3'],
-    },
-    {
-      time: '오전 08:50',
-      memberCount: 3,
-      route: 'basic',
-      tags: ['태그1', '태그2', '태그3'],
-    },
-    {
-      time: '오전 08:50',
-      memberCount: 3,
-      route: 'basic',
-      tags: ['태그1', '태그2', '태그3'],
-    },
-    {
-      // 임시 mock 데이터
-      time: '오전 08:50',
-      memberCount: 3,
-      route: 'basic',
-      tags: ['태그1', '태그2', '태그3'],
-    },
-    {
-      time: '오전 08:50',
-      memberCount: 3,
-      route: 'basic',
-      tags: ['태그1', '태그2', '태그3'],
-    },
-    {
-      time: '오전 08:50',
-      memberCount: 3,
-      route: 'basic',
-      tags: ['태그1', '태그2', '태그3'],
-    },
   ]);
   const [currentPage, setCurrentPage] = useState<'MANUAL' | 'HISTORY'>(
     'MANUAL',
