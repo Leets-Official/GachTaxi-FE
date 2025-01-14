@@ -3,7 +3,7 @@ import PlusIcon from '@/assets/icon/plusIcon.svg?react';
 
 const InviteMembers = () => {
   return (
-    <div className="h-[101px] flex-shrink-0 bg-secondary rounded-box p-vertical flex flex-col justify-between">
+    <div className="min-h-[101px] h-fit flex-shrink-0 bg-secondary rounded-box p-vertical flex flex-col justify-between">
       <Button
         variant="icon"
         className="w-fit flex justify-between items-center gap-2"
