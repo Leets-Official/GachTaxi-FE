@@ -1,31 +1,54 @@
-import { morningOrAfternoon, hours, mins } from '@/constants';
-import { motion, useMotionValue } from 'framer-motion';
+import { DAY_PERIOD, HOURS, MINUTES } from '@/constants';
+import { motion, useMotionValue, MotionValue, animate } from 'framer-motion';
+import { useState } from 'react';
 
 interface TimeSelectProps {
   timeVal: string;
   onChange: (value: string) => void;
 }
 
+const topStyle = {
+  maskImage:
+    'linear-gradient(to bottom, transparent, black 20%, black 80%, transparent)',
+  WebkitMaskImage:
+    'linear-gradient(to bottom, transparent, black 20%, black 80%, transparent)',
+  maskComposite: 'intersect', // 추가
+  WebkitMaskComposite: 'destination-in', // Safari 호환
+};
+
 const TimeSelect = ({ timeVal, onChange }: TimeSelectProps) => {
-  // Motion values for each scrollable list
   const yPeriod = useMotionValue(0);
   const yHour = useMotionValue(0);
   const yMin = useMotionValue(0);
+  const [period, setPeriod] = useState<'오전' | '오후'>('오전');
 
-  // Helper function to calculate current index based on y position
-  const calculateIndex = (y: number, itemHeight: number, length: number) =>
-    Math.min(Math.max(Math.round(-y / itemHeight), 0), length - 1);
+  const ITEM_HEIGHT = 48;
+  const SMALL_ITEM_HEIGHT = 25;
 
-  // Function to handle dragging logic
+  const calculateIndex = (y: number, length: number) => {
+    const rawIndex = Math.round(-y / ITEM_HEIGHT);
+    return Math.min(Math.max(rawIndex, 0), length - 1);
+  };
+
   const handleDragEnd = (
-    motionValue: typeof yPeriod,
-    itemHeight: number,
-    length: number,
+    variant: 'SMALL' | 'BIG',
+    motionValue: MotionValue,
+    items: string[],
     updateFn: (index: number) => void,
   ) => {
-    const index = calculateIndex(motionValue.get(), itemHeight, length);
-    motionValue.set(-index * itemHeight); // Snap to closest index
-    updateFn(index); // Trigger onChange or logic
+    const currentY = motionValue.get();
+    const index = calculateIndex(currentY, items.length);
+    const targetY =
+      -index * (variant === 'SMALL' ? SMALL_ITEM_HEIGHT : ITEM_HEIGHT);
+
+    animate(motionValue, targetY, {
+      type: 'spring',
+      stiffness: 400,
+      damping: 30,
+      restDelta: 0.5,
+    });
+
+    updateFn(index);
   };
 
   return (
@@ -34,71 +57,81 @@ const TimeSelect = ({ timeVal, onChange }: TimeSelectProps) => {
 
       <div className="flex w-full justify-center gap-[16px] h-full items-center">
         {/* Period (오전/오후) */}
-        <div className="flex flex-col overflow-y-scroll scroll-hidden h-[25px] mr-2">
-          {morningOrAfternoon.map((name) => (
-            <motion.span
+        <div
+          className="flex flex-col overflow-visible scroll-hidden h-[37px] mr-2 relative top-[5px]"
+          style={topStyle}
+        >
+          {DAY_PERIOD.map((name) => (
+            <motion.div
+              key={name}
               drag="y"
               style={{ y: yPeriod }}
               dragConstraints={{
-                top: -25 * (morningOrAfternoon.length - 1),
+                top: -SMALL_ITEM_HEIGHT * (DAY_PERIOD.length - 1),
                 bottom: 0,
               }}
-              dragElastic={0.2}
+              dragElastic={0.3}
               onDragEnd={() =>
-                handleDragEnd(
-                  yPeriod,
-                  25,
-                  morningOrAfternoon.length,
-                  (index) => {
-                    const [date, time] = timeVal.split(' '); // "2025-01-14"과 "01:00:00" 분리
-                    let [hour] = time.split(':'); // 시간, 분, 초 분리
+                handleDragEnd('SMALL', yPeriod, DAY_PERIOD, (index) => {
+                  const [date, time] = timeVal.split(' ');
+                  let hour = time.split(':')[0];
+                  const minute = time.split(':')[1];
 
-                    // 오전/오후에 따라 시간 조정
-                    if (
-                      morningOrAfternoon[index] === '오후' &&
-                      parseInt(hour) < 12
-                    ) {
-                      hour = (parseInt(hour) + 12).toString(); // 오후일 경우 12를 더함
+                  if (DAY_PERIOD[index] === '오후') {
+                    hour = (parseInt(hour) + 12).toString().padStart(2, '0');
+                    setPeriod('오후');
+                  } else if (DAY_PERIOD[index] === '오전') {
+                    if (parseInt(hour) > 12) {
+                      hour = (parseInt(hour) - 12).toString().padStart(2, '0');
+                      setPeriod('오전');
                     }
+                  }
 
-                    // 새로운 시간 문자열 생성
-                    const newTime = `${hour}:00:00`;
-
-                    // onChange에 새롭게 수정된 시간 값을 전달
-                    onChange(`${date} ${newTime}`);
-                  },
-                )
+                  const newTime = `${hour}:${minute}:00`;
+                  onChange(`${date} ${newTime}`);
+                })
               }
-              key={name}
-              className={`font-medium text-body py-[1px`}
+              className="flex items-center justify-center h-[25px]"
             >
-              {name}
-            </motion.span>
+              <span className="font-medium text-body py-[1px] flex items-center justify-center h-[25px] leading-none">
+                {name}
+              </span>
+            </motion.div>
           ))}
         </div>
 
         {/* Hours */}
-        <div className="flex flex-col overflow-hidden h-[48px]">
-          {hours.map((hour, index) => (
-            <motion.p
+        <div className="flex flex-col overflow-y-scroll scroll-hidden h-[48px] relative bottom-1">
+          {HOURS.map((hour) => (
+            <motion.div
+              key={hour}
               drag="y"
               style={{ y: yHour }}
               dragConstraints={{
-                top: -48 * hours.length,
+                top: -ITEM_HEIGHT * (HOURS.length - 1),
                 bottom: 0,
               }}
-              dragElastic={0.2}
+              dragElastic={0.3}
               onDragEnd={() =>
-                handleDragEnd(yHour, 62, hours.length, (index) => {
-                  const updatedTime = `${hours[index]}:${timeVal.split(':')[1]}`;
-                  onChange(updatedTime);
+                handleDragEnd('BIG', yHour, HOURS, (index) => {
+                  const [date] = timeVal.split(' ');
+                  let hour;
+                  if (period === '오전') {
+                    hour = HOURS[index];
+                  } else {
+                    hour = parseInt(HOURS[index]) + 12;
+                  }
+
+                  const updatedTime = `${hour}:${timeVal.split(':')[1]}:00`;
+                  onChange(`${date} ${updatedTime}`);
                 })
               }
-              key={hour}
-              className={`font-semibold text-[48px] leading-none h-fit m-[2px]`}
+              className="flex items-center justify-center h-[48px]"
             >
-              {hour}
-            </motion.p>
+              <span className="font-semibold text-[48px] leading-none">
+                {hour}
+              </span>
+            </motion.div>
           ))}
         </div>
 
@@ -109,27 +142,31 @@ const TimeSelect = ({ timeVal, onChange }: TimeSelectProps) => {
         </div>
 
         {/* Minutes */}
-        <div className="flex flex-col overflow-hidden h-[48px]">
-          {mins.map((min, index) => (
-            <motion.p
+        <div className="flex flex-col overflow-y-scroll scroll-hidden h-[48px] relative bottom-1">
+          {MINUTES.map((min) => (
+            <motion.div
+              key={min}
               drag="y"
               style={{ y: yMin }}
               dragConstraints={{
-                top: -48 * mins.length,
+                top: -ITEM_HEIGHT * (MINUTES.length - 1),
                 bottom: 0,
               }}
-              dragElastic={0.2}
+              dragElastic={0.3}
               onDragEnd={() =>
-                handleDragEnd(yMin, 62, mins.length, (index) => {
-                  const updatedTime = `${timeVal.split(':')[0]}:${mins[index]}`;
-                  onChange(updatedTime);
+                handleDragEnd('BIG', yMin, MINUTES, (index) => {
+                  const [date, time] = timeVal.split(' ');
+
+                  const updatedTime = `${time.split(':')[0]}:${MINUTES[index]}:00`;
+                  onChange(`${date} ${updatedTime}`);
                 })
               }
-              key={min}
-              className={`font-semibold text-[48px] leading-none h-fit m-[2px]`}
+              className="flex items-center justify-center h-[48px]"
             >
-              {min}
-            </motion.p>
+              <span className="font-semibold text-[48px] leading-none">
+                {min}
+              </span>
+            </motion.div>
           ))}
         </div>
       </div>
