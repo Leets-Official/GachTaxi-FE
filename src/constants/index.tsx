@@ -21,24 +21,30 @@ export const DELTA_THRESHOLD = 5;
 
 export { AGREE_VALUES };
 
-import onLogout from '@/components/my-page/LogOutButton';
-export const BUTTON_DATA = [
-  { label: '공지 사항', path: '/mypage/notice' },
-  { label: '문의 사항', path: '/mypage/inquiry' },
-  { label: '이용 기록', path: '/mypage/useage' },
-  { label: '알림 설정', path: '/mypage/notification' },
-  {
-    label: '로그아웃',
-    onClick: async () => {
-      await onLogout();
+import LogOutButton from '@/components/my-page/LogOutButton';
+interface ButtonItem {
+  label: string;
+  path?: string;
+  component?: JSX.Element;
+  isVerified?: boolean;
+}
+export const useButtonData = (): ButtonItem[] => {
+  return [
+    { label: '공지 사항', path: '/mypage/notice' },
+    { label: '문의 사항', path: '/mypage/inquiry' },
+    { label: '이용 기록', path: '/mypage/useage' },
+    { label: '알림 설정', path: '/mypage/notification' },
+    {
+      label: '로그아웃',
+      component: <LogOutButton />,
     },
-  },
-  {
-    label: '전화번호 인증',
-    path: 'mypage/phone/verification',
-    isVerified: false,
-  },
-];
+    {
+      label: '전화번호 인증',
+      path: 'mypage/phone/verification',
+      isVerified: false,
+    },
+  ];
+};
 
 export const ORIGIN = '127.12692157601926,37.45052385846493';
 export const DESTINATION = '127.13467190126833,37.45543030528147';
