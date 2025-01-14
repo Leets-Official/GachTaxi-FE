@@ -3,12 +3,13 @@ import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
 import LandingPage from '@/pages/landing/index';
 import KakaoLoginLoading from './components/landing/KakaoLoginLoading';
-import SignUpPage from './pages/sign-up';
+import SignUpPage from '@/pages/sign-up';
 import { ModalProvider } from './contexts/ModalContext';
 import HomePage from '@/pages/home';
 import NotFoundPage from '@/pages/NotFound';
 import Layout from '@/pages/Layout';
 import MyPage from '@/pages/my-page';
+import ChatPage from '@/pages/chat';
 
 function App() {
   const queryClient = new QueryClient();
@@ -25,6 +26,7 @@ function App() {
               <Route path="/signup/*" element={<SignUpPage />} />
               <Route path="/home" element={<HomePage />} />
               <Route path="/mypage/*" element={<MyPage />} />
+              <Route path="/chat" element={<ChatPage />} />
               <Route path="/*" element={<NotFoundPage />} />
             </Route>
           </Routes>
