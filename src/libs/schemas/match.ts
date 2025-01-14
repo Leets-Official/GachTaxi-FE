@@ -1,15 +1,10 @@
+import { formatTimeToSelect } from '@/utils';
 import { z } from 'zod';
 
 // 개별 스키마
 const routeSchema = z.enum(['BASIC', 'REVERSE']).default('BASIC');
 
-const timeSchema = z
-  .string()
-  .regex(
-    /^\d{2}:\d{2}:\d{2}$/, // HH:MM:SS 형식
-    'Invalid time format. Expected HH:MM:SS',
-  )
-  .default(() => new Date().toLocaleTimeString('en-GB'));
+const timeSchema = z.string().default(() => formatTimeToSelect(new Date()));
 
 const membersSchema = z.string().array().default([]);
 

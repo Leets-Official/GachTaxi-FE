@@ -2,7 +2,7 @@ import BackButton from '@/components/commons/BackButton';
 import Button from '@/components/commons/Button';
 import z from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { useForm, SubmitHandler } from 'react-hook-form';
+import { useForm, SubmitHandler, Controller } from 'react-hook-form';
 import { ManualMatchingTypes } from 'gachTaxi-types';
 import { manualMatchingSchema } from '@/libs/schemas/match';
 import RouteSetting from '@/components/home/autoMatching/RouteSetting';
@@ -10,13 +10,14 @@ import InviteMembers from '@/components/home/autoMatching/InviteMembers';
 import SelectTags from '@/components/home/autoMatching/selectTags';
 import TimeSelect from '@/components/manual-register/TimeSelect';
 import AddContent from '@/components/manual-register/AddContent';
+import { formatTimeToSelect } from '@/utils';
 
 const ManualMatchingRegister = () => {
   const manualMatchingForm = useForm<z.infer<typeof manualMatchingSchema>>({
     resolver: zodResolver(manualMatchingSchema),
     defaultValues: {
       route: 'BASIC',
-      time: new Date().toLocaleTimeString('en-GB'),
+      time: formatTimeToSelect(new Date(new Date().setHours(1, 0, 0, 0))),
       members: [],
       tags: [],
       content: '',
@@ -43,7 +44,15 @@ const ManualMatchingRegister = () => {
         onSubmit={manualMatchingForm.handleSubmit(handleSubmitToManualMatching)}
       >
         <RouteSetting control={manualMatchingForm.control} />
-        <TimeSelect />
+        <Controller
+          name="time"
+          control={manualMatchingForm.control}
+          render={({ field }) => {
+            return (
+              <TimeSelect timeVal={field.value} onChange={field.onChange} />
+            );
+          }}
+        />
         <InviteMembers />
         <SelectTags control={manualMatchingForm.control} />
         <AddContent control={manualMatchingForm.control} />
