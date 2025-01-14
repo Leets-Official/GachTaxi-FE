@@ -37,21 +37,21 @@ export const ORIGIN = '127.12692157601926,37.45052385846493';
 export const DESTINATION = '127.13467190126833,37.45543030528147';
 
 // 수동 매칭 시간 선택에 사용할 상수 모음
-export const morningOrAfternoon = ['오전', '오후'];
+export const DAY_PERIOD = ['오전', '오후'];
 
-export const hours = [
-  '01',
-  '02',
-  '03',
-  '04',
-  '05',
-  '06',
-  '07',
-  '08',
-  '09',
-  '10',
-  '11',
-  '12',
-];
+export const HOURS = Array.from({ length: 12 }, (_, i) =>
+  (i + 1).toString().padStart(2, '0'),
+);
 
-export const mins = ['00', '10', '20', '30', '40', '50'];
+export const MINUTES = Array.from({ length: 6 }, (_, i) =>
+  i.toString().padEnd(2, '0'),
+);
+
+export const GRADIENT_STYLE = {
+  maskImage:
+    'linear-gradient(to bottom, transparent, black 20%, black 80%, transparent)',
+  WebkitMaskImage:
+    'linear-gradient(to bottom, transparent, black 20%, black 80%, transparent)',
+  maskComposite: 'intersect', // 추가
+  WebkitMaskComposite: 'destination-in', // Safari 호환
+};
