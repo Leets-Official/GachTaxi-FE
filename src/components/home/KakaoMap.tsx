@@ -44,7 +44,6 @@ const KakaoMap = memo(() => {
 
       try {
         const response = await getRouteLine({ origin, destination });
-        console.log('Response:', response);
         const { routes } = response;
 
         if (routes?.length > 0 && routes[0]?.sections) {
