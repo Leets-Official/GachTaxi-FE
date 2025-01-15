@@ -8,9 +8,9 @@ import { manualMatchingSchema } from '@/libs/schemas/match';
 import RouteSetting from '@/components/home/autoMatching/RouteSetting';
 import InviteMembers from '@/components/home/autoMatching/inviteMembers';
 import SelectTags from '@/components/home/autoMatching/selectTags';
-import TimeSelect from '@/components/manual-register/TimeSelect';
 import AddContent from '@/components/manual-register/AddContent';
 import { formatTimeToSelect } from '@/utils';
+import TimeSelect from '@/components/manual-register/timeSelect';
 
 const ManualMatchingRegister = () => {
   const manualMatchingForm = useForm<z.infer<typeof manualMatchingSchema>>({
