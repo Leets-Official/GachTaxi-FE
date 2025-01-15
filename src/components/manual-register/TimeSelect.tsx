@@ -1,20 +1,12 @@
 import { DAY_PERIOD, HOURS, MINUTES } from '@/constants';
 import { motion, useMotionValue, MotionValue, animate } from 'framer-motion';
 import { useState } from 'react';
+import { GRADIENT_STYLE } from '@/constants';
 
 interface TimeSelectProps {
   timeVal: string;
   onChange: (value: string) => void;
 }
-
-const topStyle = {
-  maskImage:
-    'linear-gradient(to bottom, transparent, black 20%, black 80%, transparent)',
-  WebkitMaskImage:
-    'linear-gradient(to bottom, transparent, black 20%, black 80%, transparent)',
-  maskComposite: 'intersect', // 추가
-  WebkitMaskComposite: 'destination-in', // Safari 호환
-};
 
 const TimeSelect = ({ timeVal, onChange }: TimeSelectProps) => {
   const yPeriod = useMotionValue(0);
@@ -59,7 +51,7 @@ const TimeSelect = ({ timeVal, onChange }: TimeSelectProps) => {
         {/* Period (오전/오후) */}
         <div
           className="flex flex-col overflow-visible scroll-hidden h-[37px] mr-2 relative top-[5px]"
-          style={topStyle}
+          style={GRADIENT_STYLE}
         >
           {DAY_PERIOD.map((name) => (
             <motion.div

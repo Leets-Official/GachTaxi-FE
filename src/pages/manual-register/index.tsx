@@ -6,7 +6,7 @@ import { useForm, SubmitHandler, Controller } from 'react-hook-form';
 import { ManualMatchingTypes } from 'gachTaxi-types';
 import { manualMatchingSchema } from '@/libs/schemas/match';
 import RouteSetting from '@/components/home/autoMatching/RouteSetting';
-import InviteMembers from '@/components/home/autoMatching/InviteMembers';
+import InviteMembers from '@/components/home/autoMatching/inviteMembers';
 import SelectTags from '@/components/home/autoMatching/selectTags';
 import TimeSelect from '@/components/manual-register/TimeSelect';
 import AddContent from '@/components/manual-register/AddContent';
@@ -53,7 +53,7 @@ const ManualMatchingRegister = () => {
             );
           }}
         />
-        <InviteMembers />
+        <InviteMembers control={manualMatchingForm.control} />
         <SelectTags control={manualMatchingForm.control} />
         <AddContent control={manualMatchingForm.control} />
         <button type="submit" className="hidden"></button>

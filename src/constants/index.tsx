@@ -52,6 +52,5 @@ export const GRADIENT_STYLE = {
     'linear-gradient(to bottom, transparent, black 20%, black 80%, transparent)',
   WebkitMaskImage:
     'linear-gradient(to bottom, transparent, black 20%, black 80%, transparent)',
-  maskComposite: 'intersect', // 추가
   WebkitMaskComposite: 'destination-in', // Safari 호환
 };
