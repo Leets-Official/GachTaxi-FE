@@ -24,10 +24,7 @@ const refreshAccessToken = async () => {
     const response = await client.post('/auth/refresh');
 
     if (response) {
-      const refreshedAccessToken = document.cookie
-        .split('; ')
-        .find((row) => row.startsWith('accessToken'))
-        ?.split('=')[1];
+      const refreshedAccessToken = getCookieValue('refreshToken');
 
       if (!refreshedAccessToken) {
         console.log('재설정할 쿠키가 포함되지 않았습니다!');
