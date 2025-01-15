@@ -1,6 +1,5 @@
 import MiniTaxiLogoIcon from '@/assets/icon/miniTaxiLogoIcon.svg?react';
 import Button from '@/components/commons/Button';
-import InviteMembers from '@/components/home/autoMatching/InviteMembers';
 import RouteSetting from '@/components/home/autoMatching/RouteSetting';
 import SelectTags from '@/components/home/autoMatching/selectTags';
 import { AutoMatchingTypes } from 'gachTaxi-types';
@@ -8,6 +7,7 @@ import z from 'zod';
 import { useForm, SubmitHandler } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { autoMatchingSchema } from '@/libs/schemas/match';
+import InviteMembers from '@/components/home/autoMatching/inviteMembers';
 
 const AutoMatching = ({ isOpen }: { isOpen: boolean }) => {
   const autoMatchingForm = useForm<z.infer<typeof autoMatchingSchema>>({
@@ -43,7 +43,7 @@ const AutoMatching = ({ isOpen }: { isOpen: boolean }) => {
         <RouteSetting control={autoMatchingForm.control} />
         {isOpen && (
           <>
-            <InviteMembers />
+            <InviteMembers control={autoMatchingForm.control} />
             <SelectTags control={autoMatchingForm.control} />
           </>
         )}
