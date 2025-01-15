@@ -9,6 +9,7 @@ import HomePage from '@/pages/home';
 import NotFoundPage from '@/pages/NotFound';
 import Layout from '@/pages/Layout';
 import MyPage from '@/pages/my-page';
+import ManualMatchingDetailPage from '@/pages/manual-matching-detail';
 
 function App() {
   const queryClient = new QueryClient();
@@ -25,6 +26,10 @@ function App() {
               <Route path="/signup/*" element={<SignUpPage />} />
               <Route path="/home" element={<HomePage />} />
               <Route path="/mypage/*" element={<MyPage />} />
+              <Route
+                path="home/manual-matching-detail/:id"
+                element={<ManualMatchingDetailPage />}
+              />
               <Route path="/*" element={<NotFoundPage />} />
             </Route>
           </Routes>
