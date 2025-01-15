@@ -9,7 +9,7 @@ interface SelectTagsProps<T extends MatchingSchema> {
 const SelectTags = <T extends MatchingSchema>({
   control,
 }: SelectTagsProps<T>) => {
-  const tags: string[] = ['태그1', '태그2', '태그3'];
+  const tags: string[] = ['태그 1', '태그 2', '태그 3'];
 
   return (
     <Controller
