@@ -87,9 +87,9 @@ const UserInfoVerification = () => {
         성별
       </label>
       <GenderSelect control={userInfoForm.control} gender={gender} />
-      <p className="text-[10px] text-[#787272] my-6 font-medium">
+      <p className="text-[10px] text-[#787272] my-5 font-medium">
         * 프로필 정보는 회원 식별, 서비스 이용의 목적으로만 활용되며, <br />{' '}
-        개인정보 수집 약관내용에 따라 보관됩니다.
+        &nbsp;&nbsp;개인정보 수집 약관내용에 따라 보관됩니다.
       </p>
       <Button variant="primary" type="submit">
         시작하기

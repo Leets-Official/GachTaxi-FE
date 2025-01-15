@@ -4,6 +4,7 @@ import VerificationPage from './VerificationPage';
 import NotFoundPage from '../NotFound';
 import Button from '../../components/commons/Button';
 import UserInfoPage from './UserInfoPage';
+import LocationTaxiIcon from '@/assets/icon/locationTaxiIcon.svg?react';
 
 const SignUpPage = () => {
   const navigate = useNavigate();
@@ -14,7 +15,7 @@ const SignUpPage = () => {
   };
 
   return (
-    <section className="flex-1 w-full flex flex-col gap-[32px] p-horizontal">
+    <section className="flex-1 w-full flex flex-col gap-[32px] p-horizontal relative">
       {pathname !== '/signup/user-info' && (
         <Button variant="icon" onClick={handleBack}>
           <BackIcon />
@@ -27,6 +28,12 @@ const SignUpPage = () => {
         {/* not-found 페이지 */}
         <Route path="*" element={<NotFoundPage />} />
       </Routes>
+
+      {pathname !== '/signup/user-info' && (
+        <div className="absolute left-0 bottom-2 w-full">
+          <LocationTaxiIcon className="ml-auto " />
+        </div>
+      )}
     </section>
   );
 };
