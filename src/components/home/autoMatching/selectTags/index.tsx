@@ -11,6 +11,15 @@ const SelectTags = <T extends MatchingSchema>({
 }: SelectTagsProps<T>) => {
   const tags: string[] = ['태그 1', '태그 2', '태그 3'];
 
+  // safeValue 태그 리스트에 선택된 값이 포함되어 있는지 검사하고 업데이트시키는 함수
+  const handleUpdateTags = (safeValue: string[], selectedTag: string) => {
+    const updatedTags = safeValue.includes(selectedTag)
+      ? safeValue.filter((tag) => tag !== selectedTag)
+      : [...safeValue, selectedTag];
+
+    return updatedTags;
+  };
+
   return (
     <Controller
       control={control}
@@ -28,9 +37,10 @@ const SelectTags = <T extends MatchingSchema>({
                   tag={tag}
                   isSelected={value.includes(tag)}
                   onClick={(selectedTag) => {
-                    const updatedTags = safeValue.includes(selectedTag)
-                      ? safeValue.filter((tag) => tag !== selectedTag)
-                      : [...safeValue, selectedTag];
+                    const updatedTags = handleUpdateTags(
+                      safeValue,
+                      selectedTag,
+                    );
                     onChange(updatedTags);
                   }}
                 />

@@ -11,6 +11,18 @@ const InviteMembers = <T extends MatchingSchema>({
 }: InviteMembersProps<T>) => {
   const members: string[] = ['친구 1', '친구 2', '친구 3'];
 
+  // safeValue 친구 리스트에 선택된 값이 포함되어 있는지 검사하고 업데이트시키는 함수
+  const handleUpdateMembers = (
+    safeValue: string[],
+    selectedMemnbers: string,
+  ) => {
+    const updatedMembers = safeValue.includes(selectedMemnbers)
+      ? safeValue.filter((member) => member !== selectedMemnbers)
+      : [...safeValue, selectedMemnbers];
+
+    return updatedMembers;
+  };
+
   return (
     <Controller
       control={control}
@@ -28,11 +40,10 @@ const InviteMembers = <T extends MatchingSchema>({
                   tag={member}
                   isSelected={value.includes(member)}
                   onClick={(selectedMemnbers) => {
-                    const updatedMembers = safeValue.includes(selectedMemnbers)
-                      ? safeValue.filter(
-                          (member) => member !== selectedMemnbers,
-                        )
-                      : [...safeValue, selectedMemnbers];
+                    const updatedMembers = handleUpdateMembers(
+                      safeValue,
+                      selectedMemnbers,
+                    );
                     onChange(updatedMembers);
                   }}
                 />
