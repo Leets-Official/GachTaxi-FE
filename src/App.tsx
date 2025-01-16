@@ -27,7 +27,6 @@ function App() {
                 path="home/manual-register"
                 element={<ManualMatchingRegister />}
               />
-              <Route path="mypage/*" element={<MyPage />} />
               <Route path="*" element={<NotFoundPage />} />
               <Route path="/kakao/callback" element={<KakaoLoginLoading />} />
               <Route path="/signup/*" element={<SignUpPage />} />
