@@ -1,6 +1,6 @@
 import { useEffect } from 'react';
-import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
+import { kakaoLogin } from '@/libs/apis/kakaoLogin.api';
 
 const KakaoLoginLoading = () => {
   const nav = useNavigate();
@@ -8,16 +8,14 @@ const KakaoLoginLoading = () => {
     const fetchAuthCode = async () => {
       const authCode = new URLSearchParams(window.location.search).get('code');
 
+      if (!authCode) {
+        console.log('Authorization code가 없습니다.');
+        return;
+      }
+
       try {
-        const res = await axios.post(
-          `${import.meta.env.VITE_API_BASE_URL}/auth/login/kakao`,
-          { authCode: authCode },
-          {
-            withCredentials: true,
-            headers: { 'Content-Type': 'application/json' },
-          },
-        );
-        console.log(res);
+        const res = await kakaoLogin(authCode);
+
         const accessToken = res.headers['authorization'];
         localStorage.setItem('accessToken', accessToken);
 
@@ -35,7 +33,7 @@ const KakaoLoginLoading = () => {
     fetchAuthCode();
   }, [nav]);
 
-  return <>로딩중...</>;
+  return <>로딩중…</>;
 };
 
 export default KakaoLoginLoading;
