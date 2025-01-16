@@ -1,15 +1,23 @@
 declare module 'gachTaxi-types' {
   interface AutoMatchingTypes {
-    route: 'BASIC' | 'REVERSE';
+    startPoint: string;
+    startName: string;
+    destinationPoint: string;
+    destinationName: string;
+    criteria: string[];
     members: string[];
-    tags: string[];
+    expectedTotalCharge: number;
   }
 
   interface ManualMatchingTypes {
-    route: 'BASIC' | 'REVERSE';
-    time: string;
+    startPoint: string;
+    startName: string;
+    destinationPoint: string;
+    destinationName: string;
+    criteria: string[];
     members: string[];
-    tags: string[];
+    expectedTotalCharge: number;
+    time: string;
     content?: string;
   }
 
