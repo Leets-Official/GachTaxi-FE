@@ -24,14 +24,14 @@ const refreshAccessToken = async () => {
     const response = await client.post('/auth/refresh');
 
     if (response) {
-      const refreshedAccessToken = getCookieValue('refreshToken');
+      const newAccessToken = getCookieValue('refreshToken');
 
-      if (!refreshedAccessToken) {
+      if (!newAccessToken) {
         console.log('재설정할 쿠키가 포함되지 않았습니다!');
         return null;
       }
 
-      return refreshedAccessToken;
+      return newAccessToken;
     }
   } catch (error: unknown) {
     if (error instanceof AxiosError) {
@@ -68,6 +68,8 @@ client.interceptors.response.use(
         if (newAccessToken) {
           originalRequest.headers.Authorization = `Bearer ${newAccessToken}`;
           return client(originalRequest);
+        } else {
+          return Promise.reject(`새로운 엑세스 토큰 발행에 실패했습니다!`);
         }
       } catch (refreshError) {
         return Promise.reject(refreshError);
