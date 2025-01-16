@@ -21,8 +21,7 @@ const Button = ({
 
   // variantStyle 조건부 설정
   if (variant === 'primary') {
-    variantStyle =
-      'bg-primary h-[50px] rounded-common font-semibold text-button text-neutral outline-none';
+    variantStyle = `${isDisabled ? 'bg-matchLine' : 'bg-primary'} h-[50px] rounded-common font-semibold text-button text-neutral outline-none`;
   } else if (variant === 'secondary') {
     variantStyle =
       'bg-transparent h-[50px] rounded-common font-semibold text-button text-textLightGray outline-none';
@@ -35,7 +34,7 @@ const Button = ({
       type={type}
       disabled={isDisabled}
       initial={{ scale: 1 }}
-      whileTap={{ scale: 0.95 }}
+      whileTap={isDisabled ? { scale: 1 } : { scale: 0.95 }}
       className={`${variantStyle} ${className || ''}`}
       {...(props as MotionProps)}
     >
