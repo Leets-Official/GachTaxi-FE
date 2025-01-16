@@ -21,13 +21,26 @@ const client = axios.create({
 // refresh 사용해서 aceess 교체
 const refreshAccessToken = async () => {
   try {
-    const response = await client.post('/auth/refresh');
+    const refreshToken = getCookieValue('refreshToken');
+    if (!refreshToken) {
+      throw new Error('리프레쉬 토큰이 쿠키에 없습니다!');
+    }
+
+    const response = await client.post(
+      '/auth/refresh',
+      {},
+      {
+        headers: {
+          Authorization: `Bearer ${refreshToken}`,
+        },
+      },
+    );
 
     if (response) {
-      const newAccessToken = getCookieValue('refreshToken');
+      const newAccessToken = response.headers['authorization'];
 
       if (!newAccessToken) {
-        console.log('재설정할 쿠키가 포함되지 않았습니다!');
+        console.error('재설정할 쿠키가 포함되지 않았습니다!');
         return null;
       }
 
@@ -46,17 +59,32 @@ const refreshAccessToken = async () => {
 
 client.interceptors.request.use(
   (config) => {
-    const accessToken = getCookieValue('accessToken');
-    if (accessToken) {
-      config.headers.Authorization = `Bearer ${accessToken}`;
+    const isAuthCodeApi = config.url?.startsWith('/auth/login/kakao');
+
+    if (!isAuthCodeApi) {
+      const accessToken = localStorage.getItem('accessToken');
+      if (accessToken) {
+        config.headers.Authorization = `Bearer ${accessToken}`;
+      }
     }
+
     return config;
   },
   (error) => Promise.reject(error),
 );
 
 client.interceptors.response.use(
-  (response) => response,
+  (response) => {
+    const accessToken = response.headers['authorization'];
+
+    if (accessToken) {
+      localStorage.setItem('accessToken', accessToken);
+    } else {
+      throw new Error('리프레쉬 토큰이 헤더에 담겨오지 않았습니다!');
+    }
+
+    return response;
+  },
   async (error) => {
     const originalRequest = error.config;
 
@@ -66,6 +94,7 @@ client.interceptors.response.use(
       try {
         const newAccessToken = await refreshAccessToken();
         if (newAccessToken) {
+          localStorage.setItem('accessToken', newAccessToken);
           originalRequest.headers.Authorization = `Bearer ${newAccessToken}`;
           return client(originalRequest);
         } else {
@@ -80,30 +109,4 @@ client.interceptors.response.use(
   },
 );
 
-// 회원가입 시 사용할 인스턴스 객체
-const registerClient = axios.create({
-  baseURL: BASE_URL,
-  withCredentials: true,
-  headers: {
-    'Content-Type': 'application/json',
-  },
-  timeout: 20000,
-});
-
-registerClient.interceptors.request.use(
-  (config) => {
-    const tempToken = getCookieValue('tempToken');
-    if (tempToken) {
-      config.headers.Authorization = `Bearer ${tempToken}`;
-    }
-
-    if (config.data instanceof FormData) {
-      config.headers['Content-Type'] = 'multipart/form-data';
-    }
-
-    return config;
-  },
-  (error) => Promise.reject(error),
-);
-
-export { client, registerClient };
+export default client;
