@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { useEffect, useState, memo } from 'react';
+import { useEffect, useState, memo, useRef } from 'react';
 import getRouteLine from '@/libs/apis/kakaoMobility.api';
 import { ORIGIN, DESTINATION } from '@/constants';
 
@@ -11,22 +11,20 @@ declare global {
 
 const KakaoMap = memo(() => {
   const [isKakaoLoaded, setIsKakaoLoaded] = useState(false);
-  const [map, setMap] = useState(null);
+  const mapRef = useRef(null);
   const origin = ORIGIN;
   const destination = DESTINATION;
 
-  // 스크립트로 카카오맵 api 호출
+  // 카카오맵 스크립트 로드
   useEffect(() => {
-    if (window.kakao) {
-      window.kakao.maps.load(() => {
-        setIsKakaoLoaded(true);
-      });
+    if (window.kakao && window.kakao.maps) {
+      window.kakao.maps.load(() => setIsKakaoLoaded(true));
     }
   }, []);
 
-  // 로드 완료 후 map 객체 생성
+  // Map 객체 생성
   useEffect(() => {
-    if (isKakaoLoaded && window.kakao) {
+    if (isKakaoLoaded && !mapRef.current && window.kakao) {
       const container = document.getElementById('map');
       const options = {
         center: new window.kakao.maps.LatLng(
@@ -35,39 +33,38 @@ const KakaoMap = memo(() => {
         ),
         level: 4,
       };
-      const kakaoMap = new window.kakao.maps.Map(container, options);
-      setMap(kakaoMap);
+      mapRef.current = new window.kakao.maps.Map(container, options);
     }
   }, [isKakaoLoaded]);
 
-  // 카카오 모빌리티 api 사용한 출발지 -> 목적지 경로 렌더링
+  // 경로 렌더링
   useEffect(() => {
     const drawRoute = async () => {
-      if (!map) return;
+      if (!mapRef.current) return;
 
       try {
         const response = await getRouteLine({ origin, destination });
         const { routes } = response;
 
-        if (routes && routes[0]?.sections) {
-          const polylinePath: any[] = [];
-          routes[0].sections.forEach((section: any) => {
-            section.roads.forEach((road: any) => {
-              road.vertexes.forEach((_vertex: any, index: number) => {
-                if (index % 2 === 0) {
-                  polylinePath.push(
+        if (routes?.length > 0 && routes[0]?.sections) {
+          const polylinePath = routes[0].sections.flatMap((section: any) =>
+            section.roads.flatMap((road: any) =>
+              road.vertexes.reduce((acc: any[], _: any, i: number) => {
+                if (i % 2 === 0) {
+                  acc.push(
                     new window.kakao.maps.LatLng(
-                      road.vertexes[index + 1],
-                      road.vertexes[index],
+                      road.vertexes[i + 1],
+                      road.vertexes[i],
                     ),
                   );
                 }
-              });
-            });
-          });
+                return acc;
+              }, []),
+            ),
+          );
 
           const polyline = new window.kakao.maps.Polyline({
-            map,
+            map: mapRef.current,
             path: polylinePath,
             strokeWeight: 10,
             strokeColor: '#007AFF',
@@ -75,7 +72,9 @@ const KakaoMap = memo(() => {
             strokeStyle: 'solid',
           });
 
-          polyline.setMap(map);
+          polyline.setMap(mapRef.current);
+        } else {
+          console.warn('No valid route data');
         }
       } catch (error) {
         console.error('Error drawing route:', error);
@@ -83,7 +82,7 @@ const KakaoMap = memo(() => {
     };
 
     drawRoute();
-  }, [map, origin, destination]);
+  }, [isKakaoLoaded, origin, destination]);
 
   return <div id="map" className="w-full h-[85vh] z-20"></div>;
 });

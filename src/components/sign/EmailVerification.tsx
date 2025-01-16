@@ -6,7 +6,7 @@ import { EmailVerificationTypes } from 'gachTaxi-types';
 import Input from '../commons/Input';
 import Button from '../commons/Button';
 import useVerificationTimer from '../../hooks/useVerificationTimer';
-import { formatTimeLikeTimer } from '../../utils';
+import { formatTimeLikeTimer } from '@/utils';
 
 const TIMER_DURATION = 300;
 
