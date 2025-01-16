@@ -16,9 +16,6 @@ const KakaoLoginLoading = () => {
       try {
         const res = await kakaoLogin(authCode);
 
-        const accessToken = res.headers['authorization'];
-        localStorage.setItem('accessToken', accessToken);
-
         const status = res.data.data;
         if (status === 'LOGIN_SUCCESS') {
           nav('/home');
