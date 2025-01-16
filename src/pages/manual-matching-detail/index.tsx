@@ -1,6 +1,7 @@
 import { useParams } from 'react-router-dom';
 import RouteSettingIcon from '@/assets/icon/smallRouteChangeIcon.svg?react';
 import Button from '@/components/commons/Button';
+import BackButton from '@/components/commons/BackButton';
 
 const ManualMatchingDetailPage = () => {
   // mock 데이터
@@ -21,6 +22,7 @@ const ManualMatchingDetailPage = () => {
 
   return (
     <section className="flex-1 w-full flex flex-col gap-[32px] p-horizontal">
+      <BackButton />
       <h1 className="font-bold text-header">수동 매칭</h1>
       <div className="min-h-[310px] flex-shrink-0 bg-secondary rounded-box p-vertical flex flex-col gap-[32px]">
         <div className="flex justify-between w-full items-center">
