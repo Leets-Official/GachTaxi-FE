@@ -10,6 +10,7 @@ import NotFoundPage from '@/pages/NotFound';
 import Layout from '@/pages/Layout';
 import MyPage from '@/pages/my-page';
 import ManualMatchingRegister from '@/pages/manual-register';
+import ChatPage from '@/pages/chat';
 
 function App() {
   const queryClient = new QueryClient();
@@ -30,6 +31,7 @@ function App() {
                 element={<ManualMatchingRegister />}
               />
               <Route path="mypage/*" element={<MyPage />} />
+              <Route path="chat/" element={<ChatPage />} />
               <Route path="*" element={<NotFoundPage />} />
             </Route>
           </Routes>
