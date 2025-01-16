@@ -5,4 +5,4 @@ const formatTimeLikeTimer = (time: number) => {
   return `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
 };
 
-export { formatTimeLikeTimer };
+export default formatTimeLikeTimer;
