@@ -13,30 +13,82 @@ const RouteSetting = <T extends MatchingSchema>({
   control,
 }: RouteSettingProps<T>) => {
   return (
-    <Controller
-      control={control}
-      name={'route' as Path<T>}
-      render={({ field: { value, onChange } }) => (
-        <div className="h-[101px] flex-shrink-0 bg-secondary rounded-box p-vertical gap-3 flex items-center justify-between">
-          <RouteSettingIcon />
-          <div className="flex-1 flex flex-col justify-between h-full">
-            <p className="font-medium text-captionHeader">
-              {value === 'BASIC' ? '가천대 정문' : 'AI 공학관'}
-            </p>
-            <div className="border border-matchLine w-full rounded-full"></div>
-            <p className="font-medium text-captionHeader">
-              {value === 'BASIC' ? 'AI 공학관' : '가천대 정문'}
-            </p>
-          </div>
-          <Button
-            variant="icon"
-            onClick={() => onChange(value === 'BASIC' ? 'REVERSE' : 'BASIC')}
-          >
-            <RouteChangeIcon />
-          </Button>
-        </div>
-      )}
-    />
+    <div className="h-[101px] flex-shrink-0 bg-secondary rounded-box p-vertical gap-3 flex items-center justify-between">
+      <RouteSettingIcon />
+      <Controller
+        control={control}
+        name={'startName' as Path<T>}
+        render={({
+          field: { value: startName, onChange: onChangeStartName },
+        }) => (
+          <Controller
+            control={control}
+            name={'destinationName' as Path<T>}
+            render={({
+              field: {
+                value: destinationName,
+                onChange: onChangeDestinationName,
+              },
+            }) => (
+              <Controller
+                control={control}
+                name={'startPoint' as Path<T>}
+                render={({
+                  field: { value: startPoint, onChange: onChangeStartPoint },
+                }) => (
+                  <Controller
+                    control={control}
+                    name={'destinationPoint' as Path<T>}
+                    render={({
+                      field: {
+                        value: destinationPoint,
+                        onChange: onChangeDestinationPoint,
+                      },
+                    }) => (
+                      <>
+                        <div className="flex-1 flex flex-col justify-between h-full">
+                          <input
+                            className="font-medium text-captionHeader bg-transparent outline-none"
+                            value={startName}
+                            onChange={(e) => onChangeStartName(e.target.value)}
+                            readOnly
+                          />
+                          <div className="border border-matchLine w-full rounded-full"></div>
+                          <input
+                            className="font-medium text-captionHeader bg-transparent outline-none"
+                            value={destinationName}
+                            onChange={(e) =>
+                              onChangeDestinationName(e.target.value)
+                            }
+                            readOnly
+                          />
+                        </div>
+                        <Button
+                          variant="icon"
+                          onClick={() => {
+                            // 이름 교체
+                            const tempName = startName;
+                            onChangeStartName(destinationName);
+                            onChangeDestinationName(tempName);
+
+                            // 좌표 교체
+                            const tempPoint = startPoint;
+                            onChangeStartPoint(destinationPoint);
+                            onChangeDestinationPoint(tempPoint);
+                          }}
+                        >
+                          <RouteChangeIcon />
+                        </Button>
+                      </>
+                    )}
+                  />
+                )}
+              />
+            )}
+          />
+        )}
+      />
+    </div>
   );
 };
 
