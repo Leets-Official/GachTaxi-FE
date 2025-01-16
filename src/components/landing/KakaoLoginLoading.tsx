@@ -17,13 +17,13 @@ const KakaoLoginLoading = () => {
             headers: { 'Content-Type': 'application/json' },
           },
         );
-        console.log(res);
+
         const accessToken = res.headers['authorization'];
         localStorage.setItem('accessToken', accessToken);
 
-        const status = res.data.data;
-        if (status === 'LOGIN_SUCCESS') {
-          nav('/home');
+        const status = res.data.data.status;
+        if (status === 'LOGIN') {
+          nav('/dashboard');
         } else if (status === 'UN_REGISTER') {
           nav('/signup/verification');
         }
@@ -33,7 +33,7 @@ const KakaoLoginLoading = () => {
     };
 
     fetchAuthCode();
-  }, [nav]);
+  }, []);
 
   return <>로딩중...</>;
 };

@@ -6,13 +6,11 @@ const MyProfileHeader = () => {
     <div className="flex items-center gap-[16px] border-b-2 border-textDarkGray pb-[30px]">
       <Profile />
       <div>
-        <p className="text-header flex">
+        <p className="text-header font-bold flex">
           닉네임
-          <ProfileModify className="ml-[5px] mt-[10px]" />
+          <ProfileModify className="ml-[5px] mt-[5px]" />
         </p>
-        <p className="text-captionBody text-textLightGray mt-[8px]">
-          추가 정보
-        </p>
+        <p className="text-captionBody text-textLightGray">추가 정보</p>
       </div>
     </div>
   );

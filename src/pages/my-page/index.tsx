@@ -25,6 +25,14 @@ const MyPage = () => {
 
       <MyProfileHeader />
       <MyPageButton />
+
+      {/* <Routes>
+        <Route path="/notice" element={<Notice />} />
+        <Route path="/inquiry" element={<Inquiry />} />
+        <Route path="/useage" element={<Usage />} />
+        <Route path="/notification" element={<Notification />} />
+        <Route path="/phone/verification" element={<PhoneVerification />} />
+      </Routes> */}
     </section>
   );
 };
