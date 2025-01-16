@@ -19,6 +19,13 @@ const MinuteSelect = ({
   timeVal,
   onChange,
 }: MinuteSelectProps) => {
+  const handleMinuteDragEnd = (index: number) => {
+    const [date, time] = timeVal.split(' ');
+
+    const updatedTime = `${time.split(':')[0]}:${MINUTES[index]}:00`;
+    onChange(`${date} ${updatedTime}`);
+  };
+
   return (
     <div className="flex flex-col overflow-y-scroll scroll-hidden h-[48px] relative bottom-1">
       {MINUTES.map((min) => (
@@ -33,10 +40,7 @@ const MinuteSelect = ({
           dragElastic={0.3}
           onDragEnd={() =>
             handleDragEnd('BIG', yMin, MINUTES, (index) => {
-              const [date, time] = timeVal.split(' ');
-
-              const updatedTime = `${time.split(':')[0]}:${MINUTES[index]}:00`;
-              onChange(`${date} ${updatedTime}`);
+              handleMinuteDragEnd(index);
             })
           }
           className="flex items-center justify-center h-[48px]"

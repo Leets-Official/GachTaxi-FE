@@ -1,7 +1,7 @@
 import { HOURS, ITEM_HEIGHT } from '@/constants';
 import { motion, MotionValue } from 'framer-motion';
 
-interface MinuteSelectProps {
+interface HourSelectProps {
   yHour: MotionValue;
   handleDragEnd: (
     variant: 'SMALL' | 'BIG',
@@ -20,7 +20,25 @@ const HourSelect = ({
   timeVal,
   onChange,
   period,
-}: MinuteSelectProps) => {
+}: HourSelectProps) => {
+  // handleDragEnd 로직을 분리하여 HourSelect 내부에서 개별적으로 사용하는 함수
+  const handleHourDragEnd = (
+    index: number,
+    period: string,
+    onChange: (value: string) => void,
+  ) => {
+    const [date] = timeVal.split(' ');
+    let hour;
+    if (period === '오전') {
+      hour = HOURS[index];
+    } else {
+      hour = parseInt(HOURS[index]) + 12;
+    }
+
+    const updatedTime = `${hour}:${timeVal.split(':')[1]}:00`;
+    onChange(`${date} ${updatedTime}`);
+  };
+
   return (
     <div className="flex flex-col overflow-y-scroll scroll-hidden h-[48px] relative bottom-1">
       {HOURS.map((hour) => (
@@ -35,16 +53,7 @@ const HourSelect = ({
           dragElastic={0.3}
           onDragEnd={() =>
             handleDragEnd('BIG', yHour, HOURS, (index) => {
-              const [date] = timeVal.split(' ');
-              let hour;
-              if (period === '오전') {
-                hour = HOURS[index];
-              } else {
-                hour = parseInt(HOURS[index]) + 12;
-              }
-
-              const updatedTime = `${hour}:${timeVal.split(':')[1]}:00`;
-              onChange(`${date} ${updatedTime}`);
+              handleHourDragEnd(index, period, onChange);
             })
           }
           className="flex items-center justify-center h-[48px]"
