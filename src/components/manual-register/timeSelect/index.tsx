@@ -1,9 +1,9 @@
-import { useMotionValue, MotionValue, animate } from 'framer-motion';
+import { useMotionValue } from 'framer-motion';
 import { useState } from 'react';
-import { ITEM_HEIGHT, SMALL_ITEM_HEIGHT } from '@/constants';
 import PeriodSelect from '@/components/manual-register/timeSelect/PeriodSelect';
 import HourSelect from '@/components/manual-register/timeSelect/HourSelect';
 import MinuteSelect from '@/components/manual-register/timeSelect/MinuteSelect';
+import { handleDragEnd } from '@/utils';
 
 interface TimeSelectProps {
   timeVal: string;
@@ -15,32 +15,6 @@ const TimeSelect = ({ timeVal, onChange }: TimeSelectProps) => {
   const yHour = useMotionValue(0);
   const yMin = useMotionValue(0);
   const [period, setPeriod] = useState<'오전' | '오후'>('오전');
-
-  const calculateIndex = (y: number, length: number) => {
-    const rawIndex = Math.round(-y / ITEM_HEIGHT);
-    return Math.min(Math.max(rawIndex, 0), length - 1);
-  };
-
-  const handleDragEnd = (
-    variant: 'SMALL' | 'BIG',
-    motionValue: MotionValue,
-    items: string[],
-    updateFn: (index: number) => void,
-  ) => {
-    const currentY = motionValue.get();
-    const index = calculateIndex(currentY, items.length);
-    const targetY =
-      -index * (variant === 'SMALL' ? SMALL_ITEM_HEIGHT : ITEM_HEIGHT);
-
-    animate(motionValue, targetY, {
-      type: 'spring',
-      stiffness: 400,
-      damping: 30,
-      restDelta: 0.5,
-    });
-
-    updateFn(index);
-  };
 
   return (
     <div className="h-[101px] flex-shrink-0 bg-secondary rounded-box p-vertical gap-3 flex justify-between overflow-hidden">
