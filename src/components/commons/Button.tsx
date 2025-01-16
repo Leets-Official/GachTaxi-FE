@@ -27,7 +27,7 @@ const Button = ({
     variantStyle =
       'bg-transparent h-[50px] rounded-common font-semibold text-button text-textLightGray outline-none';
   } else if (variant === 'icon') {
-    variantStyle = 'bg-transparent outline-none';
+    variantStyle = 'bg-transparent outline-none w-fit h-fit';
   }
 
   return (
