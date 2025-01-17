@@ -11,6 +11,7 @@ import Layout from '@/pages/Layout';
 import MyPage from '@/pages/my-page';
 import ManualMatchingRegister from '@/pages/manual-register';
 import ManualMatchingDetailPage from '@/pages/manual-matching-detail';
+import ChatPage from './pages/chat';
 
 function App() {
   const queryClient = new QueryClient();
@@ -28,14 +29,15 @@ function App() {
                 element={<ManualMatchingRegister />}
               />
               <Route path="*" element={<NotFoundPage />} />
-              <Route path="/kakao/callback" element={<KakaoLoginLoading />} />
-              <Route path="/signup/*" element={<SignUpPage />} />
-              <Route path="/home" element={<HomePage />} />
-              <Route path="/mypage/*" element={<MyPage />} />
+              <Route path="kakao/callback" element={<KakaoLoginLoading />} />
+              <Route path="signup/*" element={<SignUpPage />} />
+              <Route path="home" element={<HomePage />} />
+              <Route path="mypage/*" element={<MyPage />} />
               <Route
                 path="home/manual-matching-detail/:id"
                 element={<ManualMatchingDetailPage />}
               />
+              <Route path="chat/:id" element={<ChatPage />} />
               <Route path="/*" element={<NotFoundPage />} />
             </Route>
           </Routes>
