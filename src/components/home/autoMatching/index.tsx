@@ -37,7 +37,7 @@ const AutoMatching = ({ isOpen }: { isOpen: boolean }) => {
       const coordinates: any = await getCoordinateByAddress(address);
       autoMatchingForm.setValue(
         'destinationPoint',
-        `${coordinates.lat}, ${coordinates.lng}`,
+        `${coordinates.lat},${coordinates.lng}`,
       );
     } catch (error) {
       console.error('목적지 좌표 로드 오류', error);
@@ -53,7 +53,7 @@ const AutoMatching = ({ isOpen }: { isOpen: boolean }) => {
     ) {
       autoMatchingForm.setValue(
         'startPoint',
-        `${location.coordinates.lat}, ${location.coordinates.lng}`,
+        `${location.coordinates.lat},${location.coordinates.lng}`,
       );
     }
   }, [location, autoMatchingForm]);

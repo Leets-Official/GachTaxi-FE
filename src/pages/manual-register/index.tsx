@@ -46,7 +46,7 @@ const ManualMatchingRegister = () => {
       const coordinates: any = await getCoordinateByAddress(address);
       manualMatchingForm.setValue(
         'destinationPoint',
-        `${coordinates.lat}, ${coordinates.lng}`,
+        `${coordinates.lat},${coordinates.lng}`,
       );
     } catch (error) {
       console.error('목적지 좌표 로드 오류', error);
