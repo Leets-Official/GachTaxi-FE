@@ -13,8 +13,8 @@ import InviteMessage from './InviteMessage';
 
 const mockMessages = [
   {
-    senderName: '이강혁',
-    message: '반가워요 강혁님!ㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇ',
+    senderName: '사용자1',
+    message: '반가워요 사용자1님!ㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇ',
     timeStamp: '2025-01-13T21:29:57.87',
     messageType: 'MESSAGE',
     imageUrl:
@@ -29,12 +29,12 @@ const mockMessages = [
       'https://upload.wikimedia.org/wikipedia/ko/thumb/4/4a/%EC%8B%A0%EC%A7%B1%EA%B5%AC.png/230px-%EC%8B%A0%EC%A7%B1%EA%B5%AC.png',
   },
   {
-    senderName: '이강혁',
-    message: '반가워요 강혁님!',
+    senderName: '사용자2',
+    message: '반가워요 지원님!',
     timeStamp: '2025-01-13T21:21:28.964',
     messageType: 'MESSAGE',
     imageUrl:
-      'https://upload.wikimedia.org/wikipedia/ko/thumb/4/4a/%EC%8B%A0%EC%A7%B1%EA%B5%AC.png/230px-%EC%8B%A0%EC%A7%B1%EA%B5%AC.png',
+      'https://i.namu.wiki/i/Bge3xnYd4kRe_IKbm2uqxlhQJij2SngwNssjpjaOyOqoRhQlNwLrR2ZiK-JWJ2b99RGcSxDaZ2UCI7fiv4IDDQ.webp',
   },
   {
     senderName: '나',
@@ -46,7 +46,7 @@ const mockMessages = [
   },
   {
     senderName: '다른사람1',
-    message: '방구뿡 님이 입장하셨습니다.',
+    message: '다른사람1 님이 입장하셨습니다.',
     timeStamp: '2025-01-13T21:20:10.06',
     messageType: 'ENTER',
     imageUrl:
