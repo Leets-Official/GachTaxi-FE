@@ -1,4 +1,4 @@
-import { client } from '@/libs/apis/clients';
+import client from '@/libs/apis/clients';
 
 export const kakaoLogin = async (authCode: string) => {
   try {
