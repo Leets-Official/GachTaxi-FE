@@ -11,6 +11,7 @@ import Layout from '@/pages/Layout';
 import MyPage from '@/pages/my-page';
 import ManualMatchingRegister from '@/pages/manual-register';
 import ManualMatchingDetailPage from '@/pages/manual-matching-detail';
+import PhoneVerificationPage from '@/pages/phoneVerification';
 
 function App() {
   const queryClient = new QueryClient();
@@ -35,6 +36,10 @@ function App() {
               <Route
                 path="home/manual-matching-detail/:id"
                 element={<ManualMatchingDetailPage />}
+              />
+              <Route
+                path="mypage/phone-verification"
+                element={<PhoneVerificationPage />}
               />
               <Route path="/*" element={<NotFoundPage />} />
             </Route>
