@@ -38,7 +38,7 @@ const InviteMembers = <T extends MatchingSchema>({
                 <MemberItem
                   key={member}
                   tag={member}
-                  isSelected={value.includes(member)}
+                  isSelected={safeValue.includes(member)}
                   onClick={(selectedMemnbers) => {
                     const updatedMembers = handleUpdateMembers(
                       safeValue,

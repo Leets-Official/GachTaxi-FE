@@ -7,10 +7,11 @@ import BackButton from '@/components/commons/BackButton';
 
 const SignUpPage = () => {
   const { pathname } = useLocation();
+  const isUserInfoPage = pathname !== '/signup/user-info';
 
   return (
     <section className="flex-1 w-full flex flex-col gap-[32px] p-horizontal relative">
-      {pathname !== '/signup/user-info' && <BackButton />}
+      {isUserInfoPage && <BackButton usedPage="signUpPage" />}
       <Routes>
         {/** 소셜 로그인 Route */}
         <Route path="/verification" element={<VerificationPage />} />
@@ -19,7 +20,7 @@ const SignUpPage = () => {
         <Route path="*" element={<NotFoundPage />} />
       </Routes>
 
-      {pathname !== '/signup/user-info' && (
+      {isUserInfoPage && (
         <div className="absolute left-0 bottom-2 w-full">
           <LocationTaxiIcon className="ml-auto " />
         </div>
