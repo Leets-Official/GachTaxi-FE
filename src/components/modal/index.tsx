@@ -6,6 +6,8 @@ interface ModalProps {
 }
 
 export const Modal = ({ children }: ModalProps) => {
+  const rootElement = document.getElementById('component-root') as Element;
+
   return createPortal(
     <div
       role="dialog"
@@ -13,7 +15,7 @@ export const Modal = ({ children }: ModalProps) => {
     >
       {children}
     </div>,
-    (document.getElementById('modal-root') as Element) || document.body,
+    rootElement,
   );
 };
 

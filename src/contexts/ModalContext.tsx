@@ -1,4 +1,4 @@
-import { createContext, useState, useContext, ReactNode } from 'react';
+import React, { createContext, useState, useContext, ReactNode } from 'react';
 import Modal from '../components/modal';
 
 interface ModalState {
@@ -41,15 +41,29 @@ export const ModalProvider = ({ children }: { children: ReactNode }) => {
       }}
     >
       {children}
-      {modalState.isOpen && (
-        <>
-          <Modal.Overlay onClose={closeModal} />
-          <Modal>{modalState.content}</Modal>
-        </>
-      )}
+      <PortalContainer modalState={modalState} closeModal={closeModal} />
     </ModalContext.Provider>
   );
 };
+
+const PortalContainer = React.memo(
+  ({
+    modalState,
+    closeModal,
+  }: {
+    modalState: ModalState;
+    closeModal: () => void;
+  }) => {
+    if (!modalState.isOpen) return null;
+
+    return (
+      <>
+        <Modal.Overlay onClose={closeModal} />
+        <Modal>{modalState.content}</Modal>
+      </>
+    );
+  },
+);
 
 // eslint-disable-next-line react-refresh/only-export-components
 export const useModal = () => {
