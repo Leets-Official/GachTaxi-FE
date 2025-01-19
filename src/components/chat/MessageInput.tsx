@@ -10,10 +10,15 @@ const ChatInput = () => {
   const toggleMenu = () => {
     setShowMenu(!showMenu);
   };
-
   return (
-    <div className="fixed left-0 right-0 bottom-0 max-w-[430px] w-full h-[64px] mx-auto bg-secondary">
-      <div className="flex justify-between items-center h-full px-4">
+    <div className="fixed left-0 right-0 bottom-0 max-w-[430px] w-full mx-auto">
+      {showMenu && (
+        <div className="w-full bg-secondary">
+          <BottomMenu />
+        </div>
+      )}
+
+      <div className="h-[64px] flex justify-between items-center px-4 bg-secondary">
         <button
           onClick={toggleMenu}
           className="rounded-full flex items-center justify-center"
@@ -31,12 +36,6 @@ const ChatInput = () => {
           <ChatSend />
         </button>
       </div>
-
-      {showMenu && (
-        <div className="w-full bg-secondary">
-          <BottomMenu />
-        </div>
-      )}
     </div>
   );
 };
