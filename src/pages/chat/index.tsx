@@ -1,5 +1,5 @@
 import ChatInput from '@/components/chat/MessageInput';
-import MessageList from '@/components/chat/MessageList';
+import MessageList from '@/components/chat/messageList/index';
 import NewMessage from '@/components/chat/NewMessage';
 import BackButton from '@/components/commons/BackButton';
 
@@ -12,9 +12,9 @@ const ChatPage = () => {
         <BackButton />
         <div className="flex h-[48px] items-center">
           <h1 className="font-bold text-header">채팅방</h1>
-          <h1 className="text-captionHeader text-textDarkGray mt-[4px] ml-[3%]">
+          <span className="text-captionHeader text-textDarkGray mt-[4px] ml-[3%]">
             {chatMember}
-          </h1>
+          </span>
         </div>
       </div>
       <div className="flex-1 overflow-y-auto">
@@ -23,7 +23,7 @@ const ChatPage = () => {
           <NewMessage />
         </div>
       </div>
-      <div className="sticky bottom-0 bg-secondary">
+      <div className="sticky">
         <ChatInput />
       </div>
     </section>
