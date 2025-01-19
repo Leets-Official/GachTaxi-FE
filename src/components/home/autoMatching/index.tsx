@@ -27,7 +27,7 @@ const AutoMatching = ({ isOpen }: { isOpen: boolean }) => {
     mode: 'onBlur',
   });
 
-  const location = useGeoLocation();
+  const { getCurrentLocation } = useGeoLocation();
 
   // 목적지 좌표 설정 함수
   const updateDestinationCoordinates = useCallback(async () => {
@@ -44,20 +44,6 @@ const AutoMatching = ({ isOpen }: { isOpen: boolean }) => {
     }
   }, [autoMatchingForm]);
 
-  // 위치 정보 업데이트
-  useEffect(() => {
-    if (
-      location.loaded &&
-      location.coordinates.lat &&
-      location.coordinates.lng
-    ) {
-      autoMatchingForm.setValue(
-        'startPoint',
-        `${location.coordinates.lat},${location.coordinates.lng}`,
-      );
-    }
-  }, [location, autoMatchingForm]);
-
   // 목적지 정보 업데이트
   useEffect(() => {
     if (window.kakao?.maps) {
@@ -67,15 +53,30 @@ const AutoMatching = ({ isOpen }: { isOpen: boolean }) => {
     }
   }, [updateDestinationCoordinates]);
 
-  const handleSubmitToAutoMatching: SubmitHandler<AutoMatchingTypes> = (
+  const onSubmit = async () => {
+    try {
+      const coordinates = await getCurrentLocation();
+      if (!coordinates) {
+        throw new Error('위치 정보를 가져오지 못했습니다.');
+      }
+
+      autoMatchingForm.setValue(
+        'startPoint',
+        `${coordinates.lat},${coordinates.lng}`,
+        { shouldValidate: true },
+      );
+
+      autoMatchingForm.handleSubmit(handleSubmitToAutoMatching, handleError)();
+    } catch (error) {
+      console.error('위치 정보 로드 오류:', error);
+    }
+  };
+
+  const handleSubmitToAutoMatching: SubmitHandler<AutoMatchingTypes> = async (
     data,
   ) => {
     // API 호출
-    try {
-      console.log(data);
-    } catch (e) {
-      console.error(e);
-    }
+    console.log(data);
   };
 
   const handleError = (errors: FieldValues) => {
@@ -93,10 +94,10 @@ const AutoMatching = ({ isOpen }: { isOpen: boolean }) => {
 
       <form
         className="flex flex-col gap-[16px] h-fit max-h-[calc(100dvh-310px)] overflow-y-scroll scroll-hidden"
-        onSubmit={autoMatchingForm.handleSubmit(
-          handleSubmitToAutoMatching,
-          handleError,
-        )}
+        onSubmit={(e) => {
+          e.preventDefault();
+          onSubmit();
+        }}
       >
         <RouteSetting control={autoMatchingForm.control} />
         {isOpen && (
