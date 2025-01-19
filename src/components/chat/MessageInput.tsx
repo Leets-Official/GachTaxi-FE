@@ -13,7 +13,7 @@ const ChatInput = () => {
   return (
     <div className="fixed left-0 right-0 bottom-0 max-w-[430px] w-full mx-auto">
       {showMenu && (
-        <div className="w-full bg-secondary">
+        <div className="w-full h-[144px] bg-secondary rounded-t-3xl">
           <BottomMenu />
         </div>
       )}
