@@ -10,7 +10,7 @@ const SignUpPage = () => {
   const isUserInfoPage = pathname !== '/signup/user-info';
 
   return (
-    <section className="flex-1 w-full flex flex-col gap-[32px] p-horizontal relative">
+    <section className="flex-1 w-full flex flex-col gap-[48px] p-horizontal relative">
       {isUserInfoPage && <BackButton usedPage="signUpPage" />}
       <Routes>
         {/** 소셜 로그인 Route */}
