@@ -1,5 +1,6 @@
 import React, { createContext, useState, useContext, ReactNode } from 'react';
 import Modal from '../components/modal';
+import { AnimatePresence } from 'framer-motion';
 
 interface ModalState {
   isOpen: boolean;
@@ -41,25 +42,25 @@ export const ModalProvider = ({ children }: { children: ReactNode }) => {
       }}
     >
       {children}
-      <PortalContainer modalState={modalState} closeModal={closeModal} />
+      <AnimatePresence>
+        {modalState.isOpen && (
+          <PortalContainer modalState={modalState} closeModal={closeModal} />
+        )}
+      </AnimatePresence>
     </ModalContext.Provider>
   );
 };
 
 const PortalContainer = React.memo(
-  ({
-    modalState,
-    closeModal,
-  }: {
-    modalState: ModalState;
-    closeModal: () => void;
-  }) => {
+  (props: { modalState: ModalState; closeModal: () => void }) => {
+    const { modalState, closeModal } = props;
+
     if (!modalState.isOpen) return null;
 
     return (
       <>
-        <Modal.Overlay onClose={closeModal} />
-        <Modal>{modalState.content}</Modal>
+        <Modal.Overlay key="overlay" onClose={closeModal} />
+        <Modal key="modal">{modalState.content}</Modal>
       </>
     );
   },

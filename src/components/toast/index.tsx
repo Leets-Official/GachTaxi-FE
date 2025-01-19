@@ -9,7 +9,8 @@ interface ToastProps {
 
 const Toast = ({ children, fn }: ToastProps) => {
   const [isExiting, setIsExiting] = useState(false);
-  const rootElement = document.getElementById('component-root') as Element;
+  const rootElement =
+    (document.getElementById('component-root') as Element) || document.body;
 
   const handleFnByAnimationStateExit = () => {
     if (!isExiting) {
