@@ -18,7 +18,11 @@ const MatchingInfoItem = ({ manualInfo, setCurrentPage }: MatchingInfoItem) => {
 
   const handleJoinMatching = () => {
     try {
-      openModal(<MatchingComplete setCurrentPage={setCurrentPage!} />);
+      if (setCurrentPage) {
+        openModal(<MatchingComplete setCurrentPage={setCurrentPage!} />);
+      } else {
+        console.error('페이지 교체 setter 함수를 가져오지 못했어요!');
+      }
     } catch (e) {
       console.error(e);
     }
