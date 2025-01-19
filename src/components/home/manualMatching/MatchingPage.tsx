@@ -25,7 +25,7 @@ const MatchingPage = ({ isOpen, manualInfos }: MatchingPageProps) => {
       </div>
       {isOpen && (
         <div className="w-full flex absolute bottom-2">
-          <Link to="/home/manual-register" className="ml-auto">
+          <Link to="/home/manual-register" className="ml-auto button-shadow">
             <LargePlusIcon />
           </Link>
         </div>

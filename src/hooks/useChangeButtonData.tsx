@@ -21,7 +21,7 @@ export const useChangeButtonData = (): JSX.Element[] => {
     },
     {
       label: '전화번호 인증',
-      path: 'mypage/phone/verification',
+      path: '/mypage/phone-verification',
       isVerified: false,
     },
   ];

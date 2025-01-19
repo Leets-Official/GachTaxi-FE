@@ -5,7 +5,7 @@ const MatchingInfoItem = ({ manualInfo }: { manualInfo: ManualInfo }) => {
   return (
     <div className="min-h-[144px] flex-shrink-0 bg-secondary rounded-box p-vertical flex flex-col gap-3">
       <div className="flex w-full justify-between items-center">
-        <span className="text-captionHeader font-bold">{manualInfo.time}</span>
+        <span className="text-header font-bold">{manualInfo.time}</span>
         <span className="text-body font-medium relative top-[-8px]">
           {manualInfo.memberCount}/4
         </span>
