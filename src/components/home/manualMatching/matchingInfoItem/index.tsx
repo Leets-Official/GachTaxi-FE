@@ -1,6 +1,7 @@
 import RouteSettingIcon from '@/assets/icon/smallRouteChangeIcon.svg?react';
 import Button from '@/components/commons/Button';
 import { ManualInfo } from '@/components/home/manualMatching';
+import Tags from '@/components/home/manualMatching/matchingInfoItem/Tags';
 import MatchingComplete from '@/components/modal/MatchingComplete';
 import { useModal } from '@/contexts/ModalContext';
 import { motion } from 'framer-motion';
@@ -70,18 +71,7 @@ const MatchingInfoItem = ({ manualInfo, setCurrentPage }: MatchingInfoItem) => {
           </div>
         )}
 
-        <div className="flex overflow-x-scroll scroll-hidden gap-2">
-          {manualInfo.tags.map((tag) => {
-            return (
-              <span
-                key={tag}
-                className="text-assistive min-w-fit text-black font-medium px-3 py-1 rounded-full bg-primary"
-              >
-                # {tag}
-              </span>
-            );
-          })}
-        </div>
+        <Tags manualInfo={manualInfo} />
       </motion.div>
       {isExpand && (
         <div className="w-full">

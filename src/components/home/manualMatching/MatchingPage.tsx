@@ -1,6 +1,6 @@
 import LargePlusIcon from '@/assets/icon/largePlusIcon.svg?react';
 import { Link } from 'react-router-dom';
-import MatchingInfoItem from '@/components/home/manualMatching/MatchingInfoItem';
+import MatchingInfoItem from '@/components/home/manualMatching/matchingInfoItem';
 import { ManualInfo } from '@/components/home/manualMatching';
 
 interface MatchingPageProps {
