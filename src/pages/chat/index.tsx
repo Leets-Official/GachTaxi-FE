@@ -1,20 +1,32 @@
-import ChatRoom from './ChatRoom';
+import ChatInput from '@/components/chat/MessageInput';
+import MessageList from '@/components/chat/messageList/index';
+import NewMessage from '@/components/chat/NewMessage';
+import BackButton from '@/components/commons/BackButton';
 
 const ChatPage = () => {
-  // const accessToken = localStorage.getItem('accessToken');
-  // console.log(accessToken);
-  // const senderName = '김지원';
-  const roomId = 1;
-
-  // if (!accessToken) {
-  //   return <div>Access token is missing. Please log in again.</div>;
-  // }
+  const chatMember = 3;
 
   return (
-    <div>
-      <h1>Chat</h1>
-      <ChatRoom roomId={roomId} />
-    </div>
+    <section className="flex-1 w-full flex flex-col gap-[32px] p-horizontal">
+      <div className="sticky top-0 bg-[#011A11]">
+        <BackButton />
+        <div className="flex h-[48px] items-center">
+          <h1 className="font-bold text-header">채팅방</h1>
+          <span className="text-captionHeader text-textDarkGray mt-[4px] ml-[3%]">
+            {chatMember}
+          </span>
+        </div>
+      </div>
+      <div className="flex-1 overflow-y-auto">
+        <MessageList />
+        <div className="w-full flex items-center justify-center">
+          <NewMessage />
+        </div>
+      </div>
+      <div className="sticky">
+        <ChatInput />
+      </div>
+    </section>
   );
 };
 
