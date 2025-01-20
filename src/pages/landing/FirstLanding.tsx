@@ -1,21 +1,17 @@
 import LandingHeader from '@/components/landing/LandingHeader';
-import KakaoLoginButton from '@/components/landing/KakaoLoginButton';
-import GachiTaxi from '@/assets/icon/gachiTaxi.svg?react';
-import GoogleLoginButton from '@/components/landing/GoogleLoginButton';
-import { GoogleOAuthProvider } from '@react-oauth/google';
+import FirstSvg from '@/assets/icon/firstLandingPage.svg?react';
 
 const FirstLanding = () => {
-  const CLIENT_ID = import.meta.env.VITE_GOOGLE_CLIENT_ID;
-
   return (
-    <>
-      <LandingHeader />
-      <GachiTaxi className="float-right mb-[70px]" />
-      <KakaoLoginButton />
-      <GoogleOAuthProvider clientId={CLIENT_ID}>
-        <GoogleLoginButton />
-      </GoogleOAuthProvider>
-    </>
+    <section className="w-full flex-1 flex flex-col items-center h-screen gap-8">
+      <div className="text-center">
+        <LandingHeader
+          title="지금 바로 매칭하기"
+          subtitle={`자동 매칭 기능을 통해\n현재 위치에서 매칭하기`}
+        />
+      </div>
+      <FirstSvg />
+    </section>
   );
 };
 
