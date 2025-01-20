@@ -4,3 +4,4 @@ export * from './routes.constant';
 export * from './timeOptions.constant';
 export * from './styles.constant';
 export * from './menuItems.constant';
+export * from './landingText.constant';

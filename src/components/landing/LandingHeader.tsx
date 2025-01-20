@@ -1,18 +1,13 @@
-//slide 구현이 되었을때, 공통으로 사용이 될 경우를 대비해서 일단 구현만
-// interface HeaderProps {
-//   tite: string;
-//   subtitle: string;
-// }
+interface HeaderProps {
+  title: string;
+  subtitle: React.ReactNode;
+}
 
-const Header = () => {
+const Header = ({ title, subtitle }: HeaderProps) => {
   return (
-    <div className="text-left ml-8 mt-[15%]">
-      <h1 className="text-[60px] font-bold leading-[1.3]">
-        Gachi <br /> Taxi
-      </h1>
-      <p className="text-[20px] mt-[13%] mb-[20%] leading-[1.5]">
-        가천대학교 <br /> 택시 동승 서비스
-      </p>
+    <div className="items-center mt-[15%] h-[82px]">
+      <h1 className="text-[24px] font-bold mb-[8px]">{title}</h1>
+      <p className="text-body text-textLightGray">{subtitle}</p>
     </div>
   );
 };
