@@ -13,56 +13,58 @@ const RouteSetting = <T extends MatchingSchema>({
   control,
 }: RouteSettingProps<T>) => {
   return (
-    <div className="h-[101px] flex-shrink-0 bg-secondary rounded-box p-vertical gap-3 flex items-center justify-between">
-      <RouteSettingIcon />
-      <Controller
-        control={control}
-        name={'startName' as Path<T>}
-        render={({
-          field: { value: startName, onChange: onChangeStartName },
-        }) => (
-          <Controller
-            control={control}
-            name={'destinationName' as Path<T>}
-            render={({
-              field: {
-                value: destinationName,
-                onChange: onChangeDestinationName,
-              },
-            }) => (
-              <Controller
-                control={control}
-                name={'startPoint' as Path<T>}
-                render={({
-                  field: { value: startPoint, onChange: onChangeStartPoint },
-                }) => (
-                  <Controller
-                    control={control}
-                    name={'destinationPoint' as Path<T>}
-                    render={({
-                      field: {
-                        value: destinationPoint,
-                        onChange: onChangeDestinationPoint,
-                      },
-                    }) => (
-                      <>
-                        <div className="flex-1 flex flex-col justify-between h-full">
-                          <input
-                            className="font-medium text-captionHeader bg-transparent outline-none"
-                            value={startName}
-                            onChange={(e) => onChangeStartName(e.target.value)}
-                            readOnly
-                          />
-                          <div className="border border-matchLine w-full rounded-full"></div>
-                          <input
-                            className="font-medium text-captionHeader bg-transparent outline-none"
-                            value={destinationName}
-                            onChange={(e) =>
-                              onChangeDestinationName(e.target.value)
-                            }
-                            readOnly
-                          />
-                        </div>
+    <Controller
+      control={control}
+      name={'startName' as Path<T>}
+      render={({
+        field: { value: startName, onChange: onChangeStartName },
+      }) => (
+        <Controller
+          control={control}
+          name={'destinationName' as Path<T>}
+          render={({
+            field: {
+              value: destinationName,
+              onChange: onChangeDestinationName,
+            },
+          }) => (
+            <Controller
+              control={control}
+              name={'startPoint' as Path<T>}
+              render={({
+                field: { value: startPoint, onChange: onChangeStartPoint },
+              }) => (
+                <Controller
+                  control={control}
+                  name={'destinationPoint' as Path<T>}
+                  render={({
+                    field: {
+                      value: destinationPoint,
+                      onChange: onChangeDestinationPoint,
+                    },
+                  }) => (
+                    <div className="h-[101px] w-full flex-shrink-0 bg-secondary rounded-box p-vertical gap-3 flex items-center justify-between">
+                      <div className="flex-shrink-0">
+                        <RouteSettingIcon />
+                      </div>
+                      <div className="flex-1 flex flex-col justify-between h-full w-full">
+                        <input
+                          className="font-medium text-captionHeader bg-transparent outline-none w-full"
+                          value={startName}
+                          onChange={(e) => onChangeStartName(e.target.value)}
+                          readOnly
+                        />
+                        <div className="border border-matchLine w-full rounded-full"></div>
+                        <input
+                          className="font-medium text-captionHeader bg-transparent outline-none w-full"
+                          value={destinationName}
+                          onChange={(e) =>
+                            onChangeDestinationName(e.target.value)
+                          }
+                          readOnly
+                        />
+                      </div>
+                      <div className="flex-shrink-0">
                         <Button
                           variant="icon"
                           onClick={() => {
@@ -79,16 +81,16 @@ const RouteSetting = <T extends MatchingSchema>({
                         >
                           <RouteChangeIcon />
                         </Button>
-                      </>
-                    )}
-                  />
-                )}
-              />
-            )}
-          />
-        )}
-      />
-    </div>
+                      </div>
+                    </div>
+                  )}
+                />
+              )}
+            />
+          )}
+        />
+      )}
+    />
   );
 };
 

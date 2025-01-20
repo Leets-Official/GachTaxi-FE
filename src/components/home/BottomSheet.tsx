@@ -4,6 +4,7 @@ import { useState } from 'react';
 import ViewerControlIcon from '@/assets/icon/viewerControlIcon.svg?react';
 import AutoMatching from '@/components/home/autoMatching';
 import ManualMatching from '@/components/home/manualMatching';
+import FriendList from '@/components/home/FriendList';
 
 interface MatchingSheetProps {
   modalContent: {
@@ -13,7 +14,7 @@ interface MatchingSheetProps {
   };
 }
 
-const MatchingSheet = ({ modalContent }: MatchingSheetProps) => {
+const BottomSheet = ({ modalContent }: MatchingSheetProps) => {
   const [isOpen, setIsOpen] = useState(false);
   const dragControls = useDragControls();
   const animateState = isOpen ? 'opend' : 'closed';
@@ -61,9 +62,10 @@ const MatchingSheet = ({ modalContent }: MatchingSheetProps) => {
       >
         {modalContent.home && <AutoMatching isOpen={isOpen} />}
         {modalContent.match && <ManualMatching isOpen={isOpen} />}
+        {modalContent.friend && <FriendList isOpen={isOpen} />}
       </div>
     </motion.div>
   );
 };
 
-export default MatchingSheet;
+export default BottomSheet;

@@ -33,7 +33,7 @@ const Toast = ({ children, fn }: ToastProps) => {
         damping: 14,
       }}
       onAnimationStart={handleFnByAnimationStateExit}
-      className={`p-vertical h-full max-h-[48px] max-w-[328px] w-[328px] z-[1000] bg-toastColor absolute bottom-8 rounded-[10px] text-white text-captionHeader font-medium truncate flex items-center`}
+      className={`p-vertical h-full max-h-[48px] max-w-[328px] w-[328px] z-[1000] bg-toastColor absolute bottom-20 rounded-[10px] text-white text-captionHeader font-medium truncate flex items-center`}
     >
       {children}
     </motion.div>,
