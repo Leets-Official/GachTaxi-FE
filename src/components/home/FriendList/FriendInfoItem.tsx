@@ -26,7 +26,7 @@ const FriendInfoItem = ({ friend, setCurrentPage }: FriendInfoItemProps) => {
 
   return (
     <div className="bg-toastColor rounded-box p-vertical flex items-center justify-between h-[101px]">
-      <div className="flex-1 flex items-center gap-[16px]">
+      <div className="flex-1 flex items-center gap-4">
         <div className="flex items-center gap-[10px] cursor-pointer relative rounded-full bg-textDarkGray">
           {friend.profileImage ? (
             <img

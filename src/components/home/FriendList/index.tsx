@@ -5,7 +5,7 @@ import { useState } from 'react';
 
 export interface Friend {
   id: number;
-  profileImage: string;
+  profileImage?: string;
   nickName: string;
   gender: 'MALE' | 'FEMALE';
 }
