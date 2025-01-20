@@ -49,7 +49,7 @@ const RouteSetting = <T extends MatchingSchema>({
                       </div>
                       <div className="flex-1 flex flex-col justify-between h-full w-full">
                         <input
-                          className="font-medium text-captionHeader bg-transparent outline-none"
+                          className="font-medium text-captionHeader bg-transparent outline-none w-full"
                           value={startName}
                           onChange={(e) => onChangeStartName(e.target.value)}
                           readOnly
