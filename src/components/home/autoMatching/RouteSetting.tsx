@@ -56,7 +56,7 @@ const RouteSetting = <T extends MatchingSchema>({
                         />
                         <div className="border border-matchLine w-full rounded-full"></div>
                         <input
-                          className="font-medium text-captionHeader bg-transparent outline-none"
+                          className="font-medium text-captionHeader bg-transparent outline-none w-full"
                           value={destinationName}
                           onChange={(e) =>
                             onChangeDestinationName(e.target.value)
