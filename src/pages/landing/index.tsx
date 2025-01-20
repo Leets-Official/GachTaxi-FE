@@ -43,19 +43,11 @@ const LandingPage = () => {
     };
   }, []);
 
-  useEffect(() => {
-    // 스크롤 방지 적용
-    document.body.style.overflow = 'hidden';
-    return () => {
-      document.body.style.overflow = 'auto'; // 컴포넌트 언마운트 시 원래 상태로 복구
-    };
-  }, []);
-
   return (
-    <div className="relative w-full h-screen flex flex-col items-center justify-around overflow-hidden">
+    <div className="relative w-full flex flex-col items-center justify-around overflow-x-hidden">
       <div
         ref={sliderRef}
-        className="mt-[10%] flex w-full h-full overflow-x-auto overflow-y-hidden scroll-hidden snap-mandatory snap-x scroll-smooth"
+        className="flex w-full h-full overflow-x-auto overflow-y-hidden snap-mandatory snap-x scroll-smooth scroll-hidden"
       >
         {slides.map((slide, index) => (
           <div
@@ -79,7 +71,7 @@ const LandingPage = () => {
         ))}
       </div>
 
-      <div className="absolute w-[90%] bottom-0 mb-5 flex flex-col gap-1 w-full max-w-[430px]">
+      <div className="absolute w-[90%] bottom-0 mb-5 flex flex-col w-full max-w-[430px]">
         <KakaoLoginButton />
         <GoogleOAuthProvider clientId={CLIENT_ID}>
           <GoogleLoginButton />
