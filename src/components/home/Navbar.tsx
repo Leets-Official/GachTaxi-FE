@@ -77,16 +77,14 @@ const Navbar = ({ modalContent, setModalContent }: NavbarProps) => {
         <NotificationIcon />
         <span className={`text-[10px] text-textDarkGray`}>알림</span>
       </Button>
-      <Link to="/mypage">
-        <Button
-          variant="icon"
-          className="flex flex-col items-center justify-center gap-1"
-        >
-          <div className="flex items-center rounded-full bg-textDarkGray w-[24px] h-[24px]">
-            <BasicProfileIcon className="text-[#AEAEAE]" />
-          </div>
-          <span className={`text-[10px] text-textDarkGray`}>프로필</span>
-        </Button>
+      <Link
+        to="/mypage"
+        className="flex flex-col items-center justify-center gap-1"
+      >
+        <div className="flex items-center rounded-full bg-textDarkGray w-[24px] h-[24px]">
+          <BasicProfileIcon className="text-[#AEAEAE]" />
+        </div>
+        <span className="text-[10px] text-textDarkGray">프로필</span>
       </Link>
     </nav>
   );
