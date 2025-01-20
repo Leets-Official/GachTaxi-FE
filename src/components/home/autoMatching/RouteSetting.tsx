@@ -44,7 +44,9 @@ const RouteSetting = <T extends MatchingSchema>({
                     },
                   }) => (
                     <div className="h-[101px] flex-shrink-0 bg-secondary rounded-box p-vertical gap-3 flex items-center justify-between">
-                      <RouteSettingIcon />
+                      <div className="flex-shrink-0">
+                        <RouteSettingIcon />
+                      </div>
                       <div className="flex-1 flex flex-col justify-between h-full">
                         <input
                           className="font-medium text-captionHeader bg-transparent outline-none"
@@ -62,22 +64,24 @@ const RouteSetting = <T extends MatchingSchema>({
                           readOnly
                         />
                       </div>
-                      <Button
-                        variant="icon"
-                        onClick={() => {
-                          // 이름 교체
-                          const tempName = startName;
-                          onChangeStartName(destinationName);
-                          onChangeDestinationName(tempName);
+                      <div className="flex-shrink-0">
+                        <Button
+                          variant="icon"
+                          onClick={() => {
+                            // 이름 교체
+                            const tempName = startName;
+                            onChangeStartName(destinationName);
+                            onChangeDestinationName(tempName);
 
-                          // 좌표 교체
-                          const tempPoint = startPoint;
-                          onChangeStartPoint(destinationPoint);
-                          onChangeDestinationPoint(tempPoint);
-                        }}
-                      >
-                        <RouteChangeIcon />
-                      </Button>
+                            // 좌표 교체
+                            const tempPoint = startPoint;
+                            onChangeStartPoint(destinationPoint);
+                            onChangeDestinationPoint(tempPoint);
+                          }}
+                        >
+                          <RouteChangeIcon />
+                        </Button>
+                      </div>
                     </div>
                   )}
                 />
