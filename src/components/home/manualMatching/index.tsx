@@ -48,11 +48,12 @@ const ManualMatching = ({ isOpen }: ManualMatchingProps) => {
           isOpen={isOpen}
           manualInfos={manualInfos}
           setManualInfos={setManualInfos}
+          currentPage={currentPage}
           setCurrentPage={setCurrentPage}
         />
       );
     } else {
-      return <MyMatchingPage />;
+      return <MyMatchingPage isOpen={isOpen} />;
     }
   };
 
