@@ -1,20 +1,13 @@
 interface HeaderProps {
   title: string;
-  subtitle: string;
+  subtitle: React.ReactNode;
 }
 
 const Header = ({ title, subtitle }: HeaderProps) => {
   return (
     <div className="items-center mt-[15%] h-[82px]">
       <h1 className="text-[24px] font-bold mb-[8px]">{title}</h1>
-      <p className="text-body text-textLightGray">
-        {subtitle.split('\n').map((line, index) => (
-          <span key={index}>
-            {line}
-            <br />
-          </span>
-        ))}
-      </p>
+      <p className="text-body text-textLightGray">{subtitle}</p>
     </div>
   );
 };
