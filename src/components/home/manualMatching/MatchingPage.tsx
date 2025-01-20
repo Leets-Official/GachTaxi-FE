@@ -7,6 +7,7 @@ interface MatchingPageProps {
   isOpen: boolean;
   manualInfos: ManualInfo[];
   setManualInfos: (manualInfos: ManualInfo[]) => void;
+  currentPage: 'MANUAL' | 'MY_MATCHING';
   setCurrentPage: (value: 'MANUAL' | 'MY_MATCHING') => void;
 }
 
@@ -14,6 +15,7 @@ const MatchingPage = ({
   isOpen,
   manualInfos,
   setCurrentPage,
+  currentPage,
 }: MatchingPageProps) => {
   return (
     <>
@@ -26,6 +28,7 @@ const MatchingPage = ({
               key={idx}
               setCurrentPage={setCurrentPage}
               manualInfo={manualInfo}
+              currentPage={currentPage}
             />
           );
         })}
