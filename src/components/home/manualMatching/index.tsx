@@ -12,6 +12,7 @@ export interface ManualInfo {
   memberCount: number;
   route: string;
   tags: string[];
+  content: string;
 }
 
 const ManualMatching = ({ isOpen }: ManualMatchingProps) => {
@@ -22,12 +23,14 @@ const ManualMatching = ({ isOpen }: ManualMatchingProps) => {
       memberCount: 3,
       route: 'basic',
       tags: ['태그1', '태그2', '태그3'],
+      content: '반갑다!!',
     },
     {
       time: '오전 08:50',
       memberCount: 3,
       route: 'basic',
       tags: ['태그1', '태그2', '태그3'],
+      content: '반갑다2!!',
     },
   ]);
   const [currentPage, setCurrentPage] = useState<'MANUAL' | 'MY_MATCHING'>(
@@ -45,6 +48,7 @@ const ManualMatching = ({ isOpen }: ManualMatchingProps) => {
           isOpen={isOpen}
           manualInfos={manualInfos}
           setManualInfos={setManualInfos}
+          setCurrentPage={setCurrentPage}
         />
       );
     } else {

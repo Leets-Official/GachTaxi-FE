@@ -1,15 +1,20 @@
 import LargePlusIcon from '@/assets/icon/largePlusIcon.svg?react';
 import { Link } from 'react-router-dom';
-import MatchingInfoItem from '@/components/home/manualMatching/MatchingInfoItem';
+import MatchingInfoItem from '@/components/home/manualMatching/matchingInfoItem';
 import { ManualInfo } from '@/components/home/manualMatching';
 
 interface MatchingPageProps {
   isOpen: boolean;
   manualInfos: ManualInfo[];
   setManualInfos: (manualInfos: ManualInfo[]) => void;
+  setCurrentPage: (value: 'MANUAL' | 'MY_MATCHING') => void;
 }
 
-const MatchingPage = ({ isOpen, manualInfos }: MatchingPageProps) => {
+const MatchingPage = ({
+  isOpen,
+  manualInfos,
+  setCurrentPage,
+}: MatchingPageProps) => {
   return (
     <>
       <div
@@ -17,9 +22,11 @@ const MatchingPage = ({ isOpen, manualInfos }: MatchingPageProps) => {
       >
         {manualInfos.map((manualInfo, idx) => {
           return (
-            <Link key={idx} to={`/signup/verification`}>
-              <MatchingInfoItem manualInfo={manualInfo} />
-            </Link>
+            <MatchingInfoItem
+              key={idx}
+              setCurrentPage={setCurrentPage}
+              manualInfo={manualInfo}
+            />
           );
         })}
       </div>

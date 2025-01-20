@@ -10,7 +10,6 @@ import NotFoundPage from '@/pages/NotFound';
 import Layout from '@/pages/Layout';
 import MyPage from '@/pages/my-page';
 import ManualMatchingRegister from '@/pages/manual-register';
-import ManualMatchingDetailPage from '@/pages/manual-matching-detail';
 import { ToastProvider } from '@/contexts/ToastContext';
 import ChatPage from '@/pages/chat';
 
@@ -35,10 +34,6 @@ function App() {
                 <Route path="/signup/*" element={<SignUpPage />} />
                 <Route path="/home" element={<HomePage />} />
                 <Route path="/mypage/*" element={<MyPage />} />
-                <Route
-                  path="home/manual-matching-detail/:id"
-                  element={<ManualMatchingDetailPage />}
-                />
                 <Route path="chat/:id" element={<ChatPage />} />
                 <Route path="/*" element={<NotFoundPage />} />
               </Route>

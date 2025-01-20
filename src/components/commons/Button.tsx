@@ -24,7 +24,7 @@ const Button = ({
     variantStyle = `${isDisabled ? 'bg-matchLine' : 'bg-primary'} h-[50px] rounded-common font-semibold text-button text-neutral outline-none`;
   } else if (variant === 'secondary') {
     variantStyle =
-      'bg-transparent h-[50px] rounded-common font-semibold text-button text-textLightGray outline-none';
+      'bg-transparent h-[50px] rounded-common font-semibold text-button text-textLightGray outline-none border-2 border-primary';
   } else if (variant === 'icon') {
     variantStyle = 'bg-transparent outline-none w-fit h-fit';
   }
