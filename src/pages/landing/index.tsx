@@ -1,4 +1,5 @@
 import { useState, useRef, useEffect } from 'react';
+import { motion } from 'framer-motion';
 import FirstLanding from './FirstLanding';
 import SecondLanding from './SecondLanding';
 import LastLanding from './LastLanding';
@@ -15,8 +16,8 @@ const LandingPage = () => {
 
   const handleScroll = () => {
     if (sliderRef.current) {
-      const scrollLeft = sliderRef.current.scrollLeft;
-      const slideWidth = sliderRef.current.clientWidth;
+      const scrollLeft = sliderRef.current.scrollLeft || 0;
+      const slideWidth = sliderRef.current.clientWidth || 1;
       const newIndex = Math.round(scrollLeft / slideWidth);
       setCurrentIndex(newIndex);
     }
@@ -25,7 +26,7 @@ const LandingPage = () => {
   const goToSlide = (index: number) => {
     if (sliderRef.current) {
       sliderRef.current.scrollTo({
-        left: index * sliderRef.current.clientWidth,
+        left: index * (sliderRef.current.clientWidth || 1),
         behavior: 'smooth',
       });
     }
@@ -43,22 +44,39 @@ const LandingPage = () => {
     };
   }, []);
 
+  useEffect(() => {
+    document.body.style.overflow = 'hidden';
+    return () => {
+      document.body.style.overflow = 'auto';
+    };
+  }, []);
+
   return (
-    <div className="relative w-full flex flex-col items-center justify-around overflow-x-hidden">
-      <div
+    <div className="relative w-full h-screen flex flex-col items-center justify-between overflow-hidden">
+      <motion.div
         ref={sliderRef}
-        className="flex w-full h-full overflow-x-auto overflow-y-hidden snap-mandatory snap-x scroll-smooth scroll-hidden"
+        className="flex w-full h-full overflow-x-auto overflow-hidden snap-mandatory snap-x scroll-smooth scroll-hidden"
+        drag="x"
+        dragConstraints={{ left: 0, right: 0 }}
+        onDragEnd={(_, info) => {
+          if (info.offset.x < -50) {
+            goToSlide(Math.min(currentIndex + 1, slides.length - 1));
+          } else if (info.offset.x > 50) {
+            goToSlide(Math.max(currentIndex - 1, 0));
+          }
+        }}
       >
         {slides.map((slide, index) => (
           <div
             key={index}
-            className="min-w-full flex justify-center items-center snap-center"
+            className="min-w-full h-screen flex justify-center items-center snap-center"
           >
             {slide}
           </div>
         ))}
-      </div>
+      </motion.div>
 
+      {/* 페이지네이션 */}
       <div className="absolute bottom-[25%] flex justify-center gap-2 z-30">
         {slides.map((_, index) => (
           <div
@@ -71,7 +89,8 @@ const LandingPage = () => {
         ))}
       </div>
 
-      <div className="absolute w-[90%] bottom-0 mb-5 flex flex-col w-full max-w-[430px]">
+      {/* 로그인 버튼 */}
+      <div className="absolute w-[90%] bottom-5 flex flex-col max-w-[430px]">
         <KakaoLoginButton />
         <GoogleOAuthProvider clientId={CLIENT_ID}>
           <GoogleLoginButton />
