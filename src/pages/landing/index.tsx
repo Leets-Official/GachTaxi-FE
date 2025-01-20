@@ -88,7 +88,7 @@ const LandingPage = () => {
         ))}
       </div>
 
-      <div className="absolute w-[90%] bottom-10 mb-10 flex flex-col max-w-[430px]">
+      <div className="absolute w-[90%] bottom-0 mb-5 flex flex-col max-w-[430px]">
         <KakaoLoginButton />
         <GoogleOAuthProvider clientId={CLIENT_ID}>
           <GoogleLoginButton />
