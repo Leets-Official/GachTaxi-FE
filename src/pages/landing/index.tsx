@@ -52,7 +52,7 @@ const LandingPage = () => {
   }, []);
 
   return (
-    <div className="relative w-full min-h-screen flex flex-col items-center justify-between overflow-hidden">
+    <div className="relative w-full flex flex-col items-center justify-around overflow-x-hidden">
       <motion.div
         ref={sliderRef}
         className="flex w-full h-full overflow-x-auto overflow-y-hidden snap-mandatory snap-x scroll-smooth scroll-hidden"
@@ -88,7 +88,7 @@ const LandingPage = () => {
         ))}
       </div>
 
-      <div className="absolute w-[90%] bottom-10 flex flex-col max-w-[430px]">
+      <div className="absolute w-[90%] bottom-0 mb-5 flex flex-col max-w-[430px]">
         <KakaoLoginButton />
         <GoogleOAuthProvider clientId={CLIENT_ID}>
           <GoogleLoginButton />
