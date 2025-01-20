@@ -10,7 +10,6 @@ const slides = [<FirstLanding />, <SecondLanding />, <LastLanding />];
 
 const LandingPage = () => {
   const CLIENT_ID = import.meta.env.VITE_GOOGLE_CLIENT_ID;
-
   const [currentIndex, setCurrentIndex] = useState(0);
   const sliderRef = useRef<HTMLDivElement>(null);
 
@@ -44,11 +43,19 @@ const LandingPage = () => {
     };
   }, []);
 
+  useEffect(() => {
+    // 스크롤 방지 적용
+    document.body.style.overflow = 'hidden';
+    return () => {
+      document.body.style.overflow = 'auto'; // 컴포넌트 언마운트 시 원래 상태로 복구
+    };
+  }, []);
+
   return (
-    <div className="relative w-full h-screen flex flex-col items-center justify-center overflow-hidden">
+    <div className="relative w-full h-screen flex flex-col items-center justify-around overflow-hidden">
       <div
         ref={sliderRef}
-        className="mt-[10%] flex w-full h-full overflow-x-auto snap-mandatory snap-x scroll-smooth scroll-hidden"
+        className="mt-[10%] flex w-full h-full overflow-x-auto overflow-y-hidden scroll-hidden snap-mandatory snap-x scroll-smooth"
       >
         {slides.map((slide, index) => (
           <div
@@ -72,7 +79,7 @@ const LandingPage = () => {
         ))}
       </div>
 
-      <div className="absolute w-[90%] bottom-10 flex flex-col gap-1 w-full max-w-[430px]">
+      <div className="absolute w-[90%] bottom-0 mb-5 flex flex-col gap-1 w-full max-w-[430px]">
         <KakaoLoginButton />
         <GoogleOAuthProvider clientId={CLIENT_ID}>
           <GoogleLoginButton />
