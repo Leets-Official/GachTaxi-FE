@@ -85,7 +85,7 @@ const AutoMatching = ({ isOpen }: { isOpen: boolean }) => {
 
   return (
     <div
-      className={`flex flex-col ${isOpen ? 'gap-[32px] h-fit' : 'h-[260px]'} justify-between`}
+      className={`flex flex-col ${isOpen ? 'gap-[32px] h-fit' : 'h-[260px]'} justify-between w-full`}
     >
       <div className="flex items-center justify-between">
         <h2 className="text-header font-bold">바로 매칭</h2>

@@ -47,7 +47,7 @@ const RouteSetting = <T extends MatchingSchema>({
                       <div className="flex-shrink-0">
                         <RouteSettingIcon />
                       </div>
-                      <div className="flex-1 flex flex-col justify-between h-full">
+                      <div className="flex-1 flex flex-col justify-between h-full w-full">
                         <input
                           className="font-medium text-captionHeader bg-transparent outline-none"
                           value={startName}
