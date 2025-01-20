@@ -76,7 +76,7 @@ const LandingPage = () => {
         ))}
       </motion.div>
 
-      <div className="absolute bottom-[25%] flex justify-center gap-2 z-30">
+      <div className="absolute bottom-[27%] flex justify-center gap-2 z-30">
         {slides.map((_, index) => (
           <div
             key={index}
@@ -88,7 +88,7 @@ const LandingPage = () => {
         ))}
       </div>
 
-      <div className="absolute w-[90%] bottom-0 mb-5 flex flex-col max-w-[430px]">
+      <div className="absolute w-[90%] bottom-10 mb-10 flex flex-col max-w-[430px]">
         <KakaoLoginButton />
         <GoogleOAuthProvider clientId={CLIENT_ID}>
           <GoogleLoginButton />
