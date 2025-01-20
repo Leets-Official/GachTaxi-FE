@@ -44,18 +44,11 @@ const LandingPage = () => {
     };
   }, []);
 
-  useEffect(() => {
-    document.body.style.overflow = 'hidden';
-    return () => {
-      document.body.style.overflow = 'auto';
-    };
-  }, []);
-
   return (
     <div className="relative w-full flex flex-col items-center justify-around overflow-x-hidden">
       <motion.div
         ref={sliderRef}
-        className="flex w-full h-full overflow-x-auto overflow-y-hidden snap-mandatory snap-x scroll-smooth scroll-hidden"
+        className="flex w-full overflow-x-auto overflow-y-hidden snap-mandatory snap-x scroll-smooth scroll-hidden"
         drag="x"
         dragConstraints={{ left: 0, right: 0 }}
         onDragEnd={(_, info) => {
@@ -69,7 +62,7 @@ const LandingPage = () => {
         {slides.map((slide, index) => (
           <div
             key={index}
-            className="min-w-full h-screen flex justify-center items-center snap-center"
+            className="min-w-full flex justify-center items-center snap-center"
           >
             {slide}
           </div>
@@ -88,7 +81,7 @@ const LandingPage = () => {
         ))}
       </div>
 
-      <div className="absolute w-[90%] bottom-0 mb-5 flex flex-col max-w-[430px]">
+      <div className="absolute w-[85%] bottom-10 flex flex-col max-w-[430px]">
         <KakaoLoginButton />
         <GoogleOAuthProvider clientId={CLIENT_ID}>
           <GoogleLoginButton />
