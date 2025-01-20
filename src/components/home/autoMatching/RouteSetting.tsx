@@ -43,7 +43,7 @@ const RouteSetting = <T extends MatchingSchema>({
                       onChange: onChangeDestinationPoint,
                     },
                   }) => (
-                    <div className="h-[101px] flex-shrink-0 bg-secondary rounded-box p-vertical gap-3 flex items-center justify-between">
+                    <div className="h-[101px] w-full flex-shrink-0 bg-secondary rounded-box p-vertical gap-3 flex items-center justify-between">
                       <div className="flex-shrink-0">
                         <RouteSettingIcon />
                       </div>
