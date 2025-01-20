@@ -4,6 +4,7 @@ import MatchIcon from '@/assets/icon/matchIcon.svg?react';
 import FriendIcon from '@/assets/icon/friendsIcon.svg?react';
 import NotificationIcon from '@/assets/icon/notificationIcon.svg?react';
 import BasicProfileIcon from '@/assets/icon/basicProfileIcon.svg?react';
+import { Link } from 'react-router-dom';
 
 interface NavbarProps {
   modalContent: {
@@ -76,15 +77,17 @@ const Navbar = ({ modalContent, setModalContent }: NavbarProps) => {
         <NotificationIcon />
         <span className={`text-[10px] text-textDarkGray`}>알림</span>
       </Button>
-      <Button
-        variant="icon"
-        className="flex flex-col items-center justify-center gap-1"
-      >
-        <div className="flex items-center rounded-full bg-textDarkGray w-[24px] h-[24px]">
-          <BasicProfileIcon className="text-[#AEAEAE]" />
-        </div>
-        <span className={`text-[10px] text-textDarkGray`}>프로필</span>
-      </Button>
+      <Link to="/mypage">
+        <Button
+          variant="icon"
+          className="flex flex-col items-center justify-center gap-1"
+        >
+          <div className="flex items-center rounded-full bg-textDarkGray w-[24px] h-[24px]">
+            <BasicProfileIcon className="text-[#AEAEAE]" />
+          </div>
+          <span className={`text-[10px] text-textDarkGray`}>프로필</span>
+        </Button>
+      </Link>
     </nav>
   );
 };
