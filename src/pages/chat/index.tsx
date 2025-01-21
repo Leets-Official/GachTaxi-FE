@@ -7,8 +7,8 @@ const ChatPage = () => {
   const chatMember = 3;
 
   return (
-    <section className="flex-1 w-full flex flex-col gap-[32px] p-horizontal">
-      <div className="sticky top-0 bg-[#011A11]">
+    <section className="flex-1 w-full flex flex-col gap-[32px] p-horizontal bg-[#141513]">
+      <div className="sticky top-0">
         <BackButton />
         <div className="flex h-[48px] items-center">
           <h1 className="font-bold text-header">채팅방</h1>
