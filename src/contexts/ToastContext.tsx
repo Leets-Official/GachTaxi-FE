@@ -4,13 +4,18 @@ import { createContext, useState, useContext, ReactNode } from 'react';
 
 interface ToastState {
   isOpen: boolean;
+  type: 'success' | 'error';
   content: ReactNode | null;
   fn?: () => void;
 }
 
 interface ToastContextType {
   isOpen: boolean;
-  openToast: (content: ReactNode, fn?: () => void) => void;
+  openToast: (
+    content: ReactNode,
+    type?: 'success' | 'error',
+    fn?: () => void,
+  ) => void;
 }
 
 const ToastContext = createContext<ToastContextType | undefined>(undefined);
@@ -18,19 +23,25 @@ const ToastContext = createContext<ToastContextType | undefined>(undefined);
 export const ToastProvider = ({ children }: { children: ReactNode }) => {
   const [toastState, setToastState] = useState<ToastState>({
     isOpen: false,
+    type: 'success',
     content: null,
     fn: undefined,
   });
 
-  const openToast = (content: ReactNode, fn?: () => void) => {
-    setToastState({ isOpen: true, content, fn });
+  const openToast = (
+    content: ReactNode,
+    type?: 'success' | 'error',
+    fn?: () => void,
+  ) => {
+    setToastState({ isOpen: true, type: type!, content, fn });
     setTimeout(() => {
       setToastState({
         isOpen: false,
+        type: 'success',
         content: null,
         fn: undefined,
       });
-    }, 4000);
+    }, 3000);
   };
 
   return (
@@ -43,7 +54,9 @@ export const ToastProvider = ({ children }: { children: ReactNode }) => {
       {children}
       <AnimatePresence>
         {toastState.isOpen && (
-          <Toast fn={toastState.fn}>{toastState.content}</Toast>
+          <Toast fn={toastState.fn} type={toastState.type}>
+            {toastState.content}
+          </Toast>
         )}
       </AnimatePresence>
     </ToastContext.Provider>
