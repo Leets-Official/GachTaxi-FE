@@ -16,23 +16,7 @@ export interface ManualInfo {
 }
 
 const ManualMatching = ({ isOpen }: ManualMatchingProps) => {
-  const [manualInfos, setManualInfos] = useState<ManualInfo[]>([
-    {
-      // 임시 mock 데이터
-      time: '오전 08:50',
-      memberCount: 3,
-      route: 'basic',
-      tags: ['태그1', '태그2', '태그3'],
-      content: '반갑다!!',
-    },
-    {
-      time: '오전 08:50',
-      memberCount: 3,
-      route: 'basic',
-      tags: ['태그1', '태그2', '태그3'],
-      content: '반갑다2!!',
-    },
-  ]);
+  const [manualInfos, setManualInfos] = useState<ManualInfo[]>([]);
   const [currentPage, setCurrentPage] = useState<'MANUAL' | 'MY_MATCHING'>(
     'MANUAL',
   );

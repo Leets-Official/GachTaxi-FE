@@ -11,37 +11,9 @@ export interface Friend {
 }
 
 const FriendList = ({ isOpen }: { isOpen: boolean }) => {
-  const [friendList, setFriendList] = useState<Friend[]>([
-    {
-      id: 1,
-      profileImage:
-        'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT9aeHFWXHfDhJ_xzPneJlEsKVdu-tZ5vGoow&s',
-      nickName: '택시보이',
-      gender: 'MALE',
-    },
-    {
-      id: 2,
-      profileImage: '',
-      nickName: '택시걸',
-      gender: 'FEMALE',
-    },
-  ]);
+  const [friendList, setFriendList] = useState<Friend[]>([]);
 
-  const [blackList, setBlackList] = useState<Friend[]>([
-    {
-      id: 1,
-      profileImage:
-        'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT9aeHFWXHfDhJ_xzPneJlEsKVdu-tZ5vGoow&s',
-      nickName: '택시보이',
-      gender: 'MALE',
-    },
-    {
-      id: 2,
-      profileImage: '',
-      nickName: '택시걸',
-      gender: 'FEMALE',
-    },
-  ]);
+  const [blackList, setBlackList] = useState<Friend[]>([]);
 
   const [currentPage, setCurrentPage] = useState<'FRIEND_LIST' | 'BLACK_LIST'>(
     'FRIEND_LIST',

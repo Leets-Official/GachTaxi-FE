@@ -12,6 +12,7 @@ import MyPage from '@/pages/my-page';
 import ManualMatchingRegister from '@/pages/manual-register';
 import { ToastProvider } from '@/contexts/ToastContext';
 import ChatPage from '@/pages/chat';
+import FriendRequestPage from '@/pages/friend-request';
 
 function App() {
   const queryClient = new QueryClient();
@@ -34,6 +35,10 @@ function App() {
                 <Route path="/signup/*" element={<SignUpPage />} />
                 <Route path="/home" element={<HomePage />} />
                 <Route path="/mypage/*" element={<MyPage />} />
+                <Route
+                  path="home/friend-request"
+                  element={<FriendRequestPage />}
+                />
                 <Route path="chat/:id" element={<ChatPage />} />
                 <Route path="/*" element={<NotFoundPage />} />
               </Route>

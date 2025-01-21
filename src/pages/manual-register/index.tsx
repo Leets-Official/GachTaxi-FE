@@ -20,6 +20,7 @@ import TimeSelect from '@/components/manual-register/timeSelect';
 import useGeoLocation from '@/hooks/useGeoLocation';
 import { useEffect, useCallback } from 'react';
 import getCoordinateByAddress from '@/libs/apis/getCoordinateByAddress';
+import { useToast } from '@/contexts/ToastContext';
 
 const ManualMatchingRegister = () => {
   const manualMatchingForm = useForm<z.infer<typeof manualMatchingSchema>>({
@@ -38,6 +39,7 @@ const ManualMatchingRegister = () => {
   });
 
   const { getCurrentLocation } = useGeoLocation();
+  const { openToast } = useToast();
 
   // 목적지 좌표 설정 함수
   const updateDestinationCoordinates = useCallback(async () => {
@@ -95,7 +97,10 @@ const ManualMatchingRegister = () => {
   };
 
   const handleError = (errors: FieldValues) => {
-    console.error(errors);
+    const message = Object.values(errors).find(
+      (item) => item?.message,
+    )?.message;
+    openToast(message, 'error');
   };
 
   return (
