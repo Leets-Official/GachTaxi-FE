@@ -1,3 +1,4 @@
+import EmptyView from '@/components/emptyView';
 import { Friend } from '@/components/home/FriendList';
 import BlackInfoItem from '@/components/home/FriendList/BlackInfoItem';
 
@@ -12,21 +13,27 @@ const BlackListPage = ({
   setBlackList,
   isOpen,
 }: BlackListPageProps) => {
+  const hasBlackMember = blackList.length > 0;
+
   return (
     <>
       <div
         className={`flex flex-col gap-[16px] ${isOpen ? '' : 'pb-[calc(100dvh-430px)]'} h-[calc(100dvh-225px)] max-h-[calc(100dvh-225px)] overflow-y-scroll scroll-hidden`}
       >
-        {blackList.map((blackMember, idx) => {
-          return (
-            <BlackInfoItem
-              key={idx}
-              blackList={blackList}
-              blackMember={blackMember}
-              setBlackList={setBlackList}
-            />
-          );
-        })}
+        {hasBlackMember ? (
+          blackList.map((blackMember, idx) => {
+            return (
+              <BlackInfoItem
+                key={idx}
+                blackList={blackList}
+                blackMember={blackMember}
+                setBlackList={setBlackList}
+              />
+            );
+          })
+        ) : (
+          <EmptyView>블랙리스트에 추가한 사람이 없어요!</EmptyView>
+        )}
       </div>
     </>
   );

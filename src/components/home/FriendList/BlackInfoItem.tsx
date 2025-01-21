@@ -22,7 +22,7 @@ const BlackInfoItem = ({
       (member) => member.id !== blackMember.id,
     );
     setBlackList(updatedList);
-    openToast('블랙리스트에서 삭제되었어요');
+    openToast('블랙리스트에서 삭제되었어요', 'success');
   };
 
   return (
