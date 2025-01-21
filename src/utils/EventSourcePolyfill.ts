@@ -5,7 +5,6 @@ export class EventSourcePolyfill implements EventSource {
   private headers: Record<string, string>;
   private _readyState: number;
 
-  // EventSource 상태 상수를 리터럴 타입으로 정의
   readonly CONNECTING = 0 as const;
   readonly OPEN = 1 as const;
   readonly CLOSED = 2 as const;
@@ -56,7 +55,6 @@ export class EventSourcePolyfill implements EventSource {
     this.xhr.abort();
   }
 
-  // 필수 속성 구현
   public get url(): string {
     return this._url;
   }
@@ -69,12 +67,10 @@ export class EventSourcePolyfill implements EventSource {
     return this._withCredentials;
   }
 
-  // 이벤트 핸들러
   public onopen: ((ev: Event) => any) | null = null;
   public onmessage: ((ev: MessageEvent) => any) | null = null;
   public onerror: ((ev: Event) => any) | null = null;
 
-  // EventTarget 인터페이스 구현 수정
   public addEventListener<K extends keyof EventSourceEventMap>(
     type: K,
     listener: (this: EventSource, ev: EventSourceEventMap[K]) => any,
