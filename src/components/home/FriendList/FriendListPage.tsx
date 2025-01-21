@@ -32,7 +32,7 @@ const FriendListPage = ({
       </div>
       {isOpen && (
         <div className="w-full flex absolute bottom-2">
-          <Link to="/home/manual-register" className="ml-auto button-shadow">
+          <Link to="/home/friend-request" className="ml-auto button-shadow">
             <LargePlusIcon />
           </Link>
         </div>
