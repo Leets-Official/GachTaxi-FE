@@ -197,7 +197,10 @@ const AutoMatching = ({ isOpen }: { isOpen: boolean }) => {
           onSubmit();
         }}
       >
-        <RouteSetting control={autoMatchingForm.control} />
+        <RouteSetting
+          control={autoMatchingForm.control}
+          setValue={autoMatchingForm.setValue}
+        />
         {isOpen && (
           <>
             <InviteMembers control={autoMatchingForm.control} />
