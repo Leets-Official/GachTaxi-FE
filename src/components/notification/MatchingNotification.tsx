@@ -4,7 +4,7 @@ import { Link } from 'react-router-dom';
 
 const MatchingNotification = () => {
   return (
-    <div className="min-h-[144px] bg-secondary rounded-box p-vertical flex flex-col gap-3 w-full">
+    <div className="min-h-[144px] h-[144px] bg-secondary rounded-box p-vertical flex flex-col gap-2 w-full">
       <div className="flex items-center justify-between w-full">
         <p className="font-bold text-captionHeader">곧 매칭 시간이에요</p>
         <span className="font-medium text-body">오전 09:50</span>
