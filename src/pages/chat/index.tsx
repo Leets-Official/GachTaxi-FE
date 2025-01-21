@@ -7,7 +7,7 @@ const ChatPage = () => {
   const chatMember = 3;
 
   return (
-    <section className="flex-1 w-full flex flex-col gap-[32px] p-horizontal bg-[#141513]">
+    <section className="flex-1 w-full flex flex-col gap-[32px] p-horizontal bg-darkBlack">
       <div className="sticky top-0">
         <BackButton />
         <div className="flex h-[48px] items-center">
