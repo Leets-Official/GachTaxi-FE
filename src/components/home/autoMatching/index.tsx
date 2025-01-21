@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import MiniTaxiLogoIcon from '@/assets/icon/miniTaxiLogoIcon.svg?react';
 import Button from '@/components/commons/Button';
 import RouteSetting from '@/components/home/autoMatching/RouteSetting';
@@ -12,14 +13,16 @@ import useGeoLocation from '@/hooks/useGeoLocation';
 import getCoordinateByAddress from '@/libs/apis/getCoordinateByAddress';
 import { useCallback, useEffect, useState } from 'react';
 import { EventSourcePolyfill } from '@/utils/EventSourcePolyfill';
+import axios from 'axios';
+import { useToast } from '@/contexts/ToastContext';
 
 const AutoMatching = ({ isOpen }: { isOpen: boolean }) => {
   const autoMatchingForm = useForm<z.infer<typeof autoMatchingSchema>>({
     resolver: zodResolver(autoMatchingSchema),
     defaultValues: {
-      startPoint: '37.45054647474689,127.12683685293844',
+      startPoint: '',
       startName: '가천대 정문',
-      destinationPoint: '37.45531332196219,127.13454171595741',
+      destinationPoint: '',
       destinationName: '가천대 AI 공학관',
       members: [],
       criteria: [],
@@ -28,11 +31,11 @@ const AutoMatching = ({ isOpen }: { isOpen: boolean }) => {
     mode: 'onBlur',
   });
 
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  // @ts-expect-error - will be used later
   const { getCurrentLocation } = useGeoLocation();
-
-  const [eventSource, setEventSource] = useState<EventSourcePolyfill | null>(null);
+  const { openToast } = useToast();
+  const [eventSource, setEventSource] = useState<EventSourcePolyfill | null>(
+    null,
+  );
 
   // 컴포넌트 언마운트시 구독 종료
   useEffect(() => {
@@ -44,11 +47,9 @@ const AutoMatching = ({ isOpen }: { isOpen: boolean }) => {
     };
   }, [eventSource]);
 
-  // 목적지 좌표 설정 함수
   const updateDestinationCoordinates = useCallback(async () => {
     try {
       const address = autoMatchingForm.getValues('destinationName');
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       const coordinates: any = await getCoordinateByAddress(address);
       autoMatchingForm.setValue(
         'destinationPoint',
@@ -72,17 +73,20 @@ const AutoMatching = ({ isOpen }: { isOpen: boolean }) => {
 
   // SSE 구독
   const subscribeToSSE = useCallback(() => {
-    const sse = new EventSourcePolyfill(`${baseUrl}/api/matching/auto/subscribe`, {
-      headers: {
-        Authorization: `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiZW1haWwiOiJhQGEuY29tIiwicm9sZSI6Ik1FTUJFUiIsImlhdCI6MTUxNjIzOTAyMiwiZXhwIjo2MDAwMDAwMDAwMH0.40DhQGzszXAawIW6XMJ08uAaYhulOF0x-9FYk0wr8SI`
+    const sse = new EventSourcePolyfill(
+      `${baseUrl}/api/matching/auto/subscribe`,
+      {
+        headers: {
+          Authorization: `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiZW1haWwiOiJhQGEuY29tIiwicm9sZSI6Ik1FTUJFUiIsImlhdCI6MTUxNjIzOTAyMiwiZXhwIjo2MDAwMDAwMDAwMH0.40DhQGzszXAawIW6XMJ08uAaYhulOF0x-9FYk0wr8SI`,
+        },
+        withCredentials: true,
       },
-      withCredentials: true
-    });
+    );
 
     sse.onmessage = (event: MessageEvent) => {
       const lines = event.data.split('\n');
       const parsedEvent: { event?: string; data?: any } = {};
-      
+
       // SSE 메시지 파싱
       /**
        * {
@@ -102,6 +106,7 @@ const AutoMatching = ({ isOpen }: { isOpen: boolean }) => {
           try {
             parsedEvent.data = JSON.parse(line.slice(5).trim());
           } catch (e) {
+            console.log(e);
             parsedEvent.data = line.slice(5).trim();
           }
         }
@@ -117,7 +122,26 @@ const AutoMatching = ({ isOpen }: { isOpen: boolean }) => {
     };
 
     setEventSource(sse);
-  }, []);
+  }, [baseUrl]);
+
+  const onSubmit = async () => {
+    try {
+      const coordinates = await getCurrentLocation();
+      if (!coordinates) {
+        throw new Error('위치 정보를 가져오지 못했습니다.');
+      }
+
+      autoMatchingForm.setValue(
+        'startPoint',
+        `${coordinates.lat},${coordinates.lng}`,
+        { shouldValidate: true },
+      );
+
+      autoMatchingForm.handleSubmit(handleSubmitToAutoMatching, handleError)();
+    } catch (error) {
+      console.error('위치 정보 로드 오류:', error);
+    }
+  };
 
   const handleSubmitToAutoMatching: SubmitHandler<AutoMatchingTypes> = async (
     data,
@@ -126,21 +150,23 @@ const AutoMatching = ({ isOpen }: { isOpen: boolean }) => {
     try {
       subscribeToSSE();
 
-      const response = await fetch(`${baseUrl}/api/matching/auto/request`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiZW1haWwiOiJhQGEuY29tIiwicm9sZSI6Ik1FTUJFUiIsImlhdCI6MTUxNjIzOTAyMiwiZXhwIjo2MDAwMDAwMDAwMH0.40DhQGzszXAawIW6XMJ08uAaYhulOF0x-9FYk0wr8SI`,
+      const response = await axios.post(
+        `${baseUrl}/api/matching/auto/request`,
+        data,
+        {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiZW1haWwiOiJhQGEuY29tIiwicm9sZSI6Ik1FTUJFUiIsImlhdCI6MTUxNjIzOTAyMiwiZXhwIjo2MDAwMDAwMDAwMH0.40DhQGzszXAawIW6XMJ08uAaYhulOF0x-9FYk0wr8SI`,
+          },
         },
-        body: JSON.stringify(data),
-      });
+      );
 
-      if (!response.ok) {
+      if (response.status !== 200) {
         throw new Error('매칭 요청 실패');
       }
 
       console.log('매칭 요청 성공');
-      
     } catch (error) {
       console.error('매칭 요청 중 오류:', error);
       if (eventSource) {
@@ -150,10 +176,9 @@ const AutoMatching = ({ isOpen }: { isOpen: boolean }) => {
     }
   };
 
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  // @ts-expect-error - will be used later
-  const handleError = (errors: FieldValues) => {
-    console.error(errors);
+  const handleError = (error: FieldValues) => {
+    const message = Object.values(error).find((item) => item?.message)?.message;
+    openToast(message, 'error');
   };
 
   return (
@@ -169,7 +194,7 @@ const AutoMatching = ({ isOpen }: { isOpen: boolean }) => {
         className="flex flex-col gap-[16px] h-fit max-h-[calc(100dvh-310px)] overflow-y-scroll scroll-hidden"
         onSubmit={(e) => {
           e.preventDefault();
-          handleSubmitToAutoMatching(autoMatchingForm.getValues());
+          onSubmit();
         }}
       >
         <RouteSetting control={autoMatchingForm.control} />
