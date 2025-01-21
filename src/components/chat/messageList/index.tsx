@@ -151,7 +151,7 @@ const MessageList = () => {
     <div
       ref={listRef}
       onScroll={handleScroll}
-      className="flex-1 overflow-y-auto px-4"
+      className="flex-1 overflow-y-auto px-4 bg-[#141513]"
       style={{ height: '100%' }}
     >
       {messages.map((msg, index) =>
