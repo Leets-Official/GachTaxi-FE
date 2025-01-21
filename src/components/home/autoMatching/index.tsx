@@ -3,7 +3,7 @@ import MiniTaxiLogoIcon from '@/assets/icon/miniTaxiLogoIcon.svg?react';
 import Button from '@/components/commons/Button';
 import RouteSetting from '@/components/home/autoMatching/RouteSetting';
 import SelectTags from '@/components/home/autoMatching/selectTags';
-import { AutoMatchingTypes } from 'gachTaxi-types';
+import { AutoMatchingTypes, MatchingSchema } from 'gachTaxi-types';
 import z from 'zod';
 import { useForm, SubmitHandler, FieldValues } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -197,7 +197,7 @@ const AutoMatching = ({ isOpen }: { isOpen: boolean }) => {
           onSubmit();
         }}
       >
-        <RouteSetting
+        <RouteSetting<MatchingSchema>
           control={autoMatchingForm.control}
           setValue={autoMatchingForm.setValue}
         />
