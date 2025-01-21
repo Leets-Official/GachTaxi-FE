@@ -79,6 +79,8 @@ export class EventSourcePolyfill implements EventSource {
   public addEventListener(
     type: string,
     listener: EventListenerOrEventListenerObject,
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  // @ts-expect-error - will be used later
     options?: boolean | AddEventListenerOptions
   ): void {
     switch (type) {
@@ -108,6 +110,8 @@ export class EventSourcePolyfill implements EventSource {
   public removeEventListener(
     type: string,
     listener: EventListenerOrEventListenerObject,
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  // @ts-expect-error - will be used later
     options?: boolean | EventListenerOptions
   ): void {
     switch (type) {
