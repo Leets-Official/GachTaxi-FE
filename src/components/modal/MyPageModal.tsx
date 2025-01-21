@@ -1,7 +1,6 @@
 import Modal from '@/components/modal';
 import Button from '../commons/Button';
-import useLogout from '@/hooks/useLogout';
-import useWithdraw from '@/hooks/useWithDraw';
+import { useLogout, useWithdraw } from '@/hooks';
 import { useModal } from '@/contexts/ModalContext';
 
 const MyPageModal = () => {
