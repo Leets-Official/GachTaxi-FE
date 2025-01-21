@@ -1,11 +1,13 @@
 import Modal from '@/components/modal';
 import Button from '../commons/Button';
-import { useLogout, useWithdraw } from '@/utils';
+import useLogout from '@/hooks/useLogout';
+import useWithdraw from '@/hooks/useWithDraw';
 import { useModal } from '@/contexts/ModalContext';
 
 const MyPageModal = () => {
   const { onLogout } = useLogout();
   const { onWithdraw } = useWithdraw();
+
   const { closeModal } = useModal();
 
   const handleLogout = () => {
