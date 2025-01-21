@@ -28,6 +28,8 @@ const AutoMatching = ({ isOpen }: { isOpen: boolean }) => {
     mode: 'onBlur',
   });
 
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  // @ts-expect-error - will be used later
   const { getCurrentLocation } = useGeoLocation();
 
   const [eventSource, setEventSource] = useState<EventSourcePolyfill | null>(null);
@@ -37,6 +39,7 @@ const AutoMatching = ({ isOpen }: { isOpen: boolean }) => {
     return () => {
       if (eventSource) {
         eventSource.close();
+        setEventSource(null);
       }
     };
   }, [eventSource]);
@@ -147,6 +150,8 @@ const AutoMatching = ({ isOpen }: { isOpen: boolean }) => {
     }
   };
 
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  // @ts-expect-error - will be used later
   const handleError = (errors: FieldValues) => {
     console.error(errors);
   };
