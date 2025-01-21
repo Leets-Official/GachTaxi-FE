@@ -70,13 +70,13 @@ const Navbar = ({ modalContent, setModalContent }: NavbarProps) => {
           친구
         </span>
       </Button>
-      <Button
-        variant="icon"
+      <Link
+        to="/notification"
         className="flex flex-col items-center justify-center gap-1"
       >
         <NotificationIcon />
         <span className={`text-[10px] text-textDarkGray`}>알림</span>
-      </Button>
+      </Link>
       <Link
         to="/mypage"
         className="flex flex-col items-center justify-center gap-1"
