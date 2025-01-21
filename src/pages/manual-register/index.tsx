@@ -115,7 +115,10 @@ const ManualMatchingRegister = () => {
           onSubmit();
         }}
       >
-        <RouteSetting control={manualMatchingForm.control} />
+        <RouteSetting
+          control={manualMatchingForm.control}
+          setValue={manualMatchingForm.setValue}
+        />
         <Controller
           name="time"
           control={manualMatchingForm.control}
