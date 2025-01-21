@@ -25,6 +25,7 @@ export default {
         matchLine: '#80C576',
         toastColor: '#20271E',
         addRed: '#FE3B34',
+        darkBlack: '#141513',
       },
       margin: {
         vertical: '16px',
