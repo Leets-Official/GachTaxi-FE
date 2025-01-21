@@ -10,15 +10,16 @@ import { autoMatchingSchema } from '@/libs/schemas/match';
 import InviteMembers from '@/components/home/autoMatching/inviteMembers';
 import useGeoLocation from '@/hooks/useGeoLocation';
 import getCoordinateByAddress from '@/libs/apis/getCoordinateByAddress';
-import { useCallback, useEffect } from 'react';
+import { useCallback, useEffect, useState } from 'react';
+import { EventSourcePolyfill } from '@/utils/EventSourcePolyfill';
 
 const AutoMatching = ({ isOpen }: { isOpen: boolean }) => {
   const autoMatchingForm = useForm<z.infer<typeof autoMatchingSchema>>({
     resolver: zodResolver(autoMatchingSchema),
     defaultValues: {
-      startPoint: '',
+      startPoint: '37.45054647474689,127.12683685293844',
       startName: '가천대 정문',
-      destinationPoint: '',
+      destinationPoint: '37.45531332196219,127.13454171595741',
       destinationName: '가천대 AI 공학관',
       members: [],
       criteria: [],
@@ -27,7 +28,21 @@ const AutoMatching = ({ isOpen }: { isOpen: boolean }) => {
     mode: 'onBlur',
   });
 
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  // @ts-expect-error - will be used later
   const { getCurrentLocation } = useGeoLocation();
+
+  const [eventSource, setEventSource] = useState<EventSourcePolyfill | null>(null);
+
+  // 컴포넌트 언마운트시 구독 종료
+  useEffect(() => {
+    return () => {
+      if (eventSource) {
+        eventSource.close();
+        setEventSource(null);
+      }
+    };
+  }, [eventSource]);
 
   // 목적지 좌표 설정 함수
   const updateDestinationCoordinates = useCallback(async () => {
@@ -53,39 +68,97 @@ const AutoMatching = ({ isOpen }: { isOpen: boolean }) => {
     }
   }, [updateDestinationCoordinates]);
 
-  const onSubmit = async () => {
-    try {
-      const coordinates = await getCurrentLocation();
-      if (!coordinates) {
-        throw new Error('위치 정보를 가져오지 못했습니다.');
-      }
+  const baseUrl = import.meta.env.VITE_API_BASE_URL;
 
-      autoMatchingForm.setValue(
-        'startPoint',
-        `${coordinates.lat},${coordinates.lng}`,
-        { shouldValidate: true },
-      );
+  // SSE 구독
+  const subscribeToSSE = useCallback(() => {
+    const sse = new EventSourcePolyfill(`${baseUrl}/api/matching/auto/subscribe`, {
+      headers: {
+        Authorization: `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiZW1haWwiOiJhQGEuY29tIiwicm9sZSI6Ik1FTUJFUiIsImlhdCI6MTUxNjIzOTAyMiwiZXhwIjo2MDAwMDAwMDAwMH0.40DhQGzszXAawIW6XMJ08uAaYhulOF0x-9FYk0wr8SI`
+      },
+      withCredentials: true
+    });
 
-      autoMatchingForm.handleSubmit(handleSubmitToAutoMatching, handleError)();
-    } catch (error) {
-      console.error('위치 정보 로드 오류:', error);
-    }
-  };
+    sse.onmessage = (event: MessageEvent) => {
+      const lines = event.data.split('\n');
+      const parsedEvent: { event?: string; data?: any } = {};
+      
+      // SSE 메시지 파싱
+      /**
+       * {
+       *  event: "init",
+       *  data: {
+       *    message: "member 1 Connection established"
+       *  }
+       * }
+       * 위와 같은 형식이며,
+       * event는 이벤트 타입
+       * data는 이벤트 데이터(json 형식), message에 실제 데이터가 있음
+       */
+      lines.forEach((line: string) => {
+        if (line.startsWith('event:')) {
+          parsedEvent.event = line.slice(6).trim();
+        } else if (line.startsWith('data:')) {
+          try {
+            parsedEvent.data = JSON.parse(line.slice(5).trim());
+          } catch (e) {
+            parsedEvent.data = line.slice(5).trim();
+          }
+        }
+      });
+
+      console.log('SSE 이벤트 타입:', parsedEvent.event);
+      console.log('SSE 데이터:', parsedEvent.data);
+    };
+
+    sse.onerror = (error) => {
+      console.error('SSE 에러:', error);
+      sse.close();
+    };
+
+    setEventSource(sse);
+  }, []);
 
   const handleSubmitToAutoMatching: SubmitHandler<AutoMatchingTypes> = async (
     data,
   ) => {
-    // API 호출
     console.log(data);
+    try {
+      subscribeToSSE();
+
+      const response = await fetch(`${baseUrl}/api/matching/auto/request`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiZW1haWwiOiJhQGEuY29tIiwicm9sZSI6Ik1FTUJFUiIsImlhdCI6MTUxNjIzOTAyMiwiZXhwIjo2MDAwMDAwMDAwMH0.40DhQGzszXAawIW6XMJ08uAaYhulOF0x-9FYk0wr8SI`,
+        },
+        body: JSON.stringify(data),
+      });
+
+      if (!response.ok) {
+        throw new Error('매칭 요청 실패');
+      }
+
+      console.log('매칭 요청 성공');
+      
+    } catch (error) {
+      console.error('매칭 요청 중 오류:', error);
+      if (eventSource) {
+        eventSource.close();
+        setEventSource(null);
+      }
+    }
   };
 
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  // @ts-expect-error - will be used later
   const handleError = (errors: FieldValues) => {
     console.error(errors);
   };
 
   return (
     <div
-      className={`flex flex-col ${isOpen ? 'gap-[32px] h-fit' : 'h-[260px]'} justify-between`}
+      className={`flex flex-col ${isOpen ? 'gap-[32px] h-fit' : 'h-[260px]'} justify-between w-full`}
     >
       <div className="flex items-center justify-between">
         <h2 className="text-header font-bold">바로 매칭</h2>
@@ -96,7 +169,7 @@ const AutoMatching = ({ isOpen }: { isOpen: boolean }) => {
         className="flex flex-col gap-[16px] h-fit max-h-[calc(100dvh-310px)] overflow-y-scroll scroll-hidden"
         onSubmit={(e) => {
           e.preventDefault();
-          onSubmit();
+          handleSubmitToAutoMatching(autoMatchingForm.getValues());
         }}
       >
         <RouteSetting control={autoMatchingForm.control} />

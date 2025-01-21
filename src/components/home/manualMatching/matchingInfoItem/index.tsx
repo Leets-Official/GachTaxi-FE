@@ -10,9 +10,14 @@ import { useState } from 'react';
 interface MatchingInfoItem {
   manualInfo: ManualInfo;
   setCurrentPage?: (value: 'MANUAL' | 'MY_MATCHING') => void;
+  currentPage?: 'MANUAL' | 'MY_MATCHING';
 }
 
-const MatchingInfoItem = ({ manualInfo, setCurrentPage }: MatchingInfoItem) => {
+const MatchingInfoItem = ({
+  manualInfo,
+  setCurrentPage,
+  currentPage,
+}: MatchingInfoItem) => {
   const [isExpand, setIsExpand] = useState<boolean>(false);
   const animateState = isExpand ? 'expanded' : 'collapsed';
   const { openModal } = useModal();
@@ -73,7 +78,7 @@ const MatchingInfoItem = ({ manualInfo, setCurrentPage }: MatchingInfoItem) => {
 
         <Tags manualInfo={manualInfo} />
       </motion.div>
-      {isExpand && (
+      {isExpand && currentPage! && (
         <div className="w-full">
           <Button
             className="w-full"
