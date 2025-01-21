@@ -1,11 +1,12 @@
 import { useState } from 'react';
 import ReportModal from '../modal/ReportModal';
+import DefaultProfileImage from '@/assets/icon/basicProfileIcon.svg?react';
 
 interface RenderOtherMessageProps {
   senderName: string;
   message: string;
   timeStamp: string;
-  imageUrl: string;
+  imageUrl?: string;
 }
 
 const RenderOtherMessage: React.FC<RenderOtherMessageProps> = ({
@@ -18,12 +19,19 @@ const RenderOtherMessage: React.FC<RenderOtherMessageProps> = ({
 
   return (
     <div className="flex items-start gap-2">
-      <img
-        src={imageUrl}
-        alt={`${senderName}의 프로필`}
-        className="w-8 h-8 rounded-full object-cover border-textDarkGray cursor-pointer"
-        onClick={() => setReportModalOpen(true)}
-      />
+      {imageUrl ? (
+        <img
+          src={imageUrl}
+          alt={`${senderName}의 프로필`}
+          className="w-8 h-8 rounded-full object-cover border-textDarkGray cursor-pointer"
+          onClick={() => setReportModalOpen(true)}
+        />
+      ) : (
+        <DefaultProfileImage
+          className="w-8 h-8 rounded-full cursor-pointer border-textDarkGray"
+          onClick={() => setReportModalOpen(true)}
+        />
+      )}
       <div className={`max-w-[70%]`}>
         <p className="text-assistive text-white mb-1">{senderName}</p>
         <div
@@ -43,7 +51,7 @@ const RenderOtherMessage: React.FC<RenderOtherMessageProps> = ({
         <ReportModal
           onClose={() => setReportModalOpen(false)}
           senderName={senderName}
-          imageUrl={imageUrl}
+          imageUrl={imageUrl || ''}
         />
       )}
     </div>
