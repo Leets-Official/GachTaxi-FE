@@ -14,13 +14,8 @@ const useWebSocket = (roomId: number | null) => {
     const connectWebSocket = () => {
       if (stompClient || subscribed.current) return;
       //const socket = new SockJS(`${import.meta.env.VITE_API_BASE_URL}/ws`);
-      // const socket = new SockJs(
-      //   `https://e590-2406-5900-102a-70c2-6568-cdf4-9ae9-b838.ngrok-free.app/wss`,
-      // );
 
-      const ws = new WebSocket(
-        `https://6140-2406-5900-102a-70c2-6568-cdf4-9ae9-b838.ngrok-free.app/ws`,
-      );
+      const ws = new WebSocket(`${import.meta.env.VITE_API_BASE_URL}/ws`);
       console.log('ws', ws);
 
       ws.onopen = () => {
