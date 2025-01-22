@@ -14,10 +14,18 @@ declare module 'gachTaxi-types' {
     message: string;
     data: DataType | null;
   }
+  interface PhoneVerificationTypes {
+    phoneNumber: string;
+  }
 
   interface AuthCodeTypes {
     authCode: string;
     email: string;
+  }
+
+  interface AuthCodeForPhoneTypes {
+    authCode: string;
+    phoneNumber: string;
   }
 
   interface UserInfoVerificationTypes {

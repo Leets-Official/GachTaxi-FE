@@ -1,8 +1,9 @@
-import { formatTimeToSelect } from '@/utils';
 import { z } from 'zod';
 
 // 개별 스키마
-const startPointSchema = z.string().min(1);
+const startPointSchema = z
+  .string()
+  .min(1, '시작지의 위도, 경도가 설정되지 않았어요!');
 
 const startNameSchema = z.string().min(1, '시작 지점을 설정해주세요!');
 
@@ -12,7 +13,7 @@ const destinationPointSchema = z
 
 const destinationNameSchema = z.string().min(1, '종료 지점을 설정해주세요!');
 
-const timeSchema = z.string().default(() => formatTimeToSelect(new Date()));
+const timeSchema = z.string();
 
 const membersSchema = z.string().array().default([]);
 

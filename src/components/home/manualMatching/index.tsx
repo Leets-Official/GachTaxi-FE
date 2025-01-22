@@ -12,24 +12,11 @@ export interface ManualInfo {
   memberCount: number;
   route: string;
   tags: string[];
+  content: string;
 }
 
 const ManualMatching = ({ isOpen }: ManualMatchingProps) => {
-  const [manualInfos, setManualInfos] = useState<ManualInfo[]>([
-    {
-      // 임시 mock 데이터
-      time: '오전 08:50',
-      memberCount: 3,
-      route: 'basic',
-      tags: ['태그1', '태그2', '태그3'],
-    },
-    {
-      time: '오전 08:50',
-      memberCount: 3,
-      route: 'basic',
-      tags: ['태그1', '태그2', '태그3'],
-    },
-  ]);
+  const [manualInfos, setManualInfos] = useState<ManualInfo[]>([]);
   const [currentPage, setCurrentPage] = useState<'MANUAL' | 'MY_MATCHING'>(
     'MANUAL',
   );
@@ -45,10 +32,12 @@ const ManualMatching = ({ isOpen }: ManualMatchingProps) => {
           isOpen={isOpen}
           manualInfos={manualInfos}
           setManualInfos={setManualInfos}
+          currentPage={currentPage}
+          setCurrentPage={setCurrentPage}
         />
       );
     } else {
-      return <MyMatchingPage />;
+      return <MyMatchingPage isOpen={isOpen} />;
     }
   };
 

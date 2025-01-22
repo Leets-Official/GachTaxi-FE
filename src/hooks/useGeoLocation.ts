@@ -1,11 +1,11 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 
 interface GeoLocationState {
   loaded: boolean;
   coordinates: {
     lat: number | null;
     lng: number | null;
-  };
+  } | null;
   error?: {
     code: number;
     message: string;
@@ -18,52 +18,32 @@ const useGeoLocation = () => {
     coordinates: { lat: null, lng: null },
   });
 
-  const onSuccess = (position: GeolocationPosition) => {
-    setLocation({
-      loaded: true,
-      coordinates: {
-        lat: position.coords.latitude,
-        lng: position.coords.longitude,
-      },
-    });
-  };
+  const getCurrentLocation = () =>
+    new Promise<{ lat: number; lng: number }>((resolve, reject) => {
+      if (!navigator.geolocation) {
+        console.error('naviagtor는 해당 브라우저에서 사용할 수 없어요!');
+        setLocation({ loaded: true, coordinates: null });
+        return reject(new Error('geoLocation이 동작하지 않아요!'));
+      }
 
-  const onError = (error: GeolocationPositionError) => {
-    setLocation({
-      loaded: true,
-      coordinates: { lat: null, lng: null },
-      error: {
-        code: error.code,
-        message: error.message || '알 수 없는 에러입니다.',
-      },
-    });
-  };
-
-  useEffect(() => {
-    if (!('geolocation' in navigator)) {
-      setLocation({
-        loaded: true,
-        coordinates: { lat: null, lng: null },
-        error: {
-          code: 0,
-          message: '위치 정보를 해당 브라우저에서 불러올 수 없습니다.',
+      navigator.geolocation.getCurrentPosition(
+        (position) => {
+          const coords = {
+            lat: position.coords.latitude,
+            lng: position.coords.longitude,
+          };
+          setLocation({ loaded: true, coordinates: coords });
+          resolve(coords);
         },
-      });
-      return;
-    }
+        (error) => {
+          console.error('위치를 가져오는 도중에 에러가 발생했어요!', error);
+          setLocation({ loaded: true, coordinates: null });
+          reject(error);
+        },
+      );
+    });
 
-    // 위치 갱신 타이머 설정
-    const updateLocation = () => {
-      navigator.geolocation.getCurrentPosition(onSuccess, onError);
-    };
-
-    updateLocation();
-    const intervalId = setInterval(updateLocation, 60000);
-
-    return () => clearInterval(intervalId); // Cleanup on unmount
-  }, []);
-
-  return location;
+  return { location, getCurrentLocation };
 };
 
 export default useGeoLocation;

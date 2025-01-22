@@ -44,6 +44,17 @@ const emailSchema = z
   .min(1, '이메일을 입력해주세요!')
   .email({ message: '이메일 형식으로 작성 부탁드려요!' });
 
+const phoneSchema = z
+  .string()
+  .min(1, '번호를 입력해주세요!')
+  .refine(
+    (value) => {
+      const number = Number(value);
+      return !isNaN(number);
+    },
+    { message: '숫자로만 입력해주세요!' },
+  );
+
 const authCodeSchema = z.string().min(1, '인증번호를 입력해주세요!');
 
 // 약관 개별 스키마
@@ -58,9 +69,18 @@ export const emailVerificationSchema = z.object({
   email: emailSchema,
 });
 
+export const phoneVerificationSchema = z.object({
+  phoneNumber: phoneSchema,
+});
+
 export const authCodeVerificationSchema = z.object({
   authCode: authCodeSchema,
   email: z.string(),
+});
+
+export const authCodeVerificationForPhoneSchema = z.object({
+  authCode: authCodeSchema,
+  phoneNumber: z.string(),
 });
 
 export const userInfoVerificationSchema = z.object({

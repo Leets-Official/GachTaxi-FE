@@ -20,6 +20,7 @@ import TimeSelect from '@/components/manual-register/timeSelect';
 import useGeoLocation from '@/hooks/useGeoLocation';
 import { useEffect, useCallback } from 'react';
 import getCoordinateByAddress from '@/libs/apis/getCoordinateByAddress';
+import { useToast } from '@/contexts/ToastContext';
 
 const ManualMatchingRegister = () => {
   const manualMatchingForm = useForm<z.infer<typeof manualMatchingSchema>>({
@@ -37,7 +38,8 @@ const ManualMatchingRegister = () => {
     },
   });
 
-  const location = useGeoLocation();
+  const { getCurrentLocation } = useGeoLocation();
+  const { openToast } = useToast();
 
   // 목적지 좌표 설정 함수
   const updateDestinationCoordinates = useCallback(async () => {
@@ -53,20 +55,6 @@ const ManualMatchingRegister = () => {
     }
   }, [manualMatchingForm]);
 
-  // 위치 정보 업데이트
-  useEffect(() => {
-    if (
-      location.loaded &&
-      location.coordinates.lat &&
-      location.coordinates.lng
-    ) {
-      manualMatchingForm.setValue(
-        'startPoint',
-        `${location.coordinates.lat}, ${location.coordinates.lng}`,
-      );
-    }
-  }, [location, manualMatchingForm]);
-
   // 목적지 정보 업데이트
   useEffect(() => {
     if (window.kakao?.maps) {
@@ -76,18 +64,43 @@ const ManualMatchingRegister = () => {
     }
   }, [updateDestinationCoordinates]);
 
-  const handleSubmitToManualMatching: SubmitHandler<ManualMatchingTypes> = (
-    data,
-  ) => {
+  const onSubmit = async () => {
     try {
-      console.log('Submitted Data:', data);
+      const coordinates = await getCurrentLocation();
+      if (!coordinates) {
+        throw new Error('위치 정보를 가져오지 못했습니다.');
+      }
+
+      manualMatchingForm.setValue(
+        'startPoint',
+        `${coordinates.lat},${coordinates.lng}`,
+        { shouldValidate: true },
+      );
+
+      manualMatchingForm.handleSubmit(
+        handleSubmitToManualMatching,
+        handleError,
+      )();
+    } catch (error) {
+      console.error('위치 정보 로드 오류:', error);
+    }
+  };
+
+  const handleSubmitToManualMatching: SubmitHandler<
+    ManualMatchingTypes
+  > = async (data) => {
+    try {
+      console.log(data);
     } catch (e) {
-      console.error('Submission Error:', e);
+      console.error(e);
     }
   };
 
   const handleError = (errors: FieldValues) => {
-    console.error(errors);
+    const message = Object.values(errors).find(
+      (item) => item?.message,
+    )?.message;
+    openToast(message, 'error');
   };
 
   return (
@@ -97,9 +110,15 @@ const ManualMatchingRegister = () => {
 
       <form
         className="flex-1 overflow-scroll scroll-hidden mb-[62px] flex flex-col gap-[16px] rounded-box"
-        onSubmit={manualMatchingForm.handleSubmit(handleSubmitToManualMatching)}
+        onSubmit={(e) => {
+          e.preventDefault();
+          onSubmit();
+        }}
       >
-        <RouteSetting control={manualMatchingForm.control} />
+        <RouteSetting
+          control={manualMatchingForm.control}
+          setValue={manualMatchingForm.setValue}
+        />
         <Controller
           name="time"
           control={manualMatchingForm.control}
@@ -114,14 +133,7 @@ const ManualMatchingRegister = () => {
       </form>
 
       <div className="absolute left-0 bottom-0 w-full p-horizontal">
-        <Button
-          type="button"
-          className="w-full"
-          onClick={manualMatchingForm.handleSubmit(
-            handleSubmitToManualMatching,
-            handleError,
-          )}
-        >
+        <Button type="button" className="w-full" onClick={onSubmit}>
           매칭등록
         </Button>
       </div>

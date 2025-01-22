@@ -31,7 +31,7 @@ const ProfileImageUpload = ({
                   className="w-[104px] h-[104px] rounded-full object-cover"
                 />
               ) : (
-                <BasicProfileIcon />
+                <BasicProfileIcon width={104} height={104} />
               )}
               <div className="absolute bottom-0 right-0">
                 <CameraIcon />
