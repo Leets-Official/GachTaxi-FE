@@ -1,15 +1,12 @@
 import BottomSheet from '@/components/home/BottomSheet';
 import Navbar from '@/components/home/Navbar';
-import { useState, Suspense, lazy } from 'react';
+import useSheetStore from '@/store/useSheetStore';
+import { Suspense, lazy } from 'react';
 
 const KakaoMap = lazy(() => import('@/components/home/KakaoMap'));
 
 const HomePage = () => {
-  const [modalContent, setModalContent] = useState({
-    home: true,
-    match: false,
-    friend: false,
-  });
+  const { modalContent } = useSheetStore();
 
   return (
     <section className="w-full flex-1 overflow-hidden relative bg-neutral">
@@ -17,7 +14,7 @@ const HomePage = () => {
         <KakaoMap />
       </Suspense>
       <BottomSheet modalContent={modalContent} />
-      <Navbar modalContent={modalContent} setModalContent={setModalContent} />
+      <Navbar modalContent={modalContent} />
     </section>
   );
 };
