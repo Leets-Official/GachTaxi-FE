@@ -1,7 +1,7 @@
 import { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { kakaoLogin } from '@/libs/apis/kakaoLogin.api';
-import LoadingScreen from '@/pages/loading';
+import LoadingScreen from '@/components/loading';
 
 const KakaoLoginLoading = () => {
   const nav = useNavigate();
