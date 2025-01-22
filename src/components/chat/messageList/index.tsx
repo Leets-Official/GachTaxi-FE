@@ -1,63 +1,11 @@
-import { useState, useRef } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import InviteMessage from '../InviteMessage';
 import RenderMyMessage from './renderMyMessage';
 import RenderOtherMessage from './renderOtherMessage';
-// import {
-//   fetchChatMessages,
-//   Message,
-//   Pageable,
-// } from '@/libs/apis/chat/MessageList.api';
+import { getChatMessages } from '@/libs/apis/chat/getChatMessages';
 
-// interface MessageListProps {
-//   roomId: string;
-//   subscribeToRoom: (roomId: string) => Promise<void>;
-// }
-
-const mockMessages = [
-  {
-    senderName: '사용자1',
-    message: '반가워요 사용자1님!ㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇ',
-    timeStamp: '2025-01-13T21:29:57.87',
-    messageType: 'MESSAGE',
-    imageUrl:
-      'https://upload.wikimedia.org/wikipedia/ko/thumb/4/4a/%EC%8B%A0%EC%A7%B1%EA%B5%AC.png/230px-%EC%8B%A0%EC%A7%B1%EA%B5%AC.png',
-  },
-  {
-    senderName: '나',
-    message: '정문 어떠세요!ㄴㄴㄴㄴㄴㄴㄴㄴㄴㄴㄴㄴㄴㄴㄴㄴㄴㄴ',
-    timeStamp: '2025-01-13T21:22:29.21',
-    messageType: 'MESSAGE',
-    imageUrl:
-      'https://upload.wikimedia.org/wikipedia/ko/thumb/4/4a/%EC%8B%A0%EC%A7%B1%EA%B5%AC.png/230px-%EC%8B%A0%EC%A7%B1%EA%B5%AC.png',
-  },
-  {
-    senderName: '사용자2',
-    message: '반가워요 지원님!',
-    timeStamp: '2025-01-13T21:21:28.964',
-    messageType: 'MESSAGE',
-    imageUrl:
-      'https://i.namu.wiki/i/Bge3xnYd4kRe_IKbm2uqxlhQJij2SngwNssjpjaOyOqoRhQlNwLrR2ZiK-JWJ2b99RGcSxDaZ2UCI7fiv4IDDQ.webp',
-  },
-  {
-    senderName: '나',
-    message: '반가워요!ㅇㅇㅇㅇ',
-    timeStamp: '2025-01-13T21:20:52.71',
-    messageType: 'MESSAGE',
-    imageUrl:
-      'https://upload.wikimedia.org/wikipedia/ko/thumb/4/4a/%EC%8B%A0%EC%A7%B1%EA%B5%AC.png/230px-%EC%8B%A0%EC%A7%B1%EA%B5%AC.png',
-  },
-  {
-    senderName: '다른사람1',
-    message: '다른사람1 님이 입장하셨습니다.',
-    timeStamp: '2025-01-13T21:20:10.06',
-    messageType: 'ENTER',
-    imageUrl:
-      'https://upload.wikimedia.org/wikipedia/ko/thumb/4/4a/%EC%8B%A0%EC%A7%B1%EA%B5%AC.png/230px-%EC%8B%A0%EC%A7%B1%EA%B5%AC.png',
-  },
-];
-
-const MessageList = () => {
-  const [messages, setMessages] = useState(mockMessages);
+const MessageList = ({ roomId }: { roomId: number }) => {
+  const [messages, setMessages] = useState<ChatMessageFromServer[]>([]);
   //   const [pageable, setPageable] = useState<Pageable | null>(null);
   //   const [lastMessageTimeStamp, setLastMessageTimeStamp] = useState<
   //     string | null
@@ -65,68 +13,47 @@ const MessageList = () => {
   //   const [isLoading, setIsLoading] = useState(false);
   const listRef = useRef<HTMLDivElement>(null);
 
-  //const pageSize = 10;
-
-  // 채팅방 구독 및 초기 메시지 로드
-  //   useEffect(() => {
-  //     const initialize = async () => {
-  //       try {
-  //         await subscribeToRoom(roomId);
-  //         fetchMessages(0, null);
-  //       } catch (error) {
-  //         console.error('Failed to subscribe to room:', error);
-  //       }
-  //     };
-
-  //     initialize();
-  //   }, [roomId, subscribeToRoom]);
-
-  //   const fetchMessages = async (
-  //     pageNumber: number,
-  //     timeStamp: string | null,
-  //   ) => {
-  //     if (isLoading || (pageable?.last && pageNumber > pageable.pageNumber))
-  //       return;
-
-  //     setIsLoading(true);
-
-  //     try {
-  //       const data = await fetchChatMessages(
-  //         roomId,
-  //         pageNumber,
-  //         pageSize,
-  //         timeStamp || undefined,
-  //       );
-
-  //       const newMessages = data.chattingMessage.reverse();
-  //       setMessages((prev) => [...newMessages, ...prev]);
-  //       setPageable(data.pageable);
-
-  //       if (pageNumber === 0 && newMessages.length > 0) {
-  //         setLastMessageTimeStamp(newMessages[newMessages.length - 1].timeStamp);
-  //       }
-  //     } catch (error) {
-  //       console.error('Failed to fetch messages:', error);
-  //     } finally {
-  //       setIsLoading(false);
-  //     }
-  //   };
+  useEffect(() => {
+    const getMessages = async () => {
+      try {
+        const data = await getChatMessages(roomId);
+        console.log('채팅 메시지:', data);
+        if (Array.isArray(data.message)) {
+          setMessages(data.message); // 배열일 경우 messages 상태에 저장
+        } else {
+          console.error('데이터 형식이 예상과 다릅니다.', data);
+        }
+      } catch (error) {
+        console.error('채팅 메시지 조회 중 오류:', error);
+      }
+    };
+    getMessages();
+  }, []);
 
   const loadMoreMessages = () => {
-    const newMessages = [
+    const newMessages: ChatMessageFromServer[] = [
       {
-        senderName: '이강혁',
+        messageId: '678db88cb20ab72494969cba',
+        senderId: 2, // 다른 사람이 보낸 메시지
+        senderName: '사용자1',
         message: '안녕하세요!',
-        timeStamp: '2025-01-13T21:19:17.457',
+        range: '324dffsdf',
+        unreadCount: 1,
+        timeStamp: '2025-01-21T10:09:25.71',
         messageType: 'MESSAGE',
         imageUrl:
           'https://upload.wikimedia.org/wikipedia/ko/thumb/4/4a/%EC%8B%A0%EC%A7%B1%EA%B5%AC.png/230px-%EC%8B%A0%EC%A7%B1%EA%B5%AC.png',
       },
       {
-        senderName: '이강혁',
-        message: '이강혁 님이 입장하셨습니다.',
-        timeStamp: '2025-01-13T21:18:58.34',
-        messageType: 'ENTER',
+        messageId: '678db88cb20ab72494969cba',
+        senderId: 2, // 다른 사람이 보낸 메시지
+        senderName: '사용자1',
+        message: '안녕하세요!',
+        range: '324dffsdf',
+        unreadCount: 1,
+        timeStamp: '2025-01-21T10:09:25.71',
+        messageType: 'MESSAGE',
+
         imageUrl:
           'https://upload.wikimedia.org/wikipedia/ko/thumb/4/4a/%EC%8B%A0%EC%A7%B1%EA%B5%AC.png/230px-%EC%8B%A0%EC%A7%B1%EA%B5%AC.png',
       },
@@ -162,7 +89,7 @@ const MessageList = () => {
               msg.senderName.trim() === '나' ? 'justify-end' : 'justify-start'
             } mb-4`}
           >
-            {msg.senderName.trim() === '나' ? (
+            {msg.senderId === 1 ? (
               <RenderMyMessage
                 message={msg.message}
                 timeStamp={msg.timeStamp}
