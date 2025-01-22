@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { useEffect, useState, memo, useRef } from 'react';
 import getRouteLine from '@/libs/apis/kakaoMobility.api';
-import { ORIGIN, DESTINATION } from '@/constants';
+import useLocationStore from '@/store/useLocationStore';
 
 declare global {
   interface Window {
@@ -11,9 +11,10 @@ declare global {
 
 const KakaoMap = memo(() => {
   const [isKakaoLoaded, setIsKakaoLoaded] = useState(false);
+  const { autoDestinationPoint, autoStartPoint } = useLocationStore();
   const mapRef = useRef(null);
-  const origin = ORIGIN;
-  const destination = DESTINATION;
+  const origin = autoDestinationPoint;
+  const destination = autoStartPoint;
 
   // 카카오맵 스크립트 로드
   useEffect(() => {
@@ -40,7 +41,7 @@ const KakaoMap = memo(() => {
   // 경로 렌더링
   useEffect(() => {
     const drawRoute = async () => {
-      if (!mapRef.current) return;
+      if (!mapRef.current && !origin && !destination) return;
 
       try {
         const response = await getRouteLine({ origin, destination });
