@@ -21,6 +21,7 @@ import useGeoLocation from '@/hooks/useGeoLocation';
 import { useEffect, useCallback } from 'react';
 import getCoordinateByAddress from '@/libs/apis/getCoordinateByAddress';
 import { useToast } from '@/contexts/ToastContext';
+import useLocationStore from '@/store/useLocationStore';
 
 const ManualMatchingRegister = () => {
   const manualMatchingForm = useForm<z.infer<typeof manualMatchingSchema>>({
@@ -38,6 +39,12 @@ const ManualMatchingRegister = () => {
     },
   });
 
+  const {
+    manualDestinationPoint,
+    setManualDestinationPoint,
+    manualDestinationName,
+    setManualDestinationName,
+  } = useLocationStore();
   const { getCurrentLocation } = useGeoLocation();
   const { openToast } = useToast();
 
@@ -55,14 +62,29 @@ const ManualMatchingRegister = () => {
     }
   }, [manualMatchingForm]);
 
+  const destinationName = manualMatchingForm.watch('destinationName');
+  const currentDestinationPoint = manualMatchingForm.watch('destinationPoint');
+
   // 목적지 정보 업데이트
   useEffect(() => {
-    if (window.kakao?.maps) {
-      window.kakao.maps.load(updateDestinationCoordinates);
-    } else {
-      console.error('카카오맵 api 동작 오류');
+    if (
+      destinationName !== manualDestinationName ||
+      (currentDestinationPoint !== manualDestinationPoint && window.kakao?.maps)
+    ) {
+      setManualDestinationName(destinationName);
+      setManualDestinationPoint(currentDestinationPoint);
+      console.log('카카오 api 호출');
+      // window.kakao.maps.load(updateDestinationCoordinates);
     }
-  }, [updateDestinationCoordinates]);
+  }, [
+    currentDestinationPoint,
+    destinationName,
+    setManualDestinationName,
+    setManualDestinationPoint,
+    manualDestinationName,
+    manualDestinationPoint,
+    updateDestinationCoordinates,
+  ]);
 
   const onSubmit = async () => {
     try {
@@ -115,10 +137,7 @@ const ManualMatchingRegister = () => {
           onSubmit();
         }}
       >
-        <RouteSetting
-          control={manualMatchingForm.control}
-          setValue={manualMatchingForm.setValue}
-        />
+        <RouteSetting control={manualMatchingForm.control} />
         <Controller
           name="time"
           control={manualMatchingForm.control}
