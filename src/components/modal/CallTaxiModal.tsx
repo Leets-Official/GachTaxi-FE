@@ -3,7 +3,7 @@ import Button from '../commons/Button';
 
 const CallTaxiModal = () => {
   return (
-    <div className="p-2">
+    <>
       <Modal.Header className="font-bold text-header mt-4 ml-2">
         택시를 호출할까요?
       </Modal.Header>
@@ -22,7 +22,7 @@ const CallTaxiModal = () => {
           </Button>
         </div>
       </Modal.Footer>
-    </div>
+    </>
   );
 };
 
