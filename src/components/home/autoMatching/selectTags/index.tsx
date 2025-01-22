@@ -23,7 +23,7 @@ const SelectTags = <T extends MatchingSchema>({
   return (
     <Controller
       control={control}
-      name={'tags' as Path<T>}
+      name={'criteria' as Path<T>}
       render={({ field: { value = [], onChange } }) => {
         const safeValue: string[] = Array.isArray(value) ? value : [];
 
@@ -35,7 +35,7 @@ const SelectTags = <T extends MatchingSchema>({
                 <TagItem
                   key={tag}
                   tag={tag}
-                  isSelected={value.includes(tag)}
+                  isSelected={safeValue.includes(tag)}
                   onClick={(selectedTag) => {
                     const updatedTags = handleUpdateTags(
                       safeValue,

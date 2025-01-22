@@ -1,4 +1,4 @@
-import MatchingSheet from '@/components/home/MatchingSheet';
+import BottomSheet from '@/components/home/BottomSheet';
 import Navbar from '@/components/home/Navbar';
 import { useState, Suspense, lazy } from 'react';
 
@@ -16,7 +16,7 @@ const HomePage = () => {
       <Suspense fallback={<div className="bg-white h-[85vh]">로딩중...</div>}>
         <KakaoMap />
       </Suspense>
-      <MatchingSheet modalContent={modalContent} />
+      <BottomSheet modalContent={modalContent} />
       <Navbar modalContent={modalContent} setModalContent={setModalContent} />
     </section>
   );

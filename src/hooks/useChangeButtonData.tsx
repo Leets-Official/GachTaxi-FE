@@ -1,6 +1,7 @@
-import LogOutButton from '@/components/my-page/LogOutButton';
 import BackIcon from '@/assets/icon/backIcon.svg?react';
 import { Link } from 'react-router-dom';
+import { useModal } from '@/contexts/ModalContext';
+import MyPageModal from '@/components/modal/MyPageModal';
 
 interface ButtonItem {
   label: string;
@@ -10,6 +11,8 @@ interface ButtonItem {
 }
 
 export const useChangeButtonData = (): JSX.Element[] => {
+  const { openModal } = useModal();
+
   const BUTTON_DATA: ButtonItem[] = [
     { label: '공지 사항', path: '/mypage/notice' },
     { label: '문의 사항', path: '/mypage/inquiry' },
@@ -17,11 +20,20 @@ export const useChangeButtonData = (): JSX.Element[] => {
     { label: '알림 설정', path: '/mypage/notification' },
     {
       label: '로그아웃',
-      component: <LogOutButton />,
+      component: (
+        <div
+          key="logout"
+          onClick={() => openModal(<MyPageModal />)}
+          className="flex justify-between items-center w-full text-captionHeader cursor-pointer"
+        >
+          <span>로그아웃</span>
+          <BackIcon className="rotate-180" />
+        </div>
+      ),
     },
     {
       label: '전화번호 인증',
-      path: 'mypage/phone/verification',
+      path: '/mypage/phone-verification',
       isVerified: false,
     },
   ];

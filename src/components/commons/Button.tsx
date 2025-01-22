@@ -21,13 +21,12 @@ const Button = ({
 
   // variantStyle 조건부 설정
   if (variant === 'primary') {
-    variantStyle =
-      'bg-primary h-[50px] rounded-common font-semibold text-button text-neutral outline-none';
+    variantStyle = `${isDisabled ? 'bg-matchLine' : 'bg-primary'} h-[50px] rounded-modal font-semibold text-button text-neutral outline-none`;
   } else if (variant === 'secondary') {
     variantStyle =
-      'bg-transparent h-[50px] rounded-common font-semibold text-button text-textLightGray outline-none';
+      'bg-transparent h-[50px] rounded-modal font-semibold text-button text-textLightGray outline-none border-2 border-primary';
   } else if (variant === 'icon') {
-    variantStyle = 'bg-transparent outline-none';
+    variantStyle = 'bg-transparent outline-none w-fit h-fit';
   }
 
   return (
@@ -35,7 +34,7 @@ const Button = ({
       type={type}
       disabled={isDisabled}
       initial={{ scale: 1 }}
-      whileTap={{ scale: 0.95 }}
+      whileTap={isDisabled ? { scale: 1 } : { scale: 0.95 }}
       className={`${variantStyle} ${className || ''}`}
       {...(props as MotionProps)}
     >
