@@ -2,16 +2,28 @@ import MenuItem from './MenuItem';
 import { MENUITEMS } from '@/constants';
 import { useState } from 'react';
 import SendAccountModal from '../modal/sendAccountModal';
+import CallTaxiModal from '@/components/modal/CallTaxiModal';
+import { useModal } from '@/contexts/ModalContext';
 
 const BottomMenu = ({
   onSendAccount,
 }: {
   onSendAccount: (account: string) => void;
 }) => {
+  const { openModal } = useModal();
   const [showAccountModal, setShowAccountModal] = useState(false);
 
   const handleSendClick = () => {
     setShowAccountModal(true);
+  };
+
+  const handleTaxiClick = () => {
+    openModal(<CallTaxiModal />);
+  };
+
+  const clickHandlers: Record<string, () => void> = {
+    '계좌 전송': handleSendClick,
+    '택시 호출': handleTaxiClick,
   };
 
   return (
@@ -19,7 +31,7 @@ const BottomMenu = ({
       {MENUITEMS.map((item, index) => (
         <div
           key={index}
-          onClick={item.label === '계좌 전송' ? handleSendClick : undefined}
+          onClick={clickHandlers[item.label] || undefined}
           className="cursor-pointer"
         >
           <MenuItem key={index} Icon={item.icon} label={item.label} />
