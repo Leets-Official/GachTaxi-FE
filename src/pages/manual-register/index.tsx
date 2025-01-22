@@ -40,10 +40,8 @@ const ManualMatchingRegister = () => {
   });
 
   const {
-    manualDestinationPoint,
-    setManualDestinationPoint,
-    manualDestinationName,
-    setManualDestinationName,
+    manual: { destinationName, destinationPoint },
+    setManual: { setDestinationName, setDestinationPoint },
   } = useLocationStore();
   const { getCurrentLocation } = useGeoLocation();
   const { openToast } = useToast();
@@ -62,27 +60,27 @@ const ManualMatchingRegister = () => {
     }
   }, [manualMatchingForm]);
 
-  const destinationName = manualMatchingForm.watch('destinationName');
+  const currentDestinationName = manualMatchingForm.watch('destinationName');
   const currentDestinationPoint = manualMatchingForm.watch('destinationPoint');
 
   // 목적지 정보 업데이트
   useEffect(() => {
     if (
-      destinationName !== manualDestinationName ||
-      (currentDestinationPoint !== manualDestinationPoint && window.kakao?.maps)
+      currentDestinationName !== destinationName ||
+      (currentDestinationPoint !== destinationPoint && window.kakao?.maps)
     ) {
-      setManualDestinationName(destinationName);
-      setManualDestinationPoint(currentDestinationPoint);
+      setDestinationName(destinationName);
+      setDestinationPoint(currentDestinationPoint);
       console.log('카카오 api 호출');
       // window.kakao.maps.load(updateDestinationCoordinates);
     }
   }, [
+    currentDestinationName,
     currentDestinationPoint,
     destinationName,
-    setManualDestinationName,
-    setManualDestinationPoint,
-    manualDestinationName,
-    manualDestinationPoint,
+    destinationPoint,
+    setDestinationName,
+    setDestinationPoint,
     updateDestinationCoordinates,
   ]);
 

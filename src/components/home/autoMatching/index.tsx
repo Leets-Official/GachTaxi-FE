@@ -33,11 +33,11 @@ const AutoMatching = ({ isOpen }: { isOpen: boolean }) => {
   });
 
   const {
-    autoDestinationPoint,
-    setAutoStartPoint,
-    setAutoDestinationPoint,
-    autoDestinationName,
-    setAutoDestinationName,
+    auto: {
+      destinationPoint: autoDestinationPoint,
+      destinationName: autoDestinationName,
+    },
+    setAuto: { setStartPoint, setDestinationPoint, setDestinationName },
   } = useLocationStore();
   const { getCurrentLocation } = useGeoLocation();
   const { openToast } = useToast();
@@ -65,8 +65,8 @@ const AutoMatching = ({ isOpen }: { isOpen: boolean }) => {
         getCoordinateByAddress(currentStartPoint),
       ]);
 
-      setAutoStartPoint(`${startCoordinate.lat},${startCoordinate.lng}`);
-      setAutoDestinationPoint(
+      setStartPoint(`${startCoordinate.lat},${startCoordinate.lng}`);
+      setDestinationPoint(
         `${destinationCoordinate.lat},${destinationCoordinate.lng}`,
       );
       autoMatchingForm.setValue(
@@ -76,25 +76,31 @@ const AutoMatching = ({ isOpen }: { isOpen: boolean }) => {
     } catch (error) {
       console.error('목적지 좌표 로드 오류', error);
     }
-  }, [autoMatchingForm, setAutoDestinationPoint]);
+  }, [
+    autoMatchingForm,
+    currentDestinationPoint,
+    currentStartPoint,
+    setStartPoint,
+    setDestinationPoint,
+  ]);
 
   useEffect(() => {
     if (
       destinationName !== autoDestinationName ||
       (currentDestinationPoint !== autoDestinationPoint && window.kakao?.maps)
     ) {
-      setAutoDestinationName(destinationName);
-      setAutoDestinationPoint(currentDestinationPoint);
+      setDestinationName(destinationName);
+      setDestinationPoint(currentDestinationPoint);
       console.log('카카오 api 호출');
       // window.kakao.maps.load(updateDestinationCoordinates);
     }
   }, [
-    destinationName,
     currentDestinationPoint,
+    destinationName,
     autoDestinationName,
     autoDestinationPoint,
-    setAutoDestinationName,
-    setAutoDestinationPoint,
+    setDestinationName,
+    setDestinationPoint,
     updateDestinationCoordinates,
   ]);
 

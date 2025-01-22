@@ -1,35 +1,60 @@
 import { create } from 'zustand';
 
-interface LocationStroe {
-  autoDestinationPoint: string;
-  autoDestinationName: string;
-  autoStartPoint: string;
-  setAutoDestinationPoint: (point: string) => void;
-  setAutoStartPoint: (point: string) => void;
-  setAutoDestinationName: (name: string) => void;
-  manualDestinationPoint: string;
-  manualDestinationName: string;
-  setManualDestinationPoint: (point: string) => void;
-  setManualDestinationName: (name: string) => void;
+interface LocationStore {
+  auto: {
+    destinationPoint: string;
+    destinationName: string;
+    startPoint: string;
+  };
+  manual: {
+    destinationPoint: string;
+    destinationName: string;
+  };
+  setAuto: {
+    setStartPoint: (point: string) => void;
+    setDestinationPoint: (point: string) => void;
+    setDestinationName: (name: string) => void;
+  };
+  setManual: {
+    setDestinationPoint: (point: string) => void;
+    setDestinationName: (name: string) => void;
+  };
 }
 
-// 자동 & 수동 매칭의 목적지 이름 및 좌표를 저장하는 스토어
-const useLocationStore = create<LocationStroe>((set) => ({
-  // 자동 매칭 스토어
-  autoDestinationPoint: '',
-  autoStartPoint: '',
-  autoDestinationName: '',
-  setAutoDestinationPoint: (point) => set({ autoDestinationPoint: point }),
-  setAutoStartPoint: (point) => set({ autoStartPoint: point }),
-  setAutoDestinationName: (name) => set({ autoDestinationName: name }),
-
-  // 수동 매칭 스토어
-  manualDestinationPoint: '',
-  manualDestinationName: '',
-  setManualDestinationPoint: (point: string) =>
-    set({ manualDestinationPoint: point }),
-  setManualDestinationName: (name: string) =>
-    set({ manualDestinationPoint: name }),
+const useLocationStore = create<LocationStore>((set) => ({
+  auto: {
+    destinationPoint: '',
+    destinationName: '',
+    startPoint: '',
+  },
+  manual: {
+    destinationPoint: '',
+    destinationName: '',
+  },
+  setAuto: {
+    setStartPoint: (point) =>
+      set((state) => ({
+        auto: { ...state.auto, startPoint: point },
+      })),
+    setDestinationPoint: (point) =>
+      set((state) => ({
+        auto: { ...state.auto, destinationPoint: point },
+      })),
+    setDestinationName: (name) =>
+      set((state) => ({
+        auto: { ...state.auto, destinationName: name },
+      })),
+  },
+  setManual: {
+    setDestinationPoint: (point) =>
+      set((state) => ({
+        manual: { ...state.manual, destinationPoint: point },
+      })),
+    setDestinationName: (name) =>
+      set((state) => ({
+        manual: { ...state.manual, destinationName: name },
+      })),
+  },
 }));
 
 export default useLocationStore;

@@ -11,10 +11,12 @@ declare global {
 
 const KakaoMap = memo(() => {
   const [isKakaoLoaded, setIsKakaoLoaded] = useState(false);
-  const { autoDestinationPoint, autoStartPoint } = useLocationStore();
+  const {
+    auto: { startPoint, destinationPoint },
+  } = useLocationStore();
   const mapRef = useRef(null);
-  const origin = autoDestinationPoint;
-  const destination = autoStartPoint;
+  const origin = destinationPoint;
+  const destination = startPoint;
 
   // 카카오맵 스크립트 로드
   useEffect(() => {
