@@ -1,6 +1,7 @@
 import { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { kakaoLogin } from '@/libs/apis/kakaoLogin.api';
+import LoadingScreen from '@/components/loading';
 
 const KakaoLoginLoading = () => {
   const nav = useNavigate();
@@ -30,7 +31,11 @@ const KakaoLoginLoading = () => {
     fetchAuthCode();
   }, [nav]);
 
-  return <>로딩중…</>;
+  return (
+    <>
+      <LoadingScreen />
+    </>
+  );
 };
 
 export default KakaoLoginLoading;
