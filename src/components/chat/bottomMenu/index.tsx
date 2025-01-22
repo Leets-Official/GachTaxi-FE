@@ -21,18 +21,17 @@ const BottomMenu = ({
     openModal(<CallTaxiModal />);
   };
 
+  const clickHandlers: Record<string, () => void> = {
+    '계좌 전송': handleSendClick,
+    '택시 호출': handleTaxiClick,
+  };
+
   return (
     <div className="flex justify-evenly py-8">
       {MENUITEMS.map((item, index) => (
         <div
           key={index}
-          onClick={
-            item.label === '계좌 전송'
-              ? handleSendClick
-              : item.label === '택시 호출'
-                ? handleTaxiClick
-                : undefined
-          }
+          onClick={clickHandlers[item.label] || undefined}
           className="cursor-pointer"
         >
           <MenuItem key={index} Icon={item.icon} label={item.label} />
