@@ -1,10 +1,10 @@
 import { OFFSET_THRESHOLD, DELTA_THRESHOLD } from '@/constants';
 import { motion, useDragControls } from 'framer-motion';
-import { useState } from 'react';
 import ViewerControlIcon from '@/assets/icon/viewerControlIcon.svg?react';
 import AutoMatching from '@/components/home/autoMatching';
 import ManualMatching from '@/components/home/manualMatching';
 import FriendList from '@/components/home/FriendList';
+import useSheetStore from '@/store/useSheetStore';
 
 interface MatchingSheetProps {
   modalContent: {
@@ -15,7 +15,7 @@ interface MatchingSheetProps {
 }
 
 const BottomSheet = ({ modalContent }: MatchingSheetProps) => {
-  const [isOpen, setIsOpen] = useState(false);
+  const { isOpen, openSheet, closeSheet } = useSheetStore();
   const dragControls = useDragControls();
   const animateState = isOpen ? 'opend' : 'closed';
 
@@ -31,7 +31,7 @@ const BottomSheet = ({ modalContent }: MatchingSheetProps) => {
       dragElastic={0.3}
       dragControls={dragControls}
       dragListener={false}
-      initial="closed"
+      initial={isOpen ? 'opend' : 'closed'}
       transition={{ type: 'spring', bounce: 0, duration: 0.5 }}
       animate={animateState}
       variants={{
@@ -46,8 +46,11 @@ const BottomSheet = ({ modalContent }: MatchingSheetProps) => {
         const isOverThreshold = isOverOffsetThreshold || isOverDeltaThreshold;
         if (!isOverThreshold) return;
 
-        const newIsOpened = info.offset.y < 0;
-        setIsOpen(newIsOpened);
+        if (info.offset.y < 0) {
+          openSheet();
+        } else {
+          closeSheet();
+        }
       }}
     >
       <motion.div
