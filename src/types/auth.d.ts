@@ -29,7 +29,7 @@ declare module 'gachTaxi-types' {
   }
 
   interface UserInfoVerificationTypes {
-    profileImage: file | string | undefined;
+    profileImage?: file | string | undefined;
     nickName: string;
     realName: string;
     studentId: string;
