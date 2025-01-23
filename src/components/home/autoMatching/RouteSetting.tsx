@@ -1,9 +1,4 @@
-import {
-  Control,
-  useWatch,
-  Controller,
-  UseFormSetValue,
-} from 'react-hook-form';
+import { Control, Controller } from 'react-hook-form';
 import Button from '@/components/commons/Button';
 import RouteSettingIcon from '@/assets/icon/routeSettingIcon.svg?react';
 import RouteChangeIcon from '@/assets/icon/routeChangeIcon.svg?react';
@@ -12,32 +7,11 @@ import { MatchingSchema } from 'gachTaxi-types';
 
 interface RouteSettingProps<T extends MatchingSchema> {
   control: Control<T>;
-  setValue: UseFormSetValue<T>;
 }
 
 const RouteSetting = <T extends MatchingSchema>({
   control,
-  setValue,
 }: RouteSettingProps<T>) => {
-  const startName = useWatch({ control, name: 'startName' as Path<T> });
-  const destinationName = useWatch({
-    control,
-    name: 'destinationName' as Path<T>,
-  });
-  const startPoint = useWatch({ control, name: 'startPoint' as Path<T> });
-  const destinationPoint = useWatch({
-    control,
-    name: 'destinationPoint' as Path<T>,
-  });
-
-  const handleSwap = () => {
-    setValue('startName' as Path<T>, destinationName);
-    setValue('destinationName' as Path<T>, startName);
-
-    setValue('startPoint' as Path<T>, destinationPoint);
-    setValue('destinationPoint' as Path<T>, startPoint);
-  };
-
   return (
     <Controller
       control={control}
@@ -74,7 +48,16 @@ const RouteSetting = <T extends MatchingSchema>({
                 />
               </div>
               <div className="flex-shrink-0">
-                <Button variant="icon" onClick={handleSwap}>
+                <Button
+                  variant="icon"
+                  onClick={() => {
+                    const tempStart = startName;
+                    const tempDestination = destinationName;
+
+                    onChangeStartName(tempDestination);
+                    onChangeDestinationName(tempStart);
+                  }}
+                >
                   <RouteChangeIcon />
                 </Button>
               </div>
