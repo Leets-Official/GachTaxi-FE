@@ -5,16 +5,14 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import Input from '../../commons/Input';
 import Button from '../../commons/Button';
 import { UserInfoVerificationTypes } from 'gachTaxi-types';
-import { useEffect, useState } from 'react';
 import ProfileImageUpload from './ProfileImageUpload';
 import GenderSelect from './GenderSelect';
 import requestUserInfo from '@/libs/apis/auth/requestUserInfo';
 import { useToast } from '@/contexts/ToastContext';
 import handleAxiosError from '@/libs/apis/axiosError.api';
-import getImageUrl from '@/libs/apis/auth/getImageUrl.api';
+import useUploadImage from '@/hooks/useUploadImage';
 
 const UserInfoVerification = () => {
-  const [imagePreview, setImagePreview] = useState<string | null>(null);
   const userInfoForm = useForm<z.infer<typeof userInfoVerificationSchema>>({
     resolver: zodResolver(userInfoVerificationSchema),
     defaultValues: {
@@ -29,41 +27,34 @@ const UserInfoVerification = () => {
 
   const gender = userInfoForm.watch('gender');
   const currentImage = userInfoForm.watch('profileImage');
+  const { imagePreview, uploadedImage } = useUploadImage(currentImage);
   const { openToast } = useToast();
 
   const handleSubmitToUserInfo: SubmitHandler<
     UserInfoVerificationTypes
   > = async (data) => {
     try {
-      if (
-        data.profileImage &&
-        typeof data.profileImage !== 'string' &&
-        data.profileImage !== undefined
-      ) {
-        const uploadResult = await getImageUrl(data.profileImage);
-        const profileImageUrl = uploadResult?.url;
-        userInfoForm.setValue('profileImage', profileImageUrl);
-      }
-
       const updateData = userInfoForm.getValues();
-
-      const res = await requestUserInfo(updateData);
-      if (res?.code === 200) {
-        openToast(res.message, 'success');
+      if (
+        data.profileImage !== uploadedImage &&
+        typeof data.profileImage !== 'string'
+      ) {
+        updateData.profileImage = uploadedImage;
+        const res = await requestUserInfo(updateData);
+        if (res?.code === 200) {
+          openToast(res.message, 'success');
+        }
+      } else {
+        const res = await requestUserInfo(data);
+        if (res?.code === 200) {
+          openToast(res.message, 'success');
+        }
       }
     } catch (error: unknown) {
       const errorMessage = handleAxiosError(error);
       openToast(errorMessage, 'error');
     }
   };
-
-  useEffect(() => {
-    if (!currentImage || typeof currentImage === 'string') return;
-    const objectUrl = URL.createObjectURL(currentImage);
-    setImagePreview(objectUrl);
-
-    return () => URL.revokeObjectURL(objectUrl);
-  }, [currentImage]);
 
   return (
     <form
