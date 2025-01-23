@@ -93,10 +93,10 @@ export const authCodeVerificationForPhoneSchema = z.object({
 });
 
 export const userInfoVerificationSchema = z.object({
-  profileImage: profileImageSchema,
-  nickName: nickNameSchema,
+  profilePicture: profileImageSchema,
+  nickname: nickNameSchema,
   realName: realNameSchema,
-  studentId: studentIdSchema,
+  studentNumber: studentIdSchema,
   gender: genderSchema,
 });
 

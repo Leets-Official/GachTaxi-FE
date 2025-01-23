@@ -18,7 +18,7 @@ const ProfileImageUpload = ({
   return (
     <Controller
       control={control}
-      name="profileImage"
+      name="profilePicture"
       render={({ field: { onChange, ...field } }) => (
         <>
           <div className="flex items-center justify-center my-6">

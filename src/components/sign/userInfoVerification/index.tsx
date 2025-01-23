@@ -16,17 +16,17 @@ const UserInfoVerification = () => {
   const userInfoForm = useForm<z.infer<typeof userInfoVerificationSchema>>({
     resolver: zodResolver(userInfoVerificationSchema),
     defaultValues: {
-      profileImage: undefined,
-      nickName: '',
+      profilePicture: undefined,
+      nickname: '',
       realName: '',
-      studentId: '',
+      studentNumber: '',
       gender: 'MALE',
     },
     mode: 'onBlur',
   });
 
   const gender = userInfoForm.watch('gender');
-  const currentImage = userInfoForm.watch('profileImage');
+  const currentImage = userInfoForm.watch('profilePicture');
   const { imagePreview, uploadedImage } = useUploadImage(currentImage);
   const { openToast } = useToast();
 
@@ -36,10 +36,10 @@ const UserInfoVerification = () => {
     try {
       const updateData = userInfoForm.getValues();
       if (
-        data.profileImage !== uploadedImage &&
-        typeof data.profileImage !== 'string'
+        data.profilePicture !== uploadedImage &&
+        typeof data.profilePicture !== 'string'
       ) {
-        updateData.profileImage = uploadedImage;
+        updateData.profilePicture = uploadedImage;
         const res = await requestUserInfo(updateData);
         if (res?.code === 200) {
           openToast(res.message, 'success');
@@ -69,14 +69,14 @@ const UserInfoVerification = () => {
         control={userInfoForm.control}
         imagePreview={imagePreview}
       />
-      {userInfoForm.formState.errors.profileImage && (
+      {userInfoForm.formState.errors.profilePicture && (
         <p className="text-red-500 mt-3">
-          {userInfoForm.formState.errors.profileImage.message}
+          {userInfoForm.formState.errors.profilePicture.message}
         </p>
       )}
       <Input
         control={userInfoForm.control}
-        name="nickName"
+        name="nickname"
         label="닉네임"
         type="text"
         placeholder="닉네임을 입력해주세요"
@@ -90,7 +90,7 @@ const UserInfoVerification = () => {
       />
       <Input
         control={userInfoForm.control}
-        name="studentId"
+        name="studentNumber"
         label="학번"
         type="text"
         placeholder="ex) 20243333"
