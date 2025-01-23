@@ -7,9 +7,13 @@ import Input from '../commons/Input';
 import Button from '../commons/Button';
 import { useModal } from '../../contexts/ModalContext';
 import AgreementModal from '../modal/AgreementModal';
+import { verifyAuthCode } from '@/libs/apis/auth';
+import { useToast } from '@/contexts/ToastContext';
+import handleAxiosError from '@/libs/apis/axiosError.api';
 
 const AuthCodeVerification = ({ emailInfo }: { emailInfo: string }) => {
   const { openModal } = useModal();
+  const { openToast } = useToast();
 
   const authForm = useForm<z.infer<typeof authCodeVerificationSchema>>({
     resolver: zodResolver(authCodeVerificationSchema),
@@ -20,11 +24,17 @@ const AuthCodeVerification = ({ emailInfo }: { emailInfo: string }) => {
     mode: 'onSubmit',
   });
 
-  const handleSubmitToAuth: SubmitHandler<AuthCodeTypes> = (data) => {
-    // API 구현 시 추가 구현
-    console.table(data);
-    // 약관 동의 모달 오픈 로직
-    openModal(<AgreementModal />);
+  const handleSubmitToAuth: SubmitHandler<AuthCodeTypes> = async (data) => {
+    try {
+      const res = await verifyAuthCode(data);
+      if (res?.code === 200) {
+        openToast(res.message, 'success');
+        openModal(<AgreementModal />);
+      }
+    } catch (error: unknown) {
+      const errorMessage = handleAxiosError(error);
+      openToast(errorMessage, 'error');
+    }
   };
 
   return (

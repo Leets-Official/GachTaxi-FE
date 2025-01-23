@@ -8,6 +8,10 @@ import { UserInfoVerificationTypes } from 'gachTaxi-types';
 import { useEffect, useState } from 'react';
 import ProfileImageUpload from './ProfileImageUpload';
 import GenderSelect from './GenderSelect';
+import requestUserInfo from '@/libs/apis/auth/requestUserInfo';
+import { useToast } from '@/contexts/ToastContext';
+import handleAxiosError from '@/libs/apis/axiosError.api';
+import getImageUrl from '@/libs/apis/auth/getImageUrl.api';
 
 const UserInfoVerification = () => {
   const [imagePreview, setImagePreview] = useState<string | null>(null);
@@ -25,12 +29,32 @@ const UserInfoVerification = () => {
 
   const gender = userInfoForm.watch('gender');
   const currentImage = userInfoForm.watch('profileImage');
+  const { openToast } = useToast();
 
-  const handleSubmitToUserInfo: SubmitHandler<UserInfoVerificationTypes> = (
-    data,
-  ) => {
-    // API 호출
-    console.log(data);
+  const handleSubmitToUserInfo: SubmitHandler<
+    UserInfoVerificationTypes
+  > = async (data) => {
+    try {
+      if (
+        data.profileImage &&
+        typeof data.profileImage !== 'string' &&
+        data.profileImage !== undefined
+      ) {
+        const uploadResult = await getImageUrl(data.profileImage);
+        const profileImageUrl = uploadResult?.url;
+        userInfoForm.setValue('profileImage', profileImageUrl);
+      }
+
+      const updateData = userInfoForm.getValues();
+
+      const res = await requestUserInfo(updateData);
+      if (res?.code === 200) {
+        openToast(res.message, 'success');
+      }
+    } catch (error: unknown) {
+      const errorMessage = handleAxiosError(error);
+      openToast(errorMessage, 'error');
+    }
   };
 
   useEffect(() => {
