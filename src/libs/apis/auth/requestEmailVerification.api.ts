@@ -1,18 +1,15 @@
-import handleAxiosError from '@/libs/apis/axiosError.api';
 import client from '@/libs/apis/clients';
 import { AxiosResponse } from 'axios';
 import { SignUpFlowResponse, EmailVerificationTypes } from 'gachTaxi-types';
 
-const requestEmailVerification = async (data: EmailVerificationTypes) => {
-  try {
-    const res: AxiosResponse<SignUpFlowResponse> = await client.post(
-      '/auth/code/email',
-      data,
-    );
-    return res.data;
-  } catch (e: unknown) {
-    handleAxiosError(e);
-  }
+const requestEmailVerification = async (
+  data: EmailVerificationTypes,
+): Promise<SignUpFlowResponse | undefined> => {
+  const res: AxiosResponse<SignUpFlowResponse> = await client.post(
+    '/auth/code/mail',
+    data,
+  );
+  return res.data;
 };
 
 export default requestEmailVerification;
