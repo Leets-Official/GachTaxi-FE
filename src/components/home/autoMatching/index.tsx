@@ -165,7 +165,7 @@ const AutoMatching = ({ isOpen }: { isOpen: boolean }) => {
 
       autoMatchingForm.setValue(
         'startPoint',
-        `${coordinates.lat},${coordinates.lng}`,
+        `${coordinates.lng},${coordinates.lat}`,
         { shouldValidate: true },
       );
 

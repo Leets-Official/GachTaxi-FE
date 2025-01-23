@@ -34,6 +34,8 @@ const KakaoMap = memo(() => {
     }
   }, []);
 
+  console.log(origin, destination);
+
   // Map 객체 생성
   useEffect(() => {
     if (isKakaoLoaded && !mapRef.current && window.kakao && coordinatesLoaded) {
@@ -48,7 +50,7 @@ const KakaoMap = memo(() => {
 
   useEffect(() => {
     const drawRoute = async () => {
-      if (!mapRef.current && origin !== '' && destination !== '') {
+      if (!mapRef.current && !coordinatesLoaded) {
         return;
       } else {
         try {
@@ -92,7 +94,7 @@ const KakaoMap = memo(() => {
     };
 
     drawRoute();
-  }, [isKakaoLoaded, origin, destination]);
+  }, [isKakaoLoaded, origin, destination, coordinatesLoaded]);
 
   return <div id="map" className="w-full h-[85vh] z-20"></div>;
 });
