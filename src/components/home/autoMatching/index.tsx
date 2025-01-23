@@ -22,7 +22,7 @@ const AutoMatching = ({ isOpen }: { isOpen: boolean }) => {
     resolver: zodResolver(autoMatchingSchema),
     defaultValues: {
       startPoint: '',
-      startName: '가천대 정문',
+      startName: '가천대 반도체대학',
       destinationPoint: '',
       destinationName: '가천대 AI 공학관',
       members: [],
@@ -33,10 +33,7 @@ const AutoMatching = ({ isOpen }: { isOpen: boolean }) => {
   });
 
   const {
-    auto: {
-      destinationPoint: autoDestinationPoint,
-      destinationName: autoDestinationName,
-    },
+    auto: { destinationName: autoDestinationName },
     setAuto: { setStartPoint, setDestinationPoint, setDestinationName },
   } = useLocationStore();
   const { getCurrentLocation } = useGeoLocation();
@@ -44,9 +41,8 @@ const AutoMatching = ({ isOpen }: { isOpen: boolean }) => {
   const [eventSource, setEventSource] = useState<EventSourcePolyfill | null>(
     null,
   );
-  const destinationName = autoMatchingForm.watch('destinationName');
-  const currentDestinationPoint = autoMatchingForm.watch('destinationPoint');
-  const currentStartPoint = autoMatchingForm.watch('startPoint');
+  const currentStartName = autoMatchingForm.watch('startName');
+  const currentDestinationName = autoMatchingForm.watch('destinationName');
 
   // 컴포넌트 언마운트시 구독 종료
   useEffect(() => {
@@ -60,47 +56,48 @@ const AutoMatching = ({ isOpen }: { isOpen: boolean }) => {
 
   const updateDestinationCoordinates = useCallback(async () => {
     try {
-      const [startCoordinate, destinationCoordinate]: any = await Promise.all([
-        getCoordinateByAddress(currentDestinationPoint),
-        getCoordinateByAddress(currentStartPoint),
+      const results: any = await Promise.allSettled([
+        getCoordinateByAddress(currentStartName),
+        getCoordinateByAddress(currentDestinationName),
       ]);
 
-      setStartPoint(`${startCoordinate.lat},${startCoordinate.lng}`);
-      setDestinationPoint(
-        `${destinationCoordinate.lat},${destinationCoordinate.lng}`,
-      );
-      autoMatchingForm.setValue(
-        'destinationPoint',
-        `${destinationCoordinate.lat},${destinationCoordinate.lng}`,
-      );
+      const [startResult, destinationResult] = results;
+
+      if (startResult.status === 'fulfilled' && startResult.value) {
+        const { lat, lng } = startResult.value;
+        setStartPoint(`${lng},${lat}`);
+      } else {
+        console.error('출발지 좌표 로드 실패:', startResult.reason);
+      }
+
+      if (destinationResult.status === 'fulfilled' && destinationResult.value) {
+        const { lat, lng } = destinationResult.value;
+        setDestinationPoint(`${lng},${lat}`);
+        autoMatchingForm.setValue('destinationPoint', `${lng},${lat}`);
+      } else {
+        console.error('목적지 좌표 로드 실패:', destinationResult.reason);
+      }
     } catch (error) {
-      console.error('목적지 좌표 로드 오류', error);
+      console.error('좌표 로드 중 오류 발생:', error);
     }
   }, [
     autoMatchingForm,
-    currentDestinationPoint,
-    currentStartPoint,
+    currentStartName,
+    currentDestinationName,
     setStartPoint,
     setDestinationPoint,
   ]);
 
   useEffect(() => {
-    if (
-      destinationName !== autoDestinationName ||
-      (currentDestinationPoint !== autoDestinationPoint && window.kakao?.maps)
-    ) {
-      setDestinationName(destinationName);
-      setDestinationPoint(currentDestinationPoint);
-      console.log('카카오 api 호출');
-      // window.kakao.maps.load(updateDestinationCoordinates);
+    // 목적지 이름이 변경된 경우에만 동작
+    if (currentDestinationName !== autoDestinationName && window.kakao?.maps) {
+      window.kakao.maps.load(updateDestinationCoordinates);
+      setDestinationName(currentDestinationName);
     }
   }, [
-    currentDestinationPoint,
-    destinationName,
+    currentDestinationName,
     autoDestinationName,
-    autoDestinationPoint,
     setDestinationName,
-    setDestinationPoint,
     updateDestinationCoordinates,
   ]);
 
