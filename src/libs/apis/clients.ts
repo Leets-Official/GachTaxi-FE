@@ -8,7 +8,6 @@ const getCookieValue = (key: string) => {
   return match ? match.split('=')[1] : null;
 };
 
-// 회원가입을 제외한 api 요청 시 사용할 인스턴스 객체
 const client = axios.create({
   baseURL: BASE_URL,
   withCredentials: true,
@@ -75,14 +74,19 @@ client.interceptors.request.use(
 
 client.interceptors.response.use(
   (response) => {
-    const accessToken = response.headers['authorization'];
+    if (
+      response.config.url === '/auth/refresh' ||
+      response.config.url === '/auth/login/google' ||
+      response.config.url === '/auth/login/kakao'
+    ) {
+      const accessToken = response.headers['authorization'];
 
-    if (accessToken) {
-      localStorage.setItem('accessToken', accessToken);
-    } else {
-      throw new Error('리프레쉬 토큰이 헤더에 담겨오지 않았습니다!');
+      if (accessToken) {
+        localStorage.setItem('accessToken', accessToken);
+      } else {
+        throw new Error('리프레쉬 토큰이 헤더에 담겨오지 않았습니다!');
+      }
     }
-
     return response;
   },
   async (error) => {

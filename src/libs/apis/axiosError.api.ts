@@ -1,10 +1,13 @@
 import axios from 'axios';
 
-const handleAxiosError = (error: unknown): never => {
+const handleAxiosError = (error: unknown): string => {
   if (axios.isAxiosError(error)) {
-    throw error;
+    const errorMessage =
+      error.response?.data?.message || '서버 요청 중 오류가 발생했습니다.';
+    console.error(error.response?.data);
+    return errorMessage;
   } else {
-    throw new Error('axios가 정의하는 에러 범주에서 벗어납니다.');
+    return 'axios가 정의하는 에러 범주에서 벗어납니다.';
   }
 };
 
