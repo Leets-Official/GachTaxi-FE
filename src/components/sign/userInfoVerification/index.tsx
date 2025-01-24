@@ -11,6 +11,7 @@ import requestUserInfo from '@/libs/apis/auth/requestUserInfo';
 import { useToast } from '@/contexts/ToastContext';
 import handleAxiosError from '@/libs/apis/axiosError.api';
 import useUploadImage from '@/hooks/useUploadImage';
+import useRequestStatus from '@/hooks/useRequestStatus';
 
 const UserInfoVerification = () => {
   const userInfoForm = useForm<z.infer<typeof userInfoVerificationSchema>>({
@@ -29,10 +30,12 @@ const UserInfoVerification = () => {
   const currentImage = userInfoForm.watch('profilePicture');
   const { imagePreview, uploadedImage } = useUploadImage(currentImage);
   const { openToast } = useToast();
+  const { status, setSuccess, setError, setPending } = useRequestStatus();
 
   const handleSubmitToUserInfo: SubmitHandler<
     UserInfoVerificationTypes
   > = async (data) => {
+    setPending();
     try {
       const updateData = userInfoForm.getValues();
       if (
@@ -42,15 +45,18 @@ const UserInfoVerification = () => {
         updateData.profilePicture = uploadedImage;
         const res = await requestUserInfo(updateData);
         if (res?.code === 200) {
+          setSuccess();
           openToast(res.message, 'success');
         }
       } else {
         const res = await requestUserInfo(data);
         if (res?.code === 200) {
+          setSuccess();
           openToast(res.message, 'success');
         }
       }
     } catch (error: unknown) {
+      setError();
       const errorMessage = handleAxiosError(error);
       openToast(errorMessage, 'error');
     }
@@ -106,7 +112,7 @@ const UserInfoVerification = () => {
         * 프로필 정보는 회원 식별, 서비스 이용의 목적으로만 활용되며, <br />{' '}
         &nbsp;&nbsp;개인정보 수집 약관내용에 따라 보관됩니다.
       </p>
-      <Button variant="primary" type="submit">
+      <Button variant="primary" type="submit" isLoading={status === 'pending'}>
         시작하기
       </Button>
     </form>

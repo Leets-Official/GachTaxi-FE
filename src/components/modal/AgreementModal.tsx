@@ -13,10 +13,12 @@ import { AGREE_VALUES } from '@/constants';
 import requestAgreement from '@/libs/apis/auth/requestAgreement';
 import { useToast } from '@/contexts/ToastContext';
 import handleAxiosError from '@/libs/apis/axiosError.api';
+import useRequestStatus from '@/hooks/useRequestStatus';
 
 const AgreementModal = () => {
   const navigate = useNavigate();
   const { closeModal } = useModal();
+  const { status, setSuccess, setError, setPending } = useRequestStatus();
 
   const agreementForm = useForm<z.infer<typeof agreementsSchema>>({
     resolver: zodResolver(agreementsSchema),
@@ -46,14 +48,17 @@ const AgreementModal = () => {
   const handleSubmitToAgreement: SubmitHandler<AgreementsTypes> = async (
     data: AgreementsTypes,
   ) => {
+    setPending();
     try {
       const res = await requestAgreement(data);
       if (res?.code === 200) {
+        setSuccess();
         openToast(res.message, 'success');
         navigate('/signup/user-info');
         closeModal();
       }
     } catch (error: unknown) {
+      setError();
       const errorMessage = handleAxiosError(error);
       openToast(errorMessage, 'error');
     }
@@ -99,7 +104,11 @@ const AgreementModal = () => {
             agreementForm.formState.errors.termsAgreement) && (
             <p className="text-red-500">필수 약관에 동의해주세요!</p>
           )}
-          <Button className="w-full mt-vertical" type="submit">
+          <Button
+            className="w-full mt-vertical"
+            type="submit"
+            isLoading={status === 'pending'}
+          >
             시작하기
           </Button>
         </form>
