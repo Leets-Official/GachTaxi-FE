@@ -3,12 +3,16 @@ import BottomMenu from './bottomMenu';
 import ChatPlus from '@/assets/icon/chatPlus.svg?react';
 import ChatX from '@/assets/icon/chatX.svg?react';
 import ChatSend from '@/assets/icon/chatSend.svg?react';
-import useWebSocket from '@/libs/apis/chat/connectWebSocket.api';
+//import useWebSocket from '@/libs/apis/chat/connectWebSocket.api';
 
-const ChatInput = ({ roomId }: { roomId: number }) => {
-  const { sendMessage } = useWebSocket(roomId);
+interface ChatMessage {
+  roomId: number;
+}
+
+const ChatInput = ({ roomId }: ChatMessage) => {
   const [showMenu, setShowMenu] = useState(false);
   const [message, setMessage] = useState('');
+  //const { sendMessage } = useWebSocket(roomId);
 
   const toggleMenu = () => {
     setShowMenu(!showMenu);
@@ -18,12 +22,14 @@ const ChatInput = ({ roomId }: { roomId: number }) => {
     setMessage(accountInfo);
   };
 
+  console.log('ChatInputMessages', roomId);
+
   const handleSendMessage = () => {
     if (!message.trim()) return;
 
-    sendMessage({
-      message: message,
-    });
+    // sendMessage({
+    //   message: message,
+    // });
 
     setMessage('');
   };
