@@ -1,4 +1,3 @@
-import { useState, useEffect } from 'react';
 import BackButton from '@/components/commons/BackButton';
 import Button from '@/components/commons/Button';
 import Input from '@/components/commons/Input';
@@ -8,38 +7,31 @@ import { UserInfoVerificationTypes } from 'gachTaxi-types';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm, SubmitHandler } from 'react-hook-form';
 import ProfileImageUpload from '@/components/sign/userInfoVerification/ProfileImageUpload';
+import useUploadImage from '@/hooks/useUploadImage';
 
 const EditProfilePage = () => {
-  const [imagePreview, setImagePreview] = useState<string | null>(null);
-
   const profileForm = useForm<z.infer<typeof userInfoVerificationSchema>>({
     resolver: zodResolver(userInfoVerificationSchema),
     defaultValues: {
-      nickName: '',
+      nickname: '',
       realName: '',
-      studentId: '',
+      studentNumber: '',
       gender: 'MALE',
-      profileImage: undefined,
+      profilePicture: undefined,
     },
     mode: 'onSubmit',
   });
 
-  const currentImage = profileForm.watch('profileImage');
-
-  useEffect(() => {
-    if (!currentImage || typeof currentImage === 'string') return;
-    const objectUrl = URL.createObjectURL(currentImage);
-    setImagePreview(objectUrl);
-
-    return () => URL.revokeObjectURL(objectUrl);
-  }, [currentImage]);
+  const currentImage = profileForm.watch('profilePicture');
+  const { imagePreview, uploadedImage } = useUploadImage(currentImage);
 
   const handleSubmitChange: SubmitHandler<UserInfoVerificationTypes> = (
     data,
   ) => {
     try {
       console.log(data);
-      profileForm.setValue('nickName', '');
+      console.log(uploadedImage);
+      profileForm.setValue('nickname', '');
     } catch (e) {
       console.error(e);
     }
@@ -66,7 +58,7 @@ const EditProfilePage = () => {
 
         <Input
           control={profileForm.control}
-          name="nickName"
+          name="nickname"
           label="닉네임"
           placeholder="닉네임을 입력해주세요"
           type="text"

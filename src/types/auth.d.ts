@@ -3,6 +3,17 @@ declare module 'gachTaxi-types' {
     email: string;
   }
 
+  // 회원가입 응답 타입 종속
+  type DataType = {
+    userId: number;
+  };
+
+  // 회원가입 응답 타입
+  interface SignUpFlowResponse {
+    code: number;
+    message: string;
+    data: DataType | null;
+  }
   interface PhoneVerificationTypes {
     phoneNumber: string;
   }
@@ -18,10 +29,10 @@ declare module 'gachTaxi-types' {
   }
 
   interface UserInfoVerificationTypes {
-    profileImage: file | string;
-    nickName: string;
+    profilePicture?: file | string | undefined;
+    nickname: string;
     realName: string;
-    studentId: string;
+    studentNumber: string;
     gender: 'MALE' | 'FEMALE';
   }
 
