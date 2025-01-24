@@ -1,95 +1,37 @@
-import { useState, useRef, useEffect } from 'react';
 import InviteMessage from '../InviteMessage';
 import RenderMyMessage from './renderMyMessage';
 import RenderOtherMessage from './renderOtherMessage';
-import { getChatMessages } from '@/libs/apis/chat/getChatMessages';
 
-const MessageList = ({ roomId }: { roomId: number }) => {
-  const [messages, setMessages] = useState<ChatMessageFromServer[]>([]);
-  //   const [pageable, setPageable] = useState<Pageable | null>(null);
-  //   const [lastMessageTimeStamp, setLastMessageTimeStamp] = useState<
-  //     string | null
-  //   >(null);
-  //   const [isLoading, setIsLoading] = useState(false);
-  const listRef = useRef<HTMLDivElement>(null);
+interface MessageListProps {
+  messages: ChatMessagesFromServerFull | null;
+}
 
-  useEffect(() => {
-    const getMessages = async () => {
-      try {
-        const data = await getChatMessages(roomId);
-        console.log('채팅 메시지:', data);
-        if (Array.isArray(data.message)) {
-          setMessages(data.message); // 배열일 경우 messages 상태에 저장
-        } else {
-          console.error('데이터 형식이 예상과 다릅니다.', data);
-        }
-      } catch (error) {
-        console.error('채팅 메시지 조회 중 오류:', error);
-      }
-    };
-    getMessages();
-  }, []);
-
-  const loadMoreMessages = () => {
-    const newMessages: ChatMessageFromServer[] = [
-      {
-        messageId: '678db88cb20ab72494969cba',
-        senderId: 2, // 다른 사람이 보낸 메시지
-        senderName: '사용자1',
-        message: '안녕하세요!',
-        range: '324dffsdf',
-        unreadCount: 1,
-        timeStamp: '2025-01-21T10:09:25.71',
-        messageType: 'MESSAGE',
-        imageUrl:
-          'https://upload.wikimedia.org/wikipedia/ko/thumb/4/4a/%EC%8B%A0%EC%A7%B1%EA%B5%AC.png/230px-%EC%8B%A0%EC%A7%B1%EA%B5%AC.png',
-      },
-      {
-        messageId: '678db88cb20ab72494969cba',
-        senderId: 2, // 다른 사람이 보낸 메시지
-        senderName: '사용자1',
-        message: '안녕하세요!',
-        range: '324dffsdf',
-        unreadCount: 1,
-        timeStamp: '2025-01-21T10:09:25.71',
-        messageType: 'MESSAGE',
-
-        imageUrl:
-          'https://upload.wikimedia.org/wikipedia/ko/thumb/4/4a/%EC%8B%A0%EC%A7%B1%EA%B5%AC.png/230px-%EC%8B%A0%EC%A7%B1%EA%B5%AC.png',
-      },
-    ];
-    setMessages((prev) => [...newMessages, ...prev]);
-  };
-
-  const handleScroll = () => {
-    // if (!listRef.current || isLoading || pageable?.last) return;
-
-    // if (listRef.current.scrollTop === 0) {
-    //   fetchMessages((pageable?.pageNumber || 0) + 1, lastMessageTimeStamp); // 다음 페이지 요청
-    // }
-    if (!listRef.current) return;
-
-    if (listRef.current.scrollTop === 0) {
-      loadMoreMessages();
-    }
-  };
+const MessageList = ({ messages }: MessageListProps) => {
+  if (!messages) {
+    return (
+      <div className="text-center text-gray-400">메시지를 불러오는 중...</div>
+    );
+  }
+  console.log('MessgeList:', messages);
 
   return (
     <div
-      ref={listRef}
-      onScroll={handleScroll}
+      //ref={listRef}
+      //onScroll={handleScroll}
       className="flex-1 overflow-y-auto px-4 bg-[#141513]"
-      style={{ height: '100%' }}
     >
-      {messages.map((msg, index) =>
-        msg.messageType === 'MESSAGE' ? (
+      {messages?.chattingMessage.map((msg, index) =>
+        msg.messageType === 'ENTER' ? (
+          <InviteMessage
+            key={`${msg.timeStamp}-${index}`}
+            invitedUsers={[msg.senderName]}
+          />
+        ) : msg.messageType === 'MESSAGE' ? (
           <div
             key={`${msg.timeStamp}-${index}`}
-            className={`flex ${
-              msg.senderName.trim() === '나' ? 'justify-end' : 'justify-start'
-            } mb-4`}
+            className={`flex ${msg.senderId === messages.memberId ? 'justify-end' : 'justify-start'} mb-4`}
           >
-            {msg.senderId === 1 ? (
+            {msg.senderId === messages.memberId ? (
               <RenderMyMessage
                 message={msg.message}
                 timeStamp={msg.timeStamp}
@@ -104,6 +46,7 @@ const MessageList = ({ roomId }: { roomId: number }) => {
             )}
           </div>
         ) : (
+          //읽음처리구현할에정인데 아직 구현 전이라 일단 초대메시지로 대체해두었음
           <InviteMessage
             key={`${msg.timeStamp}-${index}`}
             invitedUsers={[msg.senderName]}
