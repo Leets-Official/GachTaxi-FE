@@ -3,7 +3,7 @@ import MiniTaxiLogoIcon from '@/assets/icon/miniTaxiLogoIcon.svg?react';
 import Button from '@/components/commons/Button';
 import RouteSetting from '@/components/home/autoMatching/RouteSetting';
 import SelectTags from '@/components/home/autoMatching/selectTags';
-import { AutoMatchingTypes, MatchingSchema } from 'gachTaxi-types';
+import { AutoMatchingTypes } from 'gachTaxi-types';
 import z from 'zod';
 import { useForm, SubmitHandler, FieldValues } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -15,13 +15,14 @@ import { useCallback, useEffect, useState } from 'react';
 import { EventSourcePolyfill } from '@/utils/EventSourcePolyfill';
 import axios from 'axios';
 import { useToast } from '@/contexts/ToastContext';
+import useLocationStore from '@/store/useLocationStore';
 
 const AutoMatching = ({ isOpen }: { isOpen: boolean }) => {
   const autoMatchingForm = useForm<z.infer<typeof autoMatchingSchema>>({
     resolver: zodResolver(autoMatchingSchema),
     defaultValues: {
       startPoint: '',
-      startName: '가천대 정문',
+      startName: '가천대 반도체대학',
       destinationPoint: '',
       destinationName: '가천대 AI 공학관',
       members: [],
@@ -31,11 +32,17 @@ const AutoMatching = ({ isOpen }: { isOpen: boolean }) => {
     mode: 'onBlur',
   });
 
+  const {
+    auto: { destinationName: autoDestinationName },
+    setAuto: { setStartPoint, setDestinationPoint, setDestinationName },
+  } = useLocationStore();
   const { getCurrentLocation } = useGeoLocation();
   const { openToast } = useToast();
   const [eventSource, setEventSource] = useState<EventSourcePolyfill | null>(
     null,
   );
+  const currentStartName = autoMatchingForm.watch('startName');
+  const currentDestinationName = autoMatchingForm.watch('destinationName');
 
   // 컴포넌트 언마운트시 구독 종료
   useEffect(() => {
@@ -49,25 +56,50 @@ const AutoMatching = ({ isOpen }: { isOpen: boolean }) => {
 
   const updateDestinationCoordinates = useCallback(async () => {
     try {
-      const address = autoMatchingForm.getValues('destinationName');
-      const coordinates: any = await getCoordinateByAddress(address);
-      autoMatchingForm.setValue(
-        'destinationPoint',
-        `${coordinates.lat},${coordinates.lng}`,
-      );
-    } catch (error) {
-      console.error('목적지 좌표 로드 오류', error);
-    }
-  }, [autoMatchingForm]);
+      const results: any = await Promise.allSettled([
+        getCoordinateByAddress(currentStartName),
+        getCoordinateByAddress(currentDestinationName),
+      ]);
 
-  // 목적지 정보 업데이트
-  useEffect(() => {
-    if (window.kakao?.maps) {
-      window.kakao.maps.load(updateDestinationCoordinates);
-    } else {
-      console.error('카카오맵 api 동작 오류');
+      const [startResult, destinationResult] = results;
+
+      if (startResult.status === 'fulfilled' && startResult.value) {
+        const { lat, lng } = startResult.value;
+        setStartPoint(`${lng},${lat}`);
+      } else {
+        console.error('출발지 좌표 로드 실패:', startResult.reason);
+      }
+
+      if (destinationResult.status === 'fulfilled' && destinationResult.value) {
+        const { lat, lng } = destinationResult.value;
+        setDestinationPoint(`${lng},${lat}`);
+        autoMatchingForm.setValue('destinationPoint', `${lng},${lat}`);
+      } else {
+        console.error('목적지 좌표 로드 실패:', destinationResult.reason);
+      }
+    } catch (error) {
+      console.error('좌표 로드 중 오류 발생:', error);
     }
-  }, [updateDestinationCoordinates]);
+  }, [
+    autoMatchingForm,
+    currentStartName,
+    currentDestinationName,
+    setStartPoint,
+    setDestinationPoint,
+  ]);
+
+  useEffect(() => {
+    // 목적지 이름이 변경된 경우에만 동작
+    if (currentDestinationName !== autoDestinationName && window.kakao?.maps) {
+      window.kakao.maps.load(updateDestinationCoordinates);
+      setDestinationName(currentDestinationName);
+    }
+  }, [
+    currentDestinationName,
+    autoDestinationName,
+    setDestinationName,
+    updateDestinationCoordinates,
+  ]);
 
   const baseUrl = import.meta.env.VITE_API_BASE_URL;
 
@@ -133,7 +165,7 @@ const AutoMatching = ({ isOpen }: { isOpen: boolean }) => {
 
       autoMatchingForm.setValue(
         'startPoint',
-        `${coordinates.lat},${coordinates.lng}`,
+        `${coordinates.lng},${coordinates.lat}`,
         { shouldValidate: true },
       );
 
@@ -197,10 +229,7 @@ const AutoMatching = ({ isOpen }: { isOpen: boolean }) => {
           onSubmit();
         }}
       >
-        <RouteSetting<MatchingSchema>
-          control={autoMatchingForm.control}
-          setValue={autoMatchingForm.setValue}
-        />
+        <RouteSetting control={autoMatchingForm.control} />
         {isOpen && (
           <>
             <InviteMembers control={autoMatchingForm.control} />

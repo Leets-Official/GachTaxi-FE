@@ -7,6 +7,9 @@ import Input from '../commons/Input';
 import Button from '../commons/Button';
 import useVerificationTimer from '../../hooks/useVerificationTimer';
 import { formatTimeLikeTimer } from '@/utils';
+import { useToast } from '@/contexts/ToastContext';
+import { requestEmailVerification } from '@/libs/apis/auth';
+import handleAxiosError from '@/libs/apis/axiosError.api';
 
 const TIMER_DURATION = 300;
 
@@ -27,16 +30,24 @@ const EmailVerification = ({
     },
     mode: 'onBlur',
   });
+  const { openToast } = useToast();
 
-  // 이메일 인증 API 호출
-  const handleSubmitToSignUp: SubmitHandler<EmailVerificationTypes> = (
+  const handleSubmitToSignUp: SubmitHandler<EmailVerificationTypes> = async (
     data,
   ) => {
-    // 이메일 전송 로직 구현 (예: API 호출)
-    setIsEmailVerified(true);
     setEmailInfo(data.email);
-    startTimer(); // 타이머 시작
-    console.table(data);
+    try {
+      const res = await requestEmailVerification(data);
+      console.log(res);
+      if (res?.code && res.code >= 200 && res.code < 300) {
+        setIsEmailVerified(true);
+        startTimer();
+        openToast(res.message, 'success');
+      }
+    } catch (error: unknown) {
+      const errorMessage = handleAxiosError(error);
+      openToast(errorMessage, 'error');
+    }
   };
 
   return (

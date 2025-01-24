@@ -2,20 +2,20 @@ import { useGoogleLogin } from '@react-oauth/google';
 import Button from '../commons/Button';
 import GoogleIcon from '@/assets/icon/google.svg?react';
 import { useNavigate } from 'react-router-dom';
+import googlelogin from '@/libs/apis/googleLogin.api';
 
 const GoogleLoginButton = () => {
   const navigate = useNavigate();
 
   const handleGoogleLogin = useGoogleLogin({
-    onSuccess: (credentialResponse) => {
+    onSuccess: async (credentialResponse) => {
       if (credentialResponse) {
-        // 백엔드 API 호출
-        console.log(credentialResponse);
-        navigate('/signup/verification');
-        // if data!.status === "UN_REGISTER"
-        // navigate('/signup/verification');
-        // else
-        // navigate('/dashboard'); path는 미정
+        const res = await googlelogin(credentialResponse.access_token);
+        if (res.data === 'UN_REGISTER') {
+          navigate('/signup/verification');
+        } else if (res.data === 'LOGIN_SUCCESS') {
+          navigate('/home');
+        }
       }
     },
     onError: (error) => {

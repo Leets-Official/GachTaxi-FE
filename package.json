@@ -18,6 +18,7 @@
     "autoprefixer": "^10.4.20",
     "axios": "^1.7.9",
     "framer-motion": "^11.16.1",
+    "jwt-decode": "^4.0.0",
     "postcss": "^8.4.49",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
@@ -25,7 +26,8 @@
     "react-router-dom": "^7.0.2",
     "sockjs-client": "^1.6.1",
     "tailwindcss": "^3.4.17",
-    "zod": "^3.24.1"
+    "zod": "^3.24.1",
+    "zustand": "^5.0.3"
   },
   "devDependencies": {
     "@eslint/js": "^9.15.0",

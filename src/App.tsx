@@ -14,35 +14,41 @@ import { ToastProvider } from '@/contexts/ToastContext';
 import ChatPage from '@/pages/chat';
 import FriendRequestPage from '@/pages/friend-request';
 import NotificationPage from '@/pages/notification';
+import ProtectRoute from '@/pages/ProtectRoute';
 
 function App() {
   const queryClient = new QueryClient();
 
   return (
     <QueryClientProvider client={queryClient}>
-      <ReactQueryDevtools initialIsOpen={false} />
+      {process.env.NODE_ENV === 'development' && (
+        <ReactQueryDevtools initialIsOpen={false} />
+      )}
       <BrowserRouter>
         <ToastProvider>
           <ModalProvider>
             <Routes>
               <Route path="/" element={<Layout />}>
+                {/** 로그인 불필요 라우트 */}
                 <Route index element={<LandingPage />} />
-                <Route
-                  path="home/manual-register"
-                  element={<ManualMatchingRegister />}
-                />
                 <Route path="*" element={<NotFoundPage />} />
                 <Route path="/kakao/callback" element={<KakaoLoginLoading />} />
-                <Route path="/signup/*" element={<SignUpPage />} />
-                <Route path="/home" element={<HomePage />} />
-                <Route path="/mypage/*" element={<MyPage />} />
-                <Route
-                  path="home/friend-request"
-                  element={<FriendRequestPage />}
-                />
-                <Route path="/notification" element={<NotificationPage />} />
-                <Route path="chat/:id" element={<ChatPage />} />
-                <Route path="/*" element={<NotFoundPage />} />
+                {/** 로그인이 필요한 라우트 */}
+                <Route element={<ProtectRoute />}>
+                  <Route
+                    path="home/manual-register"
+                    element={<ManualMatchingRegister />}
+                  />
+                  <Route path="/signup/*" element={<SignUpPage />} />
+                  <Route path="/home" element={<HomePage />} />
+                  <Route path="/mypage/*" element={<MyPage />} />
+                  <Route
+                    path="home/friend-request"
+                    element={<FriendRequestPage />}
+                  />
+                  <Route path="/notification" element={<NotificationPage />} />
+                  <Route path="chat/:id" element={<ChatPage />} />
+                </Route>
               </Route>
             </Routes>
           </ModalProvider>

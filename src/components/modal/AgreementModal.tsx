@@ -10,6 +10,9 @@ import { z } from 'zod';
 import { useNavigate } from 'react-router-dom';
 import { useModal } from '@/contexts/ModalContext';
 import { AGREE_VALUES } from '@/constants';
+import requestAgreement from '@/libs/apis/auth/requestAgreement';
+import { useToast } from '@/contexts/ToastContext';
+import handleAxiosError from '@/libs/apis/axiosError.api';
 
 const AgreementModal = () => {
   const navigate = useNavigate();
@@ -32,6 +35,7 @@ const AgreementModal = () => {
   ]);
 
   const isAllAgreed = agreements.every(Boolean);
+  const { openToast } = useToast();
 
   const handleAllAgree = (checked: boolean) => {
     agreementForm.setValue('termsAgreement', checked);
@@ -39,12 +43,20 @@ const AgreementModal = () => {
     agreementForm.setValue('marketingAgreement', checked);
   };
 
-  const handleSubmitToAgreement: SubmitHandler<AgreementsTypes> = (
+  const handleSubmitToAgreement: SubmitHandler<AgreementsTypes> = async (
     data: AgreementsTypes,
   ) => {
-    console.log(data);
-    navigate('/signup/user-info');
-    closeModal();
+    try {
+      const res = await requestAgreement(data);
+      if (res?.code === 200) {
+        openToast(res.message, 'success');
+        navigate('/signup/user-info');
+        closeModal();
+      }
+    } catch (error: unknown) {
+      const errorMessage = handleAxiosError(error);
+      openToast(errorMessage, 'error');
+    }
   };
 
   return (
