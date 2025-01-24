@@ -13,7 +13,7 @@ const GoogleLoginButton = () => {
         const res = await googlelogin(credentialResponse.access_token);
         if (res.data === 'UN_REGISTER') {
           navigate('/signup/verification');
-        } else {
+        } else if (res.data === 'LOGIN_SUCCESS') {
           navigate('/home');
         }
       }
