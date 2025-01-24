@@ -34,8 +34,6 @@ const KakaoMap = memo(() => {
     }
   }, []);
 
-  console.log(origin, destination);
-
   // Map 객체 생성
   useEffect(() => {
     if (isKakaoLoaded && !mapRef.current && window.kakao && coordinatesLoaded) {
