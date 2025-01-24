@@ -8,7 +8,7 @@ const ChatPage = () => {
   const chatMember = 3;
   const roomId = 1;
 
-  useWebSocket(roomId);
+  const { isSubscribed, messages } = useWebSocket(roomId);
 
   return (
     <section className="flex-1 w-full flex flex-col gap-[32px] p-horizontal bg-darkBlack">
@@ -22,10 +22,18 @@ const ChatPage = () => {
         </div>
       </div>
       <div className="flex-1 overflow-y-auto">
-        <MessageList roomId={roomId} />
-        <div className="w-full flex items-center justify-center">
-          <NewMessage />
-        </div>
+        {isSubscribed ? (
+          <>
+            <MessageList messages={messages} />
+            <div className="w-full flex items-center justify-center">
+              <NewMessage />
+            </div>
+          </>
+        ) : (
+          <div className="text-center text-gray-400">
+            메시지를 불러오는 중...
+          </div>
+        )}
       </div>
       <div className="sticky">
         <ChatInput roomId={roomId} />
