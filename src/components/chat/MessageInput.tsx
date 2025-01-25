@@ -15,7 +15,7 @@ const ChatInput = ({ roomId }: ChatMessage) => {
   //const { sendMessage } = useWebSocket(roomId);
 
   const toggleMenu = () => {
-    setShowMenu(!showMenu);
+    setShowMenu((prev) => !prev);
   };
 
   const handleAccountSend = (accountInfo: string) => {
