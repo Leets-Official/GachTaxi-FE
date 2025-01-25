@@ -2,7 +2,7 @@ import ChatInput from '@/components/chat/MessageInput';
 import MessageList from '@/components/chat/messageList/index';
 import NewMessage from '@/components/chat/NewMessage';
 import BackButton from '@/components/commons/BackButton';
-import useWebSocket from '@/libs/apis/chat/connectWebSocket.api';
+import useWebSocket from '@/hooks/useWebSocket';
 
 const ChatPage = () => {
   const chatMember = 3;
