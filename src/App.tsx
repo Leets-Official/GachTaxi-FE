@@ -15,6 +15,7 @@ import ChatPage from '@/pages/chat';
 import FriendRequestPage from '@/pages/friend-request';
 import NotificationPage from '@/pages/notification';
 import ProtectRoute from '@/pages/ProtectRoute';
+import GoogleLoginLoading from '@/components/landing/GoogleLoginLoading';
 
 function App() {
   const queryClient = new QueryClient();
@@ -33,6 +34,10 @@ function App() {
                 <Route index element={<LandingPage />} />
                 <Route path="*" element={<NotFoundPage />} />
                 <Route path="/kakao/callback" element={<KakaoLoginLoading />} />
+                <Route
+                  path="/google/callback"
+                  element={<GoogleLoginLoading />}
+                />
                 {/** 로그인이 필요한 라우트 */}
                 <Route element={<ProtectRoute />}>
                   <Route
