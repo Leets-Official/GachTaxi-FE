@@ -8,22 +8,20 @@ export const getChatMessages = async (
   pageSize: number = 5,
 ): Promise<ChatMessagesFromServerFull> => {
   const accessToken = import.meta.env.VITE_MASTER_TOKEN;
+  const baseUrl = import.meta.env.VITE_API_BASE_URL;
 
   try {
-    const res = await axios.get(
-      `${import.meta.env.VITE_API_BASE_URL}/api/chat/${roomId}`,
-      {
-        headers: {
-          'ngrok-skip-browser-warning': '69420',
-          Authorization: `Bearer ${accessToken}`,
-        },
-        params: {
-          lastMessageTimeStamp,
-          pageNumber,
-          pageSize,
-        },
+    const res = await axios.get(`${baseUrl}/api/chat/${roomId}`, {
+      headers: {
+        'ngrok-skip-browser-warning': '69420',
+        Authorization: `Bearer ${accessToken}`,
       },
-    );
+      params: {
+        lastMessageTimeStamp,
+        pageNumber,
+        pageSize,
+      },
+    });
     const data = res.data.data;
     console.log('getChatMessage에서의 data', data);
     return data;
