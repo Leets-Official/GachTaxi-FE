@@ -6,6 +6,9 @@ import NotificationIcon from '@/assets/icon/notificationIcon.svg?react';
 import BasicProfileIcon from '@/assets/icon/basicProfileIcon.svg?react';
 import { Link } from 'react-router-dom';
 import useSheetStore from '@/store/useSheetStore';
+import { useEffect, useState } from 'react';
+import { getUnreadNotification } from '@/libs/apis/notification';
+import handleAxiosError from '@/libs/apis/axiosError.api';
 
 interface NavbarProps {
   modalContent: {
@@ -17,6 +20,36 @@ interface NavbarProps {
 
 const Navbar = ({ modalContent }: NavbarProps) => {
   const { openHome, openMatch, openFriend } = useSheetStore();
+  const [hasUnreadNotifications, setHasUnreadNotifications] = useState<
+    boolean | undefined
+  >(false);
+
+  useEffect(() => {
+    const fetchUnreadNotifications = async () => {
+      try {
+        const res = await getUnreadNotification();
+        if (res.code >= 200 && res.code < 300) {
+          return res.data.hasUnreadNotifications === true;
+        }
+        return false;
+      } catch (e: unknown) {
+        const errorMessage = handleAxiosError(e);
+        console.error(errorMessage);
+        return false;
+      }
+    };
+
+    const checkNotifications = async () => {
+      if (!hasUnreadNotifications) {
+        const notiState = await fetchUnreadNotifications();
+        if (notiState) {
+          setHasUnreadNotifications(notiState);
+        }
+      }
+    };
+
+    checkNotifications();
+  }, [hasUnreadNotifications]);
 
   return (
     <nav className="flex justify-between items-center bg-neutral fixed left-0 right-0 bottom-0 max-w-[430px] w-full h-[64px] px-8 mx-auto z-40">
@@ -64,9 +97,12 @@ const Navbar = ({ modalContent }: NavbarProps) => {
       </Button>
       <Link
         to="/notification"
-        className="flex flex-col items-center justify-center gap-1"
+        className="flex flex-col items-center justify-center gap-1 relative"
       >
         <NotificationIcon />
+        {hasUnreadNotifications && (
+          <span className="rounded-full w-2 h-2 absolute top-0 right-0 bg-red-600" />
+        )}
         <span className={`text-[10px] text-textDarkGray`}>알림</span>
       </Link>
       <Link
