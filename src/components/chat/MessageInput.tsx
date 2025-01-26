@@ -37,7 +37,7 @@ const ChatInput = ({ roomId }: ChatMessage) => {
   return (
     <div className="fixed left-0 right-0 bottom-0 max-w-[430px] w-full mx-auto">
       {showMenu && (
-        <div className="w-full h-[144px] bg-secondary rounded-t-3xl">
+        <div className="w-full h-[144px] bg-secondary">
           <BottomMenu onSendAccount={handleAccountSend} />
         </div>
       )}
