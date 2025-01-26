@@ -27,6 +27,8 @@ const useWebSocket = (roomId: number | null) => {
       client.connect(
         {
           Authorization: `Bearer ${accessToken}`,
+          'Content-Type': `application/json`,
+          'ngrok-skip-browser-warning': '69420',
         },
         () => {
           // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -35,32 +37,6 @@ const useWebSocket = (roomId: number | null) => {
 
             const receivedMessage: SubscribeServer = JSON.parse(message.body);
             console.log('구독 새로운 메시지 수신:', receivedMessage);
-
-            switch (receivedMessage.messageType) {
-              case 'ENTER':
-                console.log(`${receivedMessage.senderName} 님이 입장했습니다.`);
-                break;
-
-              case 'MESSAGE':
-                console.log(
-                  `${receivedMessage.senderName} 구독 타입이 MESSAGE입니다.`,
-                );
-                break;
-
-              case 'EXIT':
-                console.log(`${receivedMessage.senderName} 님이 퇴장했습니다.`);
-                break;
-
-              case 'READ':
-                console.log(`읽음 처리됨: ${receivedMessage.senderName}`);
-                break;
-
-              default:
-                console.warn(
-                  '알 수 없는 메시지 타입:',
-                  receivedMessage.messageType,
-                );
-            }
           });
           setIsSubscribed(true);
           getChatMessages(roomId).then((data) => {
@@ -95,27 +71,12 @@ const useWebSocket = (roomId: number | null) => {
       stompClient.send(`/pub/chat/message`, {}, JSON.stringify(sendMessage));
       console.log('메시지 전송:', sendMessage);
     }
-  };
-
-  // 페이지네이션 로직 (채팅방 위로 스크롤할 때 추가 로드)
-  const loadMoreMessages = async (
-    lastMessageTimeStamp: string,
-    pageSize: number,
-  ) => {
-    if (!roomId) return;
-
     try {
-      const newMessages = await getChatMessages(
-        roomId,
-        lastMessageTimeStamp,
-        1,
-        pageSize + 1,
-      );
-      console.log('더 많은 메시지 로드됨:', newMessages);
-
-      setMessages(newMessages);
+      const updatedMessages = await getChatMessages(roomId);
+      setMessages(updatedMessages);
+      console.log('메시지 전송 후 최신 메시지:', updatedMessages);
     } catch (error) {
-      console.error('추가 메시지 로딩 중 오류:', error);
+      console.error('메시지 전송 후 갱신 실패:', error);
     }
   };
 
@@ -123,7 +84,6 @@ const useWebSocket = (roomId: number | null) => {
     sendMessage,
     isSubscribed,
     messages,
-    loadMoreMessages,
   };
 };
 
