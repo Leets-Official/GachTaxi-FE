@@ -1,6 +1,6 @@
 import { CompatClient, Stomp } from '@stomp/stompjs';
 import { useState, useEffect } from 'react';
-import { getChatMessages } from '@/libs/apis/chat/getChatMessages';
+import { getChatMessages } from '@/libs/apis/getChatMessages';
 
 const useWebSocket = (roomId: number | null) => {
   const [stompClient, setStompClient] = useState<CompatClient | null>(null);
@@ -27,8 +27,6 @@ const useWebSocket = (roomId: number | null) => {
       client.connect(
         {
           Authorization: `Bearer ${accessToken}`,
-          'Content-Type': `application/json`,
-          'ngrok-skip-browser-warning': '69420',
         },
         () => {
           // eslint-disable-next-line @typescript-eslint/no-explicit-any
