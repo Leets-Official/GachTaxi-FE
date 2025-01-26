@@ -58,7 +58,10 @@ const refreshAccessToken = async () => {
 
 client.interceptors.request.use(
   (config) => {
-    const isAuthCodeApi = config.url?.startsWith('/auth/login/kakao');
+    const authCodeApis = ['/auth/login/kakao', '/auth/login/google'];
+    const isAuthCodeApi = authCodeApis.some((api) =>
+      config.url?.startsWith(api),
+    );
 
     if (!isAuthCodeApi) {
       const accessToken = localStorage.getItem('accessToken');

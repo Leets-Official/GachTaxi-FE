@@ -1,27 +1,19 @@
-import { useGoogleLogin } from '@react-oauth/google';
 import Button from '../commons/Button';
 import GoogleIcon from '@/assets/icon/google.svg?react';
-import { useNavigate } from 'react-router-dom';
-import googlelogin from '@/libs/apis/googleLogin.api';
+
+const CLIENT_ID = import.meta.env.VITE_GOOGLE_CLIENT_ID;
+const REDIRECT_URI = import.meta.env.VITE_GOOGLE_REDIRECT_URI;
 
 const GoogleLoginButton = () => {
-  const navigate = useNavigate();
+  const handleGoogleLogin = () => {
+    const link = `https://accounts.google.com/o/oauth2/v2/auth?
+client_id=${CLIENT_ID}
+&redirect_uri=${REDIRECT_URI}
+&response_type=code
+&scope=email+profile`;
 
-  const handleGoogleLogin = useGoogleLogin({
-    onSuccess: async (credentialResponse) => {
-      if (credentialResponse) {
-        const res = await googlelogin(credentialResponse.access_token);
-        if (res.data === 'UN_REGISTER') {
-          navigate('/signup/verification');
-        } else if (res.data === 'LOGIN_SUCCESS') {
-          navigate('/home');
-        }
-      }
-    },
-    onError: (error) => {
-      throw new Error(`에러 발생 : ${error}`);
-    },
-  });
+    window.location.href = link;
+  };
 
   return (
     <Button
