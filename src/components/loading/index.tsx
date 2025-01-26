@@ -37,7 +37,7 @@ const LoadingScreen = () => {
             fill="none"
             stroke="#08F283"
             strokeWidth="10"
-            strokeDasharray="76.8 174.4"
+            strokeDasharray="27.9 223.3"
             strokeDashoffset="188.4"
             strokeLinecap="butt"
             transform={`rotate(${rotation - 90} 50 50)`}
