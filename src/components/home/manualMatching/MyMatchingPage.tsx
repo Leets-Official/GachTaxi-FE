@@ -10,7 +10,7 @@ const MyMatchingPage = ({ isOpen }: { isOpen: boolean }) => {
   return (
     <>
       <div
-        className={`flex flex-col gap-[16px] ${isOpen ? '' : 'pb-[calc(100dvh-430px)]'} h-[calc(100dvh-225px)] max-h-[calc(100dvh-225px)] overflow-y-scroll scroll-hidden`}
+        className={`flex flex-col gap-4 ${isOpen ? '' : 'pb-[calc(100dvh-430px)]'} h-[calc(100dvh-225px)] max-h-[calc(100dvh-225px)] overflow-y-scroll scroll-hidden`}
       >
         <p className="mb-4 font-medium text-body">
           참여중인 매칭 리스트를 확인할 수 있어요!
