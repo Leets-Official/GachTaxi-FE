@@ -1,5 +1,5 @@
 interface ChatMessageFromClient {
-  content: string;
+  message: string;
 }
 
 interface SubscribeServer {
@@ -32,18 +32,16 @@ interface ChatMessagesFromServerFull {
   chattingMessage: ChattingList[];
   memberId: number;
   disconnectedAt: string;
-  pageable: Pageable;
+  pageable: {
+    pageNumber: number;
+    pageSize: number;
+    numberOfElements: number;
+    last: boolean;
+    empty: boolean;
+  };
 }
 
 type MessageType = 'ENTER' | 'MESSAGE' | 'EXIT' | 'READ';
-
-interface Pageable {
-  pageNumber: number;
-  pageSize: number;
-  numberOfElements: number;
-  last: boolean;
-  empty: boolean;
-}
 
 interface ReadReceiptRange {
   startMessageId: string;
