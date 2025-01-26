@@ -1,6 +1,5 @@
 import ChatInput from '@/components/chat/MessageInput';
 import MessageList from '@/components/chat/messageList/index';
-import NewMessage from '@/components/chat/NewMessage';
 import BackButton from '@/components/commons/BackButton';
 import useWebSocket from '@/hooks/useWebSocket';
 
@@ -8,11 +7,11 @@ const ChatPage = () => {
   const chatMember = 3;
   const roomId = 1;
 
-  const { isSubscribed, messages } = useWebSocket(roomId);
+  const { isSubscribed, messages, sendMessage } = useWebSocket(roomId);
 
   return (
-    <section className="flex-1 w-full flex flex-col gap-[32px] p-horizontal bg-darkBlack">
-      <div className="sticky top-0">
+    <section className="flex-1 w-full flex flex-col">
+      <div className="sticky top-0 p-horizontal bg-darkBlack">
         <BackButton />
         <div className="flex h-[48px] items-center">
           <h1 className="font-bold text-header">채팅방</h1>
@@ -25,9 +24,6 @@ const ChatPage = () => {
         {isSubscribed ? (
           <>
             <MessageList messages={messages} />
-            <div className="w-full flex items-center justify-center">
-              <NewMessage />
-            </div>
           </>
         ) : (
           <div className="text-center text-gray-400">
@@ -35,8 +31,8 @@ const ChatPage = () => {
           </div>
         )}
       </div>
-      <div className="sticky">
-        <ChatInput roomId={roomId} />
+      <div className="sticky bottom-0">
+        <ChatInput roomId={roomId} sendMessage={sendMessage} />
       </div>
     </section>
   );
