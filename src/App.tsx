@@ -3,7 +3,7 @@ import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
 import LandingPage from '@/pages/landing/index';
 import KakaoLoginLoading from './components/landing/KakaoLoginLoading';
-import SignUpPage from './pages/sign-up';
+import SignUpPage from '@/pages/sign-up';
 import { ModalProvider } from './contexts/ModalContext';
 import HomePage from '@/pages/home';
 import NotFoundPage from '@/pages/NotFound';
