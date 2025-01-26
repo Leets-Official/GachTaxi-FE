@@ -1,12 +1,12 @@
 import Button from '../commons/Button';
 import KakaoIcon from '@/assets/icon/kakao.svg?react';
 
+const REST_API_KEY = import.meta.env.VITE_REST_API_KEY;
+const REDIRECT_URI = import.meta.env.VITE_KAKAO_REDIRECT_URI;
+
 const KakaoLoginButton = () => {
   const handleKakaoLogin = async () => {
-    const REST_API_KEY = import.meta.env.VITE_REST_API_KEY;
-    const REDIRECT_URI = import.meta.env.VITE_REDIRECT_URI;
     const link = `https://kauth.kakao.com/oauth/authorize?client_id=${REST_API_KEY}&redirect_uri=${REDIRECT_URI}&response_type=code`;
-
     window.location.href = link;
   };
 

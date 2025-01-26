@@ -5,12 +5,10 @@ import SecondLanding from './SecondLanding';
 import LastLanding from './LastLanding';
 import KakaoLoginButton from '@/components/landing/KakaoLoginButton';
 import GoogleLoginButton from '@/components/landing/GoogleLoginButton';
-import { GoogleOAuthProvider } from '@react-oauth/google';
 
 const slides = [<FirstLanding />, <SecondLanding />, <LastLanding />];
 
 const LandingPage = () => {
-  const CLIENT_ID = import.meta.env.VITE_GOOGLE_CLIENT_ID;
   const [currentIndex, setCurrentIndex] = useState(0);
   const sliderRef = useRef<HTMLDivElement>(null);
 
@@ -83,9 +81,7 @@ const LandingPage = () => {
 
       <div className="absolute w-[85%] bottom-10 flex flex-col max-w-[430px]">
         <KakaoLoginButton />
-        <GoogleOAuthProvider clientId={CLIENT_ID}>
-          <GoogleLoginButton />
-        </GoogleOAuthProvider>
+        <GoogleLoginButton />
       </div>
     </div>
   );

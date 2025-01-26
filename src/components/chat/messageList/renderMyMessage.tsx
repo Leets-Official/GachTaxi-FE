@@ -1,5 +1,5 @@
 interface RenderMyMessageProps {
-  message: string;
+  message: string | null;
   timeStamp: string;
 }
 

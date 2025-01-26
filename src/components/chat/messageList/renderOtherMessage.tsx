@@ -4,7 +4,7 @@ import DefaultProfileImage from '@/assets/icon/basicProfileIcon.svg?react';
 
 interface RenderOtherMessageProps {
   senderName: string;
-  message: string;
+  message: string | null;
   timeStamp: string;
   imageUrl?: string;
 }
