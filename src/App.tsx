@@ -16,6 +16,7 @@ import FriendRequestPage from '@/pages/friend-request';
 import NotificationPage from '@/pages/notification';
 import ProtectRoute from '@/pages/ProtectRoute';
 import GoogleLoginLoading from '@/components/landing/GoogleLoginLoading';
+import MatchingInfoPage from '@/pages/mathcing';
 
 function App() {
   const queryClient = new QueryClient();
@@ -52,6 +53,7 @@ function App() {
                     element={<FriendRequestPage />}
                   />
                   <Route path="/notification" element={<NotificationPage />} />
+                  <Route path="/matching" element={<MatchingInfoPage />} />
                   <Route path="chat/:id" element={<ChatPage />} />
                 </Route>
               </Route>

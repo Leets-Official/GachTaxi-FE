@@ -11,11 +11,12 @@ import { autoMatchingSchema } from '@/libs/schemas/match';
 import InviteMembers from '@/components/home/autoMatching/inviteMembers';
 import useGeoLocation from '@/hooks/useGeoLocation';
 import getCoordinateByAddress from '@/libs/apis/getCoordinateByAddress';
-import { useCallback, useEffect, useState } from 'react';
-import { EventSourcePolyfill } from '@/utils/EventSourcePolyfill';
-import axios from 'axios';
+import { useCallback, useEffect } from 'react';
 import { useToast } from '@/contexts/ToastContext';
 import useLocationStore from '@/store/useLocationStore';
+import handleAxiosError from '@/libs/apis/axiosError.api';
+import startAutoMatching from '@/libs/apis/matching/startAutoMatching.api';
+import useSSEStore from '@/store/useSSEStore';
 
 const AutoMatching = ({ isOpen }: { isOpen: boolean }) => {
   const autoMatchingForm = useForm<z.infer<typeof autoMatchingSchema>>({
@@ -36,23 +37,11 @@ const AutoMatching = ({ isOpen }: { isOpen: boolean }) => {
     auto: { destinationName: autoDestinationName },
     setAuto: { setStartPoint, setDestinationPoint, setDestinationName },
   } = useLocationStore();
+  const { sse, initializeSSE } = useSSEStore();
   const { getCurrentLocation } = useGeoLocation();
   const { openToast } = useToast();
-  const [eventSource, setEventSource] = useState<EventSourcePolyfill | null>(
-    null,
-  );
   const currentStartName = autoMatchingForm.watch('startName');
   const currentDestinationName = autoMatchingForm.watch('destinationName');
-
-  // 컴포넌트 언마운트시 구독 종료
-  useEffect(() => {
-    return () => {
-      if (eventSource) {
-        eventSource.close();
-        setEventSource(null);
-      }
-    };
-  }, [eventSource]);
 
   const updateDestinationCoordinates = useCallback(async () => {
     try {
@@ -89,6 +78,12 @@ const AutoMatching = ({ isOpen }: { isOpen: boolean }) => {
   ]);
 
   useEffect(() => {
+    if (!sse) {
+      initializeSSE();
+    }
+  }, [sse, initializeSSE]);
+
+  useEffect(() => {
     // 목적지 이름이 변경된 경우에만 동작
     if (currentDestinationName !== autoDestinationName && window.kakao?.maps) {
       window.kakao.maps.load(updateDestinationCoordinates);
@@ -100,61 +95,6 @@ const AutoMatching = ({ isOpen }: { isOpen: boolean }) => {
     setDestinationName,
     updateDestinationCoordinates,
   ]);
-
-  const baseUrl = import.meta.env.VITE_API_BASE_URL;
-
-  // SSE 구독
-  const subscribeToSSE = useCallback(() => {
-    const sse = new EventSourcePolyfill(
-      `${baseUrl}/api/matching/auto/subscribe`,
-      {
-        headers: {
-          Authorization: `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiZW1haWwiOiJhQGEuY29tIiwicm9sZSI6Ik1FTUJFUiIsImlhdCI6MTUxNjIzOTAyMiwiZXhwIjo2MDAwMDAwMDAwMH0.40DhQGzszXAawIW6XMJ08uAaYhulOF0x-9FYk0wr8SI`,
-        },
-        withCredentials: true,
-      },
-    );
-
-    sse.onmessage = (event: MessageEvent) => {
-      const lines = event.data.split('\n');
-      const parsedEvent: { event?: string; data?: any } = {};
-
-      // SSE 메시지 파싱
-      /**
-       * {
-       *  event: "init",
-       *  data: {
-       *    message: "member 1 Connection established"
-       *  }
-       * }
-       * 위와 같은 형식이며,
-       * event는 이벤트 타입
-       * data는 이벤트 데이터(json 형식), message에 실제 데이터가 있음
-       */
-      lines.forEach((line: string) => {
-        if (line.startsWith('event:')) {
-          parsedEvent.event = line.slice(6).trim();
-        } else if (line.startsWith('data:')) {
-          try {
-            parsedEvent.data = JSON.parse(line.slice(5).trim());
-          } catch (e) {
-            console.log(e);
-            parsedEvent.data = line.slice(5).trim();
-          }
-        }
-      });
-
-      console.log('SSE 이벤트 타입:', parsedEvent.event);
-      console.log('SSE 데이터:', parsedEvent.data);
-    };
-
-    sse.onerror = (error) => {
-      console.error('SSE 에러:', error);
-      sse.close();
-    };
-
-    setEventSource(sse);
-  }, [baseUrl]);
 
   const onSubmit = async () => {
     try {
@@ -180,31 +120,14 @@ const AutoMatching = ({ isOpen }: { isOpen: boolean }) => {
   ) => {
     console.log(data);
     try {
-      subscribeToSSE();
+      const res = await startAutoMatching(data);
 
-      const response = await axios.post(
-        `${baseUrl}/api/matching/auto/request`,
-        data,
-        {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-            Authorization: `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiZW1haWwiOiJhQGEuY29tIiwicm9sZSI6Ik1FTUJFUiIsImlhdCI6MTUxNjIzOTAyMiwiZXhwIjo2MDAwMDAwMDAwMH0.40DhQGzszXAawIW6XMJ08uAaYhulOF0x-9FYk0wr8SI`,
-          },
-        },
-      );
-
-      if (response.status !== 200) {
-        throw new Error('매칭 요청 실패');
+      if (res?.code && res.code >= 200 && res.code < 300) {
+        openToast(res.message, 'success');
       }
-
-      console.log('매칭 요청 성공');
-    } catch (error) {
-      console.error('매칭 요청 중 오류:', error);
-      if (eventSource) {
-        eventSource.close();
-        setEventSource(null);
-      }
+    } catch (error: unknown) {
+      const errorMessage = handleAxiosError(error);
+      openToast(errorMessage, 'error');
     }
   };
 
