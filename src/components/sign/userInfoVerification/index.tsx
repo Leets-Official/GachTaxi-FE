@@ -12,6 +12,7 @@ import { useToast } from '@/contexts/ToastContext';
 import handleAxiosError from '@/libs/apis/axiosError.api';
 import useUploadImage from '@/hooks/useUploadImage';
 import useRequestStatus from '@/hooks/useRequestStatus';
+import useUserStore from '@/store/useUserStore';
 
 const UserInfoVerification = () => {
   const userInfoForm = useForm<z.infer<typeof userInfoVerificationSchema>>({
@@ -31,6 +32,7 @@ const UserInfoVerification = () => {
   const { imagePreview, uploadedImage } = useUploadImage(currentImage);
   const { openToast } = useToast();
   const { status, setSuccess, setError, setPending } = useRequestStatus();
+  const { setUser } = useUserStore();
 
   const handleSubmitToUserInfo: SubmitHandler<
     UserInfoVerificationTypes
@@ -45,12 +47,19 @@ const UserInfoVerification = () => {
         updateData.profilePicture = uploadedImage;
         const res = await requestUserInfo(updateData);
         if (res?.code === 200) {
+          const userData = res?.data?.memberResponseDto;
+          setUser(userData);
           setSuccess();
           openToast(res.message, 'success');
         }
       } else {
         const res = await requestUserInfo(data);
+
         if (res?.code === 200) {
+          if (res?.data?.memberResponseDto) {
+            const userData = res.data.memberResponseDto;
+            setUser(userData);
+          }
           setSuccess();
           openToast(res.message, 'success');
         }
