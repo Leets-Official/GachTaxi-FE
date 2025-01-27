@@ -1,9 +1,18 @@
 import Button from '@/components/commons/Button';
 import TImer from '@/components/matchingInfo/TImer';
+import useSSEStore from '@/store/useSSEStore';
 import useTimerStore from '@/store/useTimerStore';
+import { useEffect } from 'react';
 
 const MatchingInfoPage = () => {
   const { reset } = useTimerStore();
+  const { initializeSSE, messages } = useSSEStore();
+
+  useEffect(() => {
+    initializeSSE();
+  }, [initializeSSE]);
+
+  console.log(messages.length);
 
   return (
     <section className="flex-1 flex flex-col justify-between p-4">
