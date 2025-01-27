@@ -1,17 +1,11 @@
 import Profile from '@/assets/icon/myPageProfile.svg?react';
 import ProfileModify from '@/assets/icon/myPageModifyButton.svg?react';
 import { useNavigate } from 'react-router-dom';
+import useUserStore from '@/store/useUserStore';
 
-interface MyProfileHeaderProps {
-  profileImageUrl?: string;
-  nickname?: string;
-}
-
-const MyProfileHeader = ({
-  profileImageUrl,
-  nickname,
-}: MyProfileHeaderProps) => {
+const MyProfileHeader = () => {
   const navigate = useNavigate();
+  const { user } = useUserStore();
 
   const handleProfileEditClick = () => {
     navigate('/mypage/edit-profile');
@@ -19,9 +13,9 @@ const MyProfileHeader = ({
 
   return (
     <div className="flex items-center gap-[16px] border-b-2 border-textDarkGray pb-[30px]">
-      {profileImageUrl ? (
+      {user?.profilePicture ? (
         <img
-          src={profileImageUrl}
+          src={user.profilePicture}
           alt="사용자 프로필"
           className="w-[70px] h-[70px] rounded-full object-cover"
         />
@@ -30,7 +24,7 @@ const MyProfileHeader = ({
       )}
       <div>
         <p className="text-header flex">
-          {nickname}
+          {user?.nickName}
           <ProfileModify
             className="ml-[5px] mt-[10px]"
             onClick={handleProfileEditClick}
