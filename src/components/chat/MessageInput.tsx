@@ -34,7 +34,7 @@ const ChatInput = ({ roomId, sendMessage }: ChatMessage) => {
   return (
     <section className="flex-1 w-full flex flex-col">
       {showMenu && (
-        <div className="w-full h-[144px] bg-secondary rounded-t-3xl">
+        <div className="w-full h-[144px] bg-secondary">
           <BottomMenu onSendAccount={handleAccountSend} roomId={roomId} />
         </div>
       )}
