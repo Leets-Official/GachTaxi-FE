@@ -22,14 +22,21 @@ const useUploadImage = (image?: any) => {
 
       if (typeof image === 'string') {
         setImagePreview(image);
-      } else {
-        const { data, error } = await getImageUrl(image);
-        if (error || !data) {
-          throw new Error('이미지 업로드 실패');
-        } else {
+      } else if (image instanceof File) {
+        const fileName = image.name;
+
+        try {
+          const { data, error } = await getImageUrl(image, fileName);
+
+          if (error || !data) {
+            throw new Error('이미지 업로드 실패');
+          }
+
           const res = await getPresignedUrl(data, image);
           const slicedData = res.data.split('?')[0];
           setUploadedImage(slicedData);
+        } catch (error) {
+          console.error('이미지 업로드 중 오류:', error);
         }
 
         const objectURL = URL.createObjectURL(image);
