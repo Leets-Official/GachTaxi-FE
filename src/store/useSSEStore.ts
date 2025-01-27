@@ -15,46 +15,36 @@ const useSSEStore = create<SSEState>((set) => ({
   sse: null,
   messages: [],
   initializeSSE: () => {
-    const accessToken = localStorage.getItem('accessToken');
-    const sse = new EventSourcePolyfill(
-      `${BASE_URL}/api/matching/auto/subscribe`,
-      {
-        headers: {
-          Authorization: `Bearer ${accessToken}`,
+    set((state) => {
+      if (state.sse) {
+        console.log('이미 구독 중이므로 재구독을 방지합니다.');
+        return state;
+      }
+
+      const accessToken = localStorage.getItem('accessToken');
+      const sse = new EventSourcePolyfill(
+        `${BASE_URL}/api/matching/auto/subscribe`,
+        {
+          headers: { Authorization: `Bearer ${accessToken}` },
+          withCredentials: true,
         },
-        withCredentials: true,
-      },
-    );
-    set({ sse });
+      );
 
-    sse.onmessage = (event: MessageEvent) => {
-      const lines = event.data.split('\n');
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      const parsedEvent: { event?: string; data?: any } = {};
-      lines.forEach((line: string) => {
-        if (line.startsWith('event:')) {
-          parsedEvent.event = line.slice(6).trim();
-        } else if (line.startsWith('data:')) {
-          try {
-            parsedEvent.data = JSON.parse(line.slice(5).trim());
-          } catch (e) {
-            console.log(e);
-            parsedEvent.data = line.slice(5).trim();
-          }
-        }
-      });
+      sse.onmessage = (event: MessageEvent) => {
+        console.log('SSE 메시지 수신:', event.data);
+        set((state) => ({
+          messages: [...state.messages, event.data],
+        }));
+      };
 
-      console.log('SSE 이벤트 타입:', parsedEvent.event);
-      console.log('SSE 데이터:', parsedEvent.data);
-      set((state) => ({
-        messages: [...state.messages, event.data],
-      }));
-    };
+      sse.onerror = (error) => {
+        console.error('SSE 에러 발생:', error);
+        sse.close();
+      };
 
-    sse.onerror = (error) => {
-      console.error('SSE 에러:', error);
-      sse.close();
-    };
+      console.log('SSE 구독 시작');
+      return { sse };
+    });
   },
 
   closeSSE: () => {
