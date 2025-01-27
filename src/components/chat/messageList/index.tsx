@@ -1,7 +1,7 @@
 import InviteMessage from '../InviteMessage';
 import RenderMyMessage from './renderMyMessage';
 import RenderOtherMessage from './renderOtherMessage';
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 
 interface MessageListProps {
   messages: ChatMessagesFromServerFull | null;
@@ -9,12 +9,36 @@ interface MessageListProps {
 
 const MessageList = ({ messages }: MessageListProps) => {
   const bottomRef = useRef<HTMLDivElement | null>(null);
+  const containerRef = useRef<HTMLDivElement | null>(null);
+  const [isAtBottom, setIsAtBottom] = useState(true);
 
   useEffect(() => {
-    if (bottomRef.current) {
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        setIsAtBottom(entry.isIntersecting);
+      },
+      {
+        root: containerRef.current,
+        threshold: 0.1,
+      },
+    );
+    const currentBottomRef = bottomRef.current;
+
+    if (currentBottomRef) {
+      observer.observe(currentBottomRef);
+    }
+    return () => {
+      if (currentBottomRef) {
+        observer.unobserve(currentBottomRef);
+      }
+    };
+  }, [messages]);
+
+  useEffect(() => {
+    if (isAtBottom && bottomRef.current) {
       bottomRef.current.scrollIntoView({ behavior: 'smooth' });
     }
-  }, [messages]);
+  }, [messages, isAtBottom]);
 
   if (!messages) {
     return (
