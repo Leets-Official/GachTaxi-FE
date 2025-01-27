@@ -1,5 +1,5 @@
 import LandingHeader from '@/components/landing/LandingHeader';
-import SecondSvg from '@/assets/icon/secondLanding.svg?react';
+import SecondPng from '@/assets/icon/secondLandingPage.png';
 import { LANDING_TEXTS } from '@/constants';
 
 const SecondLanding = () => {
@@ -17,7 +17,7 @@ const SecondLanding = () => {
           }
         />
       </div>
-      <SecondSvg className="items-cemter mt-[10px]" />
+      <img src={SecondPng} alt="Second Page" />
     </section>
   );
 };
