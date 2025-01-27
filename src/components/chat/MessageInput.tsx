@@ -3,16 +3,15 @@ import BottomMenu from './bottomMenu';
 import ChatPlus from '@/assets/icon/chatPlus.svg?react';
 import ChatX from '@/assets/icon/chatX.svg?react';
 import ChatSend from '@/assets/icon/chatSend.svg?react';
-//import useWebSocket from '@/libs/apis/chat/connectWebSocket.api';
 
 interface ChatMessage {
   roomId: number;
+  sendMessage: (message: { message: string }) => void;
 }
 
-const ChatInput = ({ roomId }: ChatMessage) => {
+const ChatInput = ({ roomId, sendMessage }: ChatMessage) => {
   const [showMenu, setShowMenu] = useState(false);
   const [message, setMessage] = useState('');
-  //const { sendMessage } = useWebSocket(roomId);
 
   const toggleMenu = () => {
     setShowMenu((prev) => !prev);
@@ -27,18 +26,16 @@ const ChatInput = ({ roomId }: ChatMessage) => {
   const handleSendMessage = () => {
     if (!message.trim()) return;
 
-    // sendMessage({
-    //   message: message,
-    // });
+    sendMessage({ message });
 
     setMessage('');
   };
 
   return (
-    <div className="fixed left-0 right-0 bottom-0 max-w-[430px] w-full mx-auto">
+    <section className="flex-1 w-full flex flex-col">
       {showMenu && (
         <div className="w-full h-[144px] bg-secondary rounded-t-3xl">
-          <BottomMenu onSendAccount={handleAccountSend} />
+          <BottomMenu onSendAccount={handleAccountSend} roomId={roomId} />
         </div>
       )}
 
@@ -65,7 +62,7 @@ const ChatInput = ({ roomId }: ChatMessage) => {
           <ChatSend />
         </button>
       </div>
-    </div>
+    </section>
   );
 };
 
