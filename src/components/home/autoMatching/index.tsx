@@ -17,6 +17,7 @@ import useLocationStore from '@/store/useLocationStore';
 import handleAxiosError from '@/libs/apis/axiosError.api';
 import startAutoMatching from '@/libs/apis/matching/startAutoMatching.api';
 import useSSEStore from '@/store/useSSEStore';
+import { useNavigate } from 'react-router-dom';
 
 const AutoMatching = ({ isOpen }: { isOpen: boolean }) => {
   const autoMatchingForm = useForm<z.infer<typeof autoMatchingSchema>>({
@@ -42,6 +43,7 @@ const AutoMatching = ({ isOpen }: { isOpen: boolean }) => {
   const { openToast } = useToast();
   const currentStartName = autoMatchingForm.watch('startName');
   const currentDestinationName = autoMatchingForm.watch('destinationName');
+  const navigate = useNavigate();
 
   const updateDestinationCoordinates = useCallback(async () => {
     try {
@@ -121,9 +123,9 @@ const AutoMatching = ({ isOpen }: { isOpen: boolean }) => {
     console.log(data);
     try {
       const res = await startAutoMatching(data);
-
       if (res?.code && res.code >= 200 && res.code < 300) {
         openToast(res.message, 'success');
+        navigate('/matching');
       }
     } catch (error: unknown) {
       const errorMessage = handleAxiosError(error);
