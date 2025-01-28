@@ -1,5 +1,5 @@
 import LandingHeader from '@/components/landing/LandingHeader';
-import LastSvg from '@/assets/icon/lastLanding.svg?react';
+import LastPng from '@/assets/icon/lastLandingPage.png';
 import { LANDING_TEXTS } from '@/constants';
 
 const LastLanding = () => {
@@ -17,7 +17,7 @@ const LastLanding = () => {
           }
         />
       </div>
-      <LastSvg />
+      <img src={LastPng} alt="Last Page" />
     </section>
   );
 };
