@@ -1,5 +1,5 @@
 import LandingHeader from '@/components/landing/LandingHeader';
-import FirstSvg from '@/assets/icon/firstLandingPage.svg?react';
+import FirstPng from '@/assets/icon/firstLandingPage.png';
 import { LANDING_TEXTS } from '@/constants';
 
 const FirstLanding = () => {
@@ -17,7 +17,7 @@ const FirstLanding = () => {
           }
         />
       </div>
-      <FirstSvg />
+      <img src={FirstPng} alt="First Page" />
     </section>
   );
 };
