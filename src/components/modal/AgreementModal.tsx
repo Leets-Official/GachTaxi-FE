@@ -15,7 +15,11 @@ import { useToast } from '@/contexts/ToastContext';
 import handleAxiosError from '@/libs/apis/axiosError.api';
 import useRequestStatus from '@/hooks/useRequestStatus';
 
-const AgreementModal = () => {
+const AgreementModal = ({
+  setIsVerified,
+}: {
+  setIsVerified: (value: boolean) => void;
+}) => {
   const navigate = useNavigate();
   const { closeModal } = useModal();
   const { status, setSuccess, setError, setPending } = useRequestStatus();
@@ -53,14 +57,17 @@ const AgreementModal = () => {
       const res = await requestAgreement(data);
       if (res?.code === 200) {
         setSuccess();
+        setIsVerified(true);
         openToast(res.message, 'success');
-        navigate('/signup/user-info');
         closeModal();
+        setTimeout(() => navigate('/signup/user-info'), 0);
       }
     } catch (error: unknown) {
       setError();
       const errorMessage = handleAxiosError(error);
       openToast(errorMessage, 'error');
+    } finally {
+      closeModal();
     }
   };
 

@@ -2,7 +2,11 @@ import { useState } from 'react';
 import AuthCodeVerification from '../../components/sign/AuthCodeVerification';
 import EmailVerification from '../../components/sign/EmailVerification';
 
-const VerificationPage = () => {
+const VerificationPage = ({
+  setIsVerified,
+}: {
+  setIsVerified: (value: boolean) => void;
+}) => {
   const [isEmailVerified, setIsEmailVerified] = useState(false);
   const [emailInfo, setEmailInfo] = useState<string>('');
 
@@ -21,7 +25,12 @@ const VerificationPage = () => {
         setIsEmailVerified={setIsEmailVerified}
         setEmailInfo={setEmailInfo}
       />
-      {isEmailVerified && <AuthCodeVerification emailInfo={emailInfo} />}
+      {isEmailVerified && (
+        <AuthCodeVerification
+          emailInfo={emailInfo}
+          setIsVerified={setIsVerified}
+        />
+      )}
     </>
   );
 };
