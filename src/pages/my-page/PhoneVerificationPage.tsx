@@ -10,7 +10,7 @@ const PhoneVerificationPage = () => {
 
   return (
     <section className="flex-1 w-full flex flex-col gap-[48px] p-horizontal relative">
-      <BackButton usedPage="signUpPage" />
+      <BackButton />
 
       <div className="flex flex-col gap-[16px] text-white">
         <h1 className="text-header font-bold">

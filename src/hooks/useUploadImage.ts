@@ -1,5 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import getImageUrl from '@/libs/apis/auth/getImageUrl.api';
+import getPresignedUrl from '@/libs/apis/auth/getPresignedUrl';
 import { useState, useEffect } from 'react';
 
 const useUploadImage = (image?: any) => {
@@ -21,12 +22,23 @@ const useUploadImage = (image?: any) => {
 
       if (typeof image === 'string') {
         setImagePreview(image);
-      } else {
-        const { data, error } = await getImageUrl(image);
-        if (error || !data) {
-          throw new Error('이미지 업로드 실패');
+      } else if (image instanceof File) {
+        const fileName = image.name;
+
+        try {
+          const { data, error } = await getImageUrl(image, fileName);
+
+          if (error || !data) {
+            throw new Error('이미지 업로드 실패');
+          }
+
+          await getPresignedUrl(data, image);
+          const slicedData = data.split('?')[0];
+          setUploadedImage(slicedData);
+        } catch (error) {
+          console.error('이미지 업로드 중 오류:', error);
         }
-        setUploadedImage(data);
+
         const objectURL = URL.createObjectURL(image);
         setImagePreview(objectURL);
 
@@ -37,7 +49,7 @@ const useUploadImage = (image?: any) => {
     imageUpload();
   }, [image]);
 
-  return { imagePreview, uploadedImage };
+  return { imagePreview, uploadedImage, setImagePreview };
 };
 
 export default useUploadImage;

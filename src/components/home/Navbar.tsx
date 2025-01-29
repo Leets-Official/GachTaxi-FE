@@ -9,6 +9,7 @@ import useSheetStore from '@/store/useSheetStore';
 import { useEffect, useState } from 'react';
 import { getUnreadNotification } from '@/libs/apis/notification';
 import handleAxiosError from '@/libs/apis/axiosError.api';
+import useUserStore from '@/store/useUserStore';
 
 interface NavbarProps {
   modalContent: {
@@ -23,6 +24,7 @@ const Navbar = ({ modalContent }: NavbarProps) => {
   const [hasUnreadNotifications, setHasUnreadNotifications] = useState<
     boolean | undefined
   >(false);
+  const { user } = useUserStore();
 
   useEffect(() => {
     const fetchUnreadNotifications = async () => {
@@ -110,7 +112,15 @@ const Navbar = ({ modalContent }: NavbarProps) => {
         className="flex flex-col items-center justify-center gap-1"
       >
         <div className="flex items-center rounded-full bg-textDarkGray w-[24px] h-[24px]">
-          <BasicProfileIcon className="text-[#AEAEAE]" />
+          {user?.profilePicture ? (
+            <img
+              src={user.profilePicture}
+              alt="네비바 유저 프로필 이미지"
+              className="w-full h-full object-cover"
+            />
+          ) : (
+            <BasicProfileIcon className="text-[#AEAEAE]" />
+          )}
         </div>
         <span className="text-[10px] text-textDarkGray">프로필</span>
       </Link>
