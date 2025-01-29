@@ -28,7 +28,6 @@ const GoogleLoginLoading = () => {
           setUser(memberResponseDto);
           nav('/home');
         } else if (status === 'UN_REGISTER') {
-          console.log('gogo');
           nav('/signup/verification');
         }
       } catch (error) {
