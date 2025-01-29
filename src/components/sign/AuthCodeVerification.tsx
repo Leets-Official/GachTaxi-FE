@@ -12,13 +12,7 @@ import { useToast } from '@/contexts/ToastContext';
 import handleAxiosError from '@/libs/apis/axiosError.api';
 import useRequestStatus from '@/hooks/useRequestStatus';
 
-const AuthCodeVerification = ({
-  emailInfo,
-  setIsVerified,
-}: {
-  emailInfo: string;
-  setIsVerified: (value: boolean) => void;
-}) => {
+const AuthCodeVerification = ({ emailInfo }: { emailInfo: string }) => {
   const { openModal } = useModal();
   const { openToast } = useToast();
 
@@ -39,7 +33,7 @@ const AuthCodeVerification = ({
       if (res?.code === 200) {
         setSuccess();
         openToast(res.message, 'success');
-        openModal(<AgreementModal setIsVerified={setIsVerified} />);
+        openModal(<AgreementModal />);
       }
     } catch (error: unknown) {
       setError();

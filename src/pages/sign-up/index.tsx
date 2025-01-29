@@ -4,12 +4,9 @@ import NotFoundPage from '../NotFound';
 import UserInfoPage from './UserInfoPage';
 import LocationTaxiIcon from '@/assets/icon/locationTaxiIcon.svg?react';
 import BackButton from '@/components/commons/BackButton';
-import ProtectSignUpRoute from '@/components/sign/ProtectSignUpRoute';
-import { useState } from 'react';
 
 const SignUpPage = () => {
   const { pathname } = useLocation();
-  const [isVerified, setIsVerified] = useState<boolean>(false);
   const isUserInfoPage = pathname !== '/signup/user-info';
 
   return (
@@ -17,21 +14,8 @@ const SignUpPage = () => {
       {isUserInfoPage && <BackButton usedPage="signUpPage" />}
       <Routes>
         {/** 소셜 로그인 Route */}
-        <Route
-          path="/verification"
-          element={<VerificationPage setIsVerified={setIsVerified} />}
-        />
-        <Route
-          path="/user-info"
-          element={
-            <ProtectSignUpRoute
-              isVerified={isVerified}
-              redirectTo="/signup/verification"
-            >
-              <UserInfoPage />
-            </ProtectSignUpRoute>
-          }
-        />
+        <Route path="/verification" element={<VerificationPage />} />
+        <Route path="/user-info" element={<UserInfoPage />} />
         {/* not-found 페이지 */}
         <Route path="*" element={<NotFoundPage />} />
       </Routes>
