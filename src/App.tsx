@@ -40,22 +40,70 @@ function App() {
                   element={<GoogleLoginLoading />}
                 />
                 {/** 로그인이 필요한 라우트 */}
-                <Route element={<ProtectRoute />}>
-                  <Route
-                    path="home/manual-register"
-                    element={<ManualMatchingRegister />}
-                  />
-                  <Route path="/signup/*" element={<SignUpPage />} />
-                  <Route path="/home" element={<HomePage />} />
-                  <Route path="/mypage/*" element={<MyPage />} />
-                  <Route
-                    path="home/friend-request"
-                    element={<FriendRequestPage />}
-                  />
-                  <Route path="/notification" element={<NotificationPage />} />
-                  <Route path="/matching" element={<MatchingInfoPage />} />
-                  <Route path="chat/:id" element={<ChatPage />} />
-                </Route>
+                <Route
+                  path="home/manual-register"
+                  element={
+                    <ProtectRoute isPrivate>
+                      <ManualMatchingRegister />
+                    </ProtectRoute>
+                  }
+                />
+                <Route
+                  path="/signup/*"
+                  element={
+                    <ProtectRoute>
+                      <SignUpPage />
+                    </ProtectRoute>
+                  }
+                />
+                <Route
+                  path="/home"
+                  element={
+                    <ProtectRoute isPrivate>
+                      <HomePage />
+                    </ProtectRoute>
+                  }
+                />
+                <Route
+                  path="/mypage/*"
+                  element={
+                    <ProtectRoute isPrivate>
+                      <MyPage />
+                    </ProtectRoute>
+                  }
+                />
+                <Route
+                  path="home/friend-request"
+                  element={
+                    <ProtectRoute isPrivate>
+                      <FriendRequestPage />
+                    </ProtectRoute>
+                  }
+                />
+                <Route
+                  path="/notification"
+                  element={
+                    <ProtectRoute isPrivate>
+                      <NotificationPage />
+                    </ProtectRoute>
+                  }
+                />
+                <Route
+                  path="chat/:id"
+                  element={
+                    <ProtectRoute isPrivate>
+                      <ChatPage />
+                    </ProtectRoute>
+                  }
+                />
+                <Route
+                  path="/matching"
+                  element={
+                    <ProtectRoute isPrivate>
+                      <MatchingInfoPage />
+                    </ProtectRoute>
+                  }
+                />
               </Route>
             </Routes>
           </ModalProvider>
