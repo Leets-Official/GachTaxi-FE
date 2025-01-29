@@ -1,5 +1,5 @@
 import Button from '@/components/commons/Button';
-import TImer from '@/components/matchingInfo/TImer';
+import Timer from '@/components/matchingInfo/Timer';
 import useSSEStore from '@/store/useSSEStore';
 import useTimerStore from '@/store/useTimerStore';
 import { useEffect } from 'react';
@@ -22,7 +22,7 @@ const MatchingInfoPage = () => {
         </p>
       </div>
       <div className=" w-full flex justify-center flex-col gap-2 items-center">
-        <TImer />
+        <Timer />
         <>택시아이콘자리</>
       </div>
       <div className=" w-full mb-4">

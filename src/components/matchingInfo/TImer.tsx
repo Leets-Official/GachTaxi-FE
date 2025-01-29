@@ -2,7 +2,7 @@ import useTimerStore from '@/store/useTimerStore';
 import { formatTimeLikeTimer } from '@/utils';
 import { useEffect } from 'react';
 
-const TImer = () => {
+const Timer = () => {
   const { timer, start, reset } = useTimerStore();
 
   useEffect(() => {
@@ -19,4 +19,4 @@ const TImer = () => {
   );
 };
 
-export default TImer;
+export default Timer;
