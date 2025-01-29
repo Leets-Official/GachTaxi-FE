@@ -1,12 +1,12 @@
 import { EventSourcePolyfill } from '@/utils/EventSourcePolyfill';
+import { MessagesArray } from 'gachTaxi-types';
 import { create } from 'zustand';
 
 interface SSEState {
   sse: EventSourcePolyfill | null;
-  messages: string[];
+  messages: MessagesArray;
   initializeSSE: () => void;
   closeSSE: () => void;
-  addMessage: (message: string) => void;
 }
 
 const BASE_URL = import.meta.env.VITE_API_BASE_URL;
@@ -31,9 +31,9 @@ const useSSEStore = create<SSEState>((set) => ({
       );
 
       sse.onmessage = (event: MessageEvent) => {
-        console.log('SSE 메시지 수신:', event.data);
+        const formatedData = JSON.parse(event.data.split('data:')[1].trim());
         set((state) => ({
-          messages: [...state.messages, event.data],
+          messages: [...state.messages, formatedData],
         }));
       };
 
@@ -52,11 +52,6 @@ const useSSEStore = create<SSEState>((set) => ({
       state.sse?.close();
       return { sse: null };
     });
-  },
-  addMessage: (message) => {
-    set((state) => ({
-      messages: [...state.messages, message],
-    }));
   },
 }));
 
