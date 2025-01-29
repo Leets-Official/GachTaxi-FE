@@ -14,10 +14,10 @@ import getCoordinateByAddress from '@/libs/apis/getCoordinateByAddress';
 import { useCallback, useEffect } from 'react';
 import { useToast } from '@/contexts/ToastContext';
 import useLocationStore from '@/store/useLocationStore';
-import handleAxiosError from '@/libs/apis/axiosError.api';
 import startAutoMatching from '@/libs/apis/matching/startAutoMatching.api';
 import useSSEStore from '@/store/useSSEStore';
 import { useNavigate } from 'react-router-dom';
+import axios from 'axios';
 
 const AutoMatching = ({ isOpen }: { isOpen: boolean }) => {
   const autoMatchingForm = useForm<z.infer<typeof autoMatchingSchema>>({
@@ -120,7 +120,6 @@ const AutoMatching = ({ isOpen }: { isOpen: boolean }) => {
   const handleSubmitToAutoMatching: SubmitHandler<AutoMatchingTypes> = async (
     data,
   ) => {
-    console.log(data);
     try {
       const res = await startAutoMatching(data);
       if (res?.code && res.code >= 200 && res.code < 300) {
@@ -128,8 +127,15 @@ const AutoMatching = ({ isOpen }: { isOpen: boolean }) => {
         navigate('/matching');
       }
     } catch (error: unknown) {
-      const errorMessage = handleAxiosError(error);
-      openToast(errorMessage, 'error');
+      if (axios.isAxiosError(error)) {
+        const errorMessage = error.response?.data?.message;
+        const errorCode = error.response?.status;
+
+        openToast(errorMessage, 'error');
+        if (errorCode === 409) {
+          navigate('/matching');
+        }
+      }
     }
   };
 
