@@ -9,11 +9,13 @@ import Button from '@/components/commons/Button';
 interface ProfileImageUploadProps {
   control: Control<z.infer<typeof userInfoVerificationSchema>>;
   imagePreview: string | undefined;
+  setImagePreview: (value: string | undefined) => void;
 }
 
 const ProfileImageUpload = ({
   control,
   imagePreview,
+  setImagePreview,
 }: ProfileImageUploadProps) => {
   return (
     <Controller
@@ -41,18 +43,18 @@ const ProfileImageUpload = ({
                 </div>
               )}
               {imagePreview && (
-                <div className="absolute bottom-[-4px] right-0">
-                  <Button
-                    variant="icon"
-                    className="z-20"
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      onChange(undefined);
-                    }}
-                  >
-                    <ImageCancelIcon width={28} height={28} />
-                  </Button>
-                </div>
+                <Button
+                  variant="icon"
+                  className="z-20 absolute bottom-0 right-0"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    e.preventDefault();
+                    onChange(undefined);
+                    setImagePreview(undefined);
+                  }}
+                >
+                  <ImageCancelIcon width={28} height={28} />
+                </Button>
               )}
             </label>
             <input

@@ -29,7 +29,8 @@ const UserInfoVerification = () => {
 
   const gender = userInfoForm.watch('gender');
   const currentImage = userInfoForm.watch('profilePicture');
-  const { imagePreview, uploadedImage } = useUploadImage(currentImage);
+  const { imagePreview, uploadedImage, setImagePreview } =
+    useUploadImage(currentImage);
   const { openToast } = useToast();
   const { status, setSuccess, setError, setPending } = useRequestStatus();
   const { setUser } = useUserStore();
@@ -83,6 +84,7 @@ const UserInfoVerification = () => {
       <ProfileImageUpload
         control={userInfoForm.control}
         imagePreview={imagePreview}
+        setImagePreview={setImagePreview}
       />
       {userInfoForm.formState.errors.profilePicture && (
         <p className="text-red-500 mt-3">

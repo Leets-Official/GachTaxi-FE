@@ -32,8 +32,8 @@ const useUploadImage = (image?: any) => {
             throw new Error('이미지 업로드 실패');
           }
 
-          const res = await getPresignedUrl(data, image);
-          const slicedData = res.data.split('?')[0];
+          await getPresignedUrl(data, image);
+          const slicedData = data.split('?')[0];
           setUploadedImage(slicedData);
         } catch (error) {
           console.error('이미지 업로드 중 오류:', error);
@@ -49,7 +49,7 @@ const useUploadImage = (image?: any) => {
     imageUpload();
   }, [image]);
 
-  return { imagePreview, uploadedImage };
+  return { imagePreview, uploadedImage, setImagePreview };
 };
 
 export default useUploadImage;
