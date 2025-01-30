@@ -21,8 +21,6 @@ const ChatInput = ({ roomId, sendMessage }: ChatMessage) => {
     setMessage(accountInfo);
   };
 
-  console.log('ChatInputMessages', roomId);
-
   const handleSendMessage = () => {
     if (!message.trim()) return;
 
@@ -32,14 +30,14 @@ const ChatInput = ({ roomId, sendMessage }: ChatMessage) => {
   };
 
   return (
-    <section className="flex-1 w-full flex flex-col">
+    <section className="flex-1 w-full flex flex-col relative">
       {showMenu && (
-        <div className="w-full h-[144px] bg-secondary">
+        <div className="absolute bottom-[58px] w-full h-[144px] bg-secondary">
           <BottomMenu onSendAccount={handleAccountSend} roomId={roomId} />
         </div>
       )}
 
-      <div className="h-[64px] flex justify-between items-center px-4 bg-secondary">
+      <div className="py-2 flex justify-between items-center px-4 bg-secondary">
         <button
           onClick={toggleMenu}
           className="rounded-full flex items-center justify-center"
@@ -47,12 +45,11 @@ const ChatInput = ({ roomId, sendMessage }: ChatMessage) => {
           {showMenu ? <ChatX /> : <ChatPlus />}
         </button>
 
-        <input
-          type="text"
+        <textarea
           placeholder="메시지 입력"
           value={message}
           onChange={(e) => setMessage(e.target.value)}
-          className="flex-1 text-white bg-[#465443] rounded-full px-4 py-2 outline-none placeholder-black mx-4"
+          className="w-[300px] min-h-[42px] h-[42px] max-h-fit resize-none text-white bg-[#465443] rounded-full px-4 py-2 outline-none placeholder-black mx-4 scroll-hidden"
         />
 
         <button
