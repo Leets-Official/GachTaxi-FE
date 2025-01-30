@@ -10,6 +10,7 @@ import { formatTimeLikeTimer } from '@/utils';
 import { useToast } from '@/contexts/ToastContext';
 import { requestEmailVerification } from '@/libs/apis/auth';
 import handleAxiosError from '@/libs/apis/axiosError.api';
+import useRequestStatus from '@/hooks/useRequestStatus';
 
 const TIMER_DURATION = 300;
 
@@ -31,21 +32,25 @@ const EmailVerification = ({
     mode: 'onBlur',
   });
   const { openToast } = useToast();
+  const { status, setPending, setSuccess, setError } = useRequestStatus();
 
   const handleSubmitToSignUp: SubmitHandler<EmailVerificationTypes> = async (
     data,
   ) => {
     setEmailInfo(data.email);
+    setPending();
     try {
       const res = await requestEmailVerification(data);
       console.log(res);
       if (res?.code && res.code >= 200 && res.code < 300) {
         setIsEmailVerified(true);
+        setSuccess();
         startTimer();
         openToast(res.message, 'success');
       }
     } catch (error: unknown) {
       const errorMessage = handleAxiosError(error);
+      setError();
       openToast(errorMessage, 'error');
     }
   };
@@ -66,7 +71,8 @@ const EmailVerification = ({
         variant="primary"
         type="submit"
         className="mt-3"
-        disabled={timer === 0 && isEmailVerified} // 타이머 종료 시 버튼 비활성화
+        isDisabled={timer === 0 && isEmailVerified} // 타이머 종료 시 버튼 비활성화
+        isLoading={status === 'pending'}
       >
         {isEmailVerified
           ? timer > 0

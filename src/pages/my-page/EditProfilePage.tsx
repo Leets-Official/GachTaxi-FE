@@ -23,7 +23,8 @@ const EditProfilePage = () => {
   });
 
   const currentImage = profileForm.watch('profilePicture');
-  const { imagePreview, uploadedImage } = useUploadImage(currentImage);
+  const { imagePreview, uploadedImage, setImagePreview } =
+    useUploadImage(currentImage);
 
   const handleSubmitChange: SubmitHandler<UserInfoVerificationTypes> = (
     data,
@@ -54,6 +55,7 @@ const EditProfilePage = () => {
         <ProfileImageUpload
           control={profileForm.control}
           imagePreview={imagePreview}
+          setImagePreview={setImagePreview}
         />
 
         <Input
