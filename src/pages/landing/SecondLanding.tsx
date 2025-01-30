@@ -4,7 +4,7 @@ import { LANDING_TEXTS } from '@/constants';
 
 const SecondLanding = () => {
   return (
-    <section className="w-full flex-1 flex flex-col items-center h-screen gap-8 z-10">
+    <section className="w-full flex-1 flex flex-col items-center h-screen gap-8">
       <div className="text-center">
         <LandingHeader
           title={LANDING_TEXTS.SECOND_TITLE}
@@ -17,7 +17,7 @@ const SecondLanding = () => {
           }
         />
       </div>
-      <img src={SecondPng} alt="Second Page" />
+      <img src={SecondPng} alt="Second Page" draggable="false" />
     </section>
   );
 };
