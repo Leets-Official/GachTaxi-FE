@@ -2,7 +2,6 @@ import { useEffect, useState } from 'react';
 
 interface ExitMessageProps {
   invitedUsers: string[];
-  //handleDisconnect: () => void;
 }
 
 const ExitMessage = ({ invitedUsers }: ExitMessageProps) => {
@@ -13,7 +12,6 @@ const ExitMessage = ({ invitedUsers }: ExitMessageProps) => {
       .map((user) => `${user}님이 퇴장되었습니다.`)
       .join(' ');
     setMessage(newMessage);
-    //handleDisconnect();
   }, [invitedUsers]);
 
   return (
