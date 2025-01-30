@@ -35,7 +35,7 @@ const ReportModal: React.FC<ReportModalProps> = ({
         </Button>
       </div>
       <Button className="w-full h-[42px] bg-primary text-[#012619] py-3 rounded-full font-semibold flex items-center justify-center">
-        신고하기
+        블랙리스트 추가
       </Button>
     </Modal>
   );
