@@ -8,6 +8,8 @@ import handleExitChatRoom from '@/libs/apis/handleExitChatRoom';
 import { useNavigate } from 'react-router-dom';
 import { useToast } from '@/contexts/ToastContext';
 import useWebSocket from '@/hooks/useWebSocket';
+import CancelTaxiModal from '@/components/modal/CancelTaxiModal';
+import CloseMatchingModal from '@/components/modal/CloseMatching';
 
 const BottomMenu = ({
   onSendAccount,
@@ -18,6 +20,7 @@ const BottomMenu = ({
 }) => {
   const { handleDisconnect } = useWebSocket(roomId);
   const { openModal } = useModal();
+  const { closeModal } = useModal();
   const { openToast } = useToast();
   const [showAccountModal, setShowAccountModal] = useState(false);
   const nav = useNavigate();
@@ -34,6 +37,7 @@ const BottomMenu = ({
     try {
       const res = await handleExitChatRoom(roomId);
       if (res.code === 200) {
+        closeModal();
         nav('/home');
         handleDisconnect();
         openToast(res.message, 'success');
@@ -43,10 +47,19 @@ const BottomMenu = ({
     }
   };
 
+  const handleOpenExitModal = () => {
+    openModal(<CancelTaxiModal onConfirm={handleExitClick} />);
+  };
+
+  const handleCloseMatching = () => {
+    openModal(<CloseMatchingModal />);
+  };
+
   const clickHandlers: Record<string, () => void> = {
     '계좌 전송': handleSendClick,
     '택시 호출': handleTaxiClick,
-    '매칭 취소': handleExitClick,
+    '매칭 마감': handleCloseMatching,
+    '매칭 취소': handleOpenExitModal,
   };
 
   return (
