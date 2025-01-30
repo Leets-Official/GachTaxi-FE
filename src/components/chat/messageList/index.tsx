@@ -1,4 +1,6 @@
+import ExitMessage from '../ExitMessage';
 import InviteMessage from '../InviteMessage';
+import NewMessage from '../NewMessage';
 import RenderMyMessage from './renderMyMessage';
 import RenderOtherMessage from './renderOtherMessage';
 import { useEffect, useRef, useState } from 'react';
@@ -11,6 +13,7 @@ const MessageList = ({ messages }: MessageListProps) => {
   const bottomRef = useRef<HTMLDivElement | null>(null);
   const containerRef = useRef<HTMLDivElement | null>(null);
   const [isAtBottom, setIsAtBottom] = useState(true);
+  console.log('messageList');
 
   useEffect(() => {
     const observer = new IntersectionObserver(
@@ -45,23 +48,31 @@ const MessageList = ({ messages }: MessageListProps) => {
       <div className="text-center text-gray-400">메시지를 불러오는 중...</div>
     );
   }
-  console.log('MessgeList:', messages);
+
+  const newMessageIndex = messages.chattingMessage.findIndex(
+    (msg) =>
+      new Date(msg.timeStamp) > new Date(messages.disconnectedAt) &&
+      msg.senderId !== messages.memberId,
+  );
 
   return (
-    <div className="flex-1 overflow-y-auto px-4 flex flex-col-reverse">
+    <div className="h-[calc(100dvh-162px)] scroll-hidden flex-1 overflow-y-auto px-4 flex flex-col-reverse">
       <div ref={bottomRef}></div>
-      {messages.chattingMessage.map((msg, index) =>
-        msg.messageType === 'ENTER' ? (
-          <InviteMessage
-            key={`${msg.timeStamp}-${index}`}
-            invitedUsers={[msg.senderName]}
-          />
-        ) : msg.messageType === 'MESSAGE' ? (
+      {messages.chattingMessage.map((msg, index) => (
+        <div key={`${msg.timeStamp}-${index}`}>
+          {index === newMessageIndex && <NewMessage />}
           <div
-            key={`${msg.timeStamp}-${index}`}
-            className={`flex ${msg.senderId === messages.memberId ? 'justify-end' : 'justify-start'} mb-4`}
+            className={`flex ${
+              msg.senderId === messages.memberId
+                ? 'justify-end'
+                : 'justify-start'
+            } mb-4`}
           >
-            {msg.senderId === messages.memberId ? (
+            {msg.messageType === 'ENTER' ? (
+              <InviteMessage invitedUsers={[msg.senderName]} />
+            ) : msg.messageType === 'EXIT' ? (
+              <ExitMessage invitedUsers={[msg.senderName]} />
+            ) : msg.senderId === messages.memberId ? (
               <RenderMyMessage
                 message={msg.message}
                 timeStamp={msg.timeStamp}
@@ -71,18 +82,12 @@ const MessageList = ({ messages }: MessageListProps) => {
                 senderName={msg.senderName}
                 message={msg.message}
                 timeStamp={msg.timeStamp}
-                imageUrl={msg.imageUrl}
+                profilePicture={msg.profilePicture}
               />
             )}
           </div>
-        ) : (
-          //읽음처리구현할에정인데 아직 구현 전이라 일단 초대메시지로 대체해두었음
-          <InviteMessage
-            key={`${msg.timeStamp}-${index}`}
-            invitedUsers={[msg.senderName]}
-          />
-        ),
-      )}
+        </div>
+      ))}
     </div>
   );
 };
