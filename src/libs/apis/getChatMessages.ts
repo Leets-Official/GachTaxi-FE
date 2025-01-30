@@ -1,7 +1,7 @@
 import axios from 'axios';
-// import client from '../clients';
 
-const accessToken = import.meta.env.VITE_MASTER_TOKEN;
+//const accessToken = import.meta.env.VITE_MASTER_TOKEN;
+const accessToken = localStorage.getItem('accessToken');
 const baseUrl = import.meta.env.VITE_API_BASE_URL;
 
 export const getChatMessages = async (
@@ -21,8 +21,6 @@ export const getChatMessages = async (
       },
     });
     const data = res.data.data;
-    console.log('getChatMessage에서의 data', data);
-    console.log('roomId', roomId);
     return data;
   } catch (error) {
     throw new Error(`Error get ChatMessage: ${error}`);
