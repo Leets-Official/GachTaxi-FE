@@ -7,6 +7,7 @@ import { useModal } from '@/contexts/ModalContext';
 import handleExitChatRoom from '@/libs/apis/handleExitChatRoom';
 import { useNavigate } from 'react-router-dom';
 import { useToast } from '@/contexts/ToastContext';
+import useWebSocket from '@/hooks/useWebSocket';
 
 const BottomMenu = ({
   onSendAccount,
@@ -15,6 +16,7 @@ const BottomMenu = ({
   onSendAccount: (account: string) => void;
   roomId: number;
 }) => {
+  const { handleDisconnect } = useWebSocket(roomId);
   const { openModal } = useModal();
   const { openToast } = useToast();
   const [showAccountModal, setShowAccountModal] = useState(false);
@@ -33,6 +35,7 @@ const BottomMenu = ({
       const res = await handleExitChatRoom(roomId);
       if (res.code === 200) {
         nav('/home');
+        handleDisconnect();
         openToast(res.message, 'success');
       }
     } catch (error) {
