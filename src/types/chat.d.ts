@@ -7,12 +7,12 @@ interface SubscribeServer {
   messageId: string | null;
   messageType: MessageType;
   range?: ReadReceiptRange | null;
-  roomId: number;
+  roomId?: number;
   senderId: number;
   senderName: string;
   timeStamp: string;
   unreadCount: number | null;
-  imageUrl?: string;
+  profilePicture?: string;
 }
 
 interface ChattingList {
@@ -23,8 +23,8 @@ interface ChattingList {
   unreadCount: number | null;
   timeStamp: string;
   messageType: MessageType;
-  imageUrl?: string;
-  roomId: number;
+  profilePicture?: string;
+  roomId?: number;
   range?: ReadReceiptRange | null;
 }
 
