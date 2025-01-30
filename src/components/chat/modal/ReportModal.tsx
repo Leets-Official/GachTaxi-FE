@@ -7,13 +7,13 @@ import { useState } from 'react';
 interface ReportModalProps {
   onClose: () => void;
   senderName: string;
-  imageUrl: string;
+  profilePicture: string;
 }
 
 const ReportModal: React.FC<ReportModalProps> = ({
   onClose,
   senderName,
-  imageUrl,
+  profilePicture,
 }) => {
   const [isFriend, setIsFriend] = useState(false);
 
@@ -24,7 +24,11 @@ const ReportModal: React.FC<ReportModalProps> = ({
   return (
     <Modal onClose={onClose}>
       <div className="flex items-center gap-2 mb-7 gap-3">
-        <img src={imageUrl} alt="프로필" className="w-10 h-10 rounded-full" />
+        <img
+          src={profilePicture}
+          alt="프로필"
+          className="w-10 h-10 rounded-full"
+        />
         <p className="text-white font-semibold text-header">{senderName}</p>
         <Button variant="icon" onClick={toggleFriend} className="w-7 h-7 mt-1">
           {isFriend ? <EmptyPlus /> : <FillPlus />}
