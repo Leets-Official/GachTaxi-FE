@@ -17,7 +17,7 @@ const KakaoLoginLoading = () => {
       try {
         const res = await kakaoLogin(authCode);
 
-        const status = res.data.data;
+        const status = res.data.data.status;
         if (status === 'LOGIN_SUCCESS') {
           nav('/home');
         } else if (status === 'UN_REGISTER') {
