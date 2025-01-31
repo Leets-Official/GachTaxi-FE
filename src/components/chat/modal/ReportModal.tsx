@@ -26,7 +26,7 @@ const ReportModal: React.FC<ReportModalProps> = ({
       <div className="flex items-center gap-2 mb-7 gap-3">
         <img
           src={profilePicture}
-          alt="프로필"
+          alt={`${senderName}의 프로필`}
           className="w-10 h-10 rounded-full"
         />
         <p className="text-white font-semibold text-header">{senderName}</p>
