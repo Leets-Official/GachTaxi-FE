@@ -8,9 +8,9 @@ const CloseMatchingModal = () => {
         정말로 매칭을 마감하시겠습니까?
       </Modal.Header>
       <Modal.Content className="font-medium text-captionBody text-textDarkGray mb-10 ml-2">
-        매칭 마감 버튼을 누르시면
+        매칭을 마감하고
         <br />
-        채팅방에 함께 있는 모든 사람들의 자동매칭이 취소됩니다!
+        현재 인원으로 택시를 호출합니다!
       </Modal.Content>
       <Modal.Footer>
         <div className="w-full flex flex-col gap-3">
