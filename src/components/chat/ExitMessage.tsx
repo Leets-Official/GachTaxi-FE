@@ -1,22 +1,11 @@
-import { useEffect, useState } from 'react';
-
 interface ExitMessageProps {
-  invitedUsers: string[];
+  exitUsers: string[];
 }
 
-const ExitMessage = ({ invitedUsers }: ExitMessageProps) => {
-  const [message, setMessage] = useState<string>('');
-
-  useEffect(() => {
-    const newMessage = invitedUsers
-      .map((user) => `${user}님이 퇴장되었습니다.`)
-      .join(' ');
-    setMessage(newMessage);
-  }, [invitedUsers]);
-
+const ExitMessage = ({ exitUsers }: ExitMessageProps) => {
   return (
     <div className="bg-[#202D22] text-assistive flex items-center justify-center w-[100%] h-[25px] rounded-3xl mb-2">
-      {message}
+      {exitUsers}님이 퇴장했습니다.
     </div>
   );
 };
