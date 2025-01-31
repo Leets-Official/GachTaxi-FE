@@ -6,22 +6,22 @@ interface RenderOtherMessageProps {
   senderName: string;
   message: string | null;
   timeStamp: string;
-  imageUrl?: string;
+  profilePicture?: string;
 }
 
 const RenderOtherMessage: React.FC<RenderOtherMessageProps> = ({
   senderName,
   message,
   timeStamp,
-  imageUrl,
+  profilePicture,
 }) => {
   const [isReportModalOpen, setReportModalOpen] = useState(false);
 
   return (
     <div className="flex items-start gap-2">
-      {imageUrl ? (
+      {profilePicture ? (
         <img
-          src={imageUrl}
+          src={profilePicture}
           alt={`${senderName}의 프로필`}
           className="w-8 h-8 rounded-full object-cover border-textDarkGray cursor-pointer"
           onClick={() => setReportModalOpen(true)}
@@ -51,7 +51,7 @@ const RenderOtherMessage: React.FC<RenderOtherMessageProps> = ({
         <ReportModal
           onClose={() => setReportModalOpen(false)}
           senderName={senderName}
-          imageUrl={imageUrl || ''}
+          profilePicture={profilePicture || ''}
         />
       )}
     </div>
