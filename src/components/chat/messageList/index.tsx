@@ -13,7 +13,6 @@ const MessageList = ({ messages }: MessageListProps) => {
   const bottomRef = useRef<HTMLDivElement | null>(null);
   const containerRef = useRef<HTMLDivElement | null>(null);
   const [isAtBottom, setIsAtBottom] = useState(true);
-  console.log('messageList');
 
   useEffect(() => {
     const observer = new IntersectionObserver(
@@ -48,19 +47,17 @@ const MessageList = ({ messages }: MessageListProps) => {
       <div className="text-center text-gray-400">메시지를 불러오는 중...</div>
     );
   }
-
-  const newMessageIndex = messages.chattingMessage.findIndex(
-    (msg) =>
-      new Date(msg.timeStamp) > new Date(messages.disconnectedAt) &&
-      msg.senderId !== messages.memberId,
-  );
+  let hasRenderedNewMessage = false;
 
   return (
     <div className="h-[calc(100dvh-162px)] scroll-hidden flex-1 overflow-y-auto px-4 flex flex-col-reverse">
       <div ref={bottomRef}></div>
       {messages.chattingMessage.map((msg, index) => (
         <div key={`${msg.timeStamp}-${index}`}>
-          {index === newMessageIndex && <NewMessage />}
+          {!hasRenderedNewMessage &&
+            new Date(msg.timeStamp) > new Date(messages.disconnectedAt) &&
+            msg.senderId !== messages.memberId &&
+            (hasRenderedNewMessage = true) && <NewMessage />}
           <div
             className={`flex ${
               msg.senderId === messages.memberId
@@ -71,7 +68,7 @@ const MessageList = ({ messages }: MessageListProps) => {
             {msg.messageType === 'ENTER' ? (
               <InviteMessage invitedUsers={[msg.senderName]} />
             ) : msg.messageType === 'EXIT' ? (
-              <ExitMessage invitedUsers={[msg.senderName]} />
+              <ExitMessage exitUsers={[msg.senderName]} />
             ) : msg.senderId === messages.memberId ? (
               <RenderMyMessage
                 message={msg.message}
