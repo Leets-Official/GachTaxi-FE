@@ -183,6 +183,12 @@ const AutoMatching = ({ isOpen }: { isOpen: boolean }) => {
           </>
         )}
 
+        {isOpen || (
+          <p className="font-medium text-[10px] text-textDarkGray">
+            추가 설정을 통해 상세한 매칭을 할 수 있어요
+          </p>
+        )}
+
         <div className="w-full">
           <Button variant="primary" className="w-full mt-[16px]" type="submit">
             매칭 시작
