@@ -7,10 +7,6 @@ const Timer = () => {
 
   useEffect(() => {
     start();
-
-    return () => {
-      reset();
-    };
   }, [start, reset]);
   return (
     <span className="font-bold text-[36px] text-matchLine">

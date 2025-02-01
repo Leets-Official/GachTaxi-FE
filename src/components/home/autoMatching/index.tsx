@@ -41,7 +41,7 @@ const AutoMatching = ({ isOpen }: { isOpen: boolean }) => {
     mode: 'onBlur',
   });
 
-  const { sse } = useSSEStore();
+  const { initializeSSE } = useSSEStore();
   const { getCurrentLocation } = useGeoLocation();
   const { openToast } = useToast();
   const currentStartName = useWatch({
@@ -90,15 +90,9 @@ const AutoMatching = ({ isOpen }: { isOpen: boolean }) => {
     setDestinationPoint,
   ]);
 
-  const handleinitializeSSE = useCallback(() => {
-    if (!sse) {
-      useSSEStore.getState().initializeSSE();
-    }
-  }, [sse]);
-
   useEffect(() => {
-    handleinitializeSSE();
-  }, [handleinitializeSSE]);
+    initializeSSE();
+  }, [initializeSSE]);
 
   useEffect(() => {
     // 목적지 이름이 변경된 경우에만 동작

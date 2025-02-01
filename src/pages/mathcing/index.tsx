@@ -1,5 +1,5 @@
 import Button from '@/components/commons/Button';
-import Timer from '@/components/matchingInfo/Timer';
+import Timer from '@/components/matchingInfo/TImer';
 import useSSEStore from '@/store/useSSEStore';
 import useTimerStore from '@/store/useTimerStore';
 import { useEffect, useState } from 'react';
@@ -29,7 +29,7 @@ const MatchingInfoPage = () => {
           break;
 
         case 'match_room_created':
-          setRoomCapacity((prev) => prev + 1);
+          setRoomCapacity((prev) => Math.max(prev + 1, 4));
           setRoomStatus('matching');
           break;
 
@@ -58,7 +58,9 @@ const MatchingInfoPage = () => {
           </div>
         )}
       </div>
-      <div className=" w-full flex justify-center flex-col gap-2 items-center">
+      <div
+        className={` w-full flex justify-center flex-col gap-2 items-center ${roomStatus === 'searching' ? 'flex-grow' : ''}`}
+      >
         <Timer />
         <>택시아이콘자리</>
       </div>
