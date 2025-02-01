@@ -42,4 +42,13 @@ declare module '@gachTaxi-types' {
       pageable: Pageable;
     };
   }
+
+  interface UnreadNotificationTypes {
+    code: number;
+    message: string;
+    data: {
+      unreadCount: number;
+      hasUnreadNotifications: boolean;
+    };
+  }
 }
