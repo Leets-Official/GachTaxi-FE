@@ -17,7 +17,7 @@ const FirstLanding = () => {
           }
         />
       </div>
-      <img src={FirstPng} alt="First Page" />
+      <img src={FirstPng} alt="First Page" draggable="false" />
     </section>
   );
 };
