@@ -14,6 +14,7 @@ const BASE_URL = import.meta.env.VITE_API_BASE_URL;
 const useSSEStore = create<SSEState>((set, get) => ({
   sse: null,
   messages: [],
+
   initializeSSE: () => {
     const accessToken = localStorage.getItem('accessToken');
 
@@ -22,42 +23,52 @@ const useSSEStore = create<SSEState>((set, get) => ({
       return;
     }
 
-    if (get().sse) {
-      console.log('이미 구독 중이므로 재구독을 방지합니다.');
-      return;
-    }
+    set((state): Partial<SSEState> => {
+      if (state.sse) {
+        console.log('이미 구독 중이므로 재구독을 방지합니다.');
+        return state; // 기존 상태 유지
+      }
 
-    const sse = new EventSourcePolyfill(
-      `${BASE_URL}/api/matching/auto/subscribe`,
-      {
-        headers: { Authorization: `Bearer ${accessToken}` },
-        withCredentials: true,
-      },
-    );
+      const sse = new EventSourcePolyfill(
+        `${BASE_URL}/api/matching/auto/subscribe`,
+        {
+          headers: { Authorization: `Bearer ${accessToken}` },
+          withCredentials: true,
+        },
+      );
 
-    sse.onmessage = (event: MessageEvent) => {
-      const rawData = event.data;
-      const formatedData: MatchingEvent = rawData.startsWith('data:')
-        ? JSON.parse(rawData.split('data:')[1].trim())
-        : JSON.parse(rawData);
+      sse.onmessage = (event: MessageEvent) => {
+        const rawData = event.data.trim();
 
-      set((state) => {
-        return { messages: [...state.messages, formatedData] };
-      });
-    };
+        if (!rawData.startsWith('data:')) {
+          return;
+        }
 
-    sse.onerror = (error) => {
-      console.error('SSE 에러 발생:', error);
-      sse.close();
+        const jsonString = rawData.slice(5).trim();
+        try {
+          const formatedData: MatchingEvent = JSON.parse(jsonString);
+          set((state) => ({ messages: [...state.messages, formatedData] }));
+        } catch (error) {
+          console.error('JSON 파싱 중 오류가 발생했습니다. : ', error);
+        }
+      };
 
-      setTimeout(() => {
-        console.log('SSE 재연결 시도');
-        get().initializeSSE();
-      }, 5000);
-    };
+      sse.onerror = () => {
+        console.error('SSE 에러 발생, 연결 종료 후 재연결 시도');
+        sse.close();
+
+        // ✅ 상태 업데이트 (재연결 가능하도록 sse: null 설정)
+        set({ sse: null });
+
+        setTimeout(() => {
+          get().initializeSSE();
+        }, 5000);
+      };
+
+      return { sse };
+    });
 
     console.log('SSE 구독 시작');
-    return { sse };
   },
 
   closeSSE: () => {

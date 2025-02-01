@@ -5,7 +5,7 @@ import RouteSetting from '@/components/home/autoMatching/RouteSetting';
 import SelectTags from '@/components/home/autoMatching/selectTags';
 import { AutoMatchingTypes } from 'gachTaxi-types';
 import z from 'zod';
-import { useForm, SubmitHandler, FieldValues } from 'react-hook-form';
+import { useForm, SubmitHandler, FieldValues, useWatch } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { autoMatchingSchema } from '@/libs/schemas/match';
 import InviteMembers from '@/components/home/autoMatching/inviteMembers';
@@ -20,12 +20,19 @@ import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 
 const AutoMatching = ({ isOpen }: { isOpen: boolean }) => {
+  const {
+    auto: {
+      destinationPoint: autoDestinationPoint,
+      destinationName: autoDestinationName,
+    },
+    setAuto: { setStartPoint, setDestinationPoint, setDestinationName },
+  } = useLocationStore();
   const autoMatchingForm = useForm<z.infer<typeof autoMatchingSchema>>({
     resolver: zodResolver(autoMatchingSchema),
     defaultValues: {
       startPoint: '',
       startName: '가천대 반도체대학',
-      destinationPoint: '',
+      destinationPoint: autoDestinationPoint || '',
       destinationName: '가천대 AI 공학관',
       members: [],
       criteria: [],
@@ -34,15 +41,17 @@ const AutoMatching = ({ isOpen }: { isOpen: boolean }) => {
     mode: 'onBlur',
   });
 
-  const {
-    auto: { destinationName: autoDestinationName },
-    setAuto: { setStartPoint, setDestinationPoint, setDestinationName },
-  } = useLocationStore();
-  const { sse, initializeSSE } = useSSEStore();
+  const { sse } = useSSEStore();
   const { getCurrentLocation } = useGeoLocation();
   const { openToast } = useToast();
-  const currentStartName = autoMatchingForm.watch('startName');
-  const currentDestinationName = autoMatchingForm.watch('destinationName');
+  const currentStartName = useWatch({
+    control: autoMatchingForm.control,
+    name: 'startName',
+  });
+  const currentDestinationName = useWatch({
+    control: autoMatchingForm.control,
+    name: 'destinationName',
+  });
   const navigate = useNavigate();
 
   const updateDestinationCoordinates = useCallback(async () => {
@@ -56,17 +65,19 @@ const AutoMatching = ({ isOpen }: { isOpen: boolean }) => {
 
       if (startResult.status === 'fulfilled' && startResult.value) {
         const { lat, lng } = startResult.value;
-        setStartPoint(`${lng},${lat}`);
-      } else {
-        console.error('출발지 좌표 로드 실패:', startResult.reason);
+        if (autoMatchingForm.getValues('startPoint') !== `${lng},${lat}`) {
+          setStartPoint(`${lng},${lat}`);
+        }
       }
 
       if (destinationResult.status === 'fulfilled' && destinationResult.value) {
         const { lat, lng } = destinationResult.value;
-        setDestinationPoint(`${lng},${lat}`);
-        autoMatchingForm.setValue('destinationPoint', `${lng},${lat}`);
-      } else {
-        console.error('목적지 좌표 로드 실패:', destinationResult.reason);
+        if (
+          autoMatchingForm.getValues('destinationPoint') !== `${lng},${lat}`
+        ) {
+          setDestinationPoint(`${lng},${lat}`);
+          autoMatchingForm.setValue('destinationPoint', `${lng},${lat}`);
+        }
       }
     } catch (error) {
       console.error('좌표 로드 중 오류 발생:', error);
@@ -79,11 +90,15 @@ const AutoMatching = ({ isOpen }: { isOpen: boolean }) => {
     setDestinationPoint,
   ]);
 
-  useEffect(() => {
+  const handleinitializeSSE = useCallback(() => {
     if (!sse) {
-      initializeSSE();
+      useSSEStore.getState().initializeSSE();
     }
-  }, [sse, initializeSSE]);
+  }, [sse]);
+
+  useEffect(() => {
+    handleinitializeSSE();
+  }, [handleinitializeSSE]);
 
   useEffect(() => {
     // 목적지 이름이 변경된 경우에만 동작
