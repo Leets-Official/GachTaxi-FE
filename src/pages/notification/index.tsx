@@ -1,23 +1,23 @@
 import BackButton from '@/components/commons/BackButton';
 import NotificationList from '@/components/notification';
-
-export interface Notification {
-  notificationId: number;
-  senderId: string;
-  receiverId: string;
-  notificationType: string;
-  notificationStatus: string;
-  title: string;
-  content: string;
-  createdAt: string;
-}
+import SpinnerIcon from '@/assets/icon/spinnerIcon.svg?react';
+import { Suspense } from 'react';
 
 const NotificationPage = () => {
   return (
-    <section className="flex-1 w-full flex flex-col gap-[32px] p-horizontal max-h-screen">
+    <section className="flex-1 w-full flex flex-col gap-[32px] p-horizontal h-full">
       <BackButton />
       <h1 className="text-header font-bold">알림</h1>
-      <NotificationList />
+
+      <Suspense
+        fallback={
+          <div className="h-full w-full flex items-center justify-center flex-1">
+            <SpinnerIcon width={36} height={36} className="mx-auto spinner" />
+          </div>
+        }
+      >
+        <NotificationList />
+      </Suspense>
     </section>
   );
 };
