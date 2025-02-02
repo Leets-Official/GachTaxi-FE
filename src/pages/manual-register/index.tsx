@@ -8,6 +8,7 @@ import {
   SubmitHandler,
   Controller,
   FieldValues,
+  useWatch,
 } from 'react-hook-form';
 import { ManualMatchingTypes } from 'gachTaxi-types';
 import { manualMatchingSchema } from '@/libs/schemas/match';
@@ -22,14 +23,23 @@ import { useEffect, useCallback } from 'react';
 import getCoordinateByAddress from '@/libs/apis/getCoordinateByAddress';
 import { useToast } from '@/contexts/ToastContext';
 import useLocationStore from '@/store/useLocationStore';
+import { useNavigate } from 'react-router-dom';
 
 const ManualMatchingRegister = () => {
+  const {
+    auto: {
+      destinationPoint: autoDestinationPoint,
+      destinationName: autoDestinationName,
+    },
+    setAuto: { setStartPoint, setDestinationPoint, setDestinationName },
+  } = useLocationStore();
+
   const manualMatchingForm = useForm<z.infer<typeof manualMatchingSchema>>({
     resolver: zodResolver(manualMatchingSchema),
     defaultValues: {
       startPoint: '',
-      startName: '가천대 정문',
-      destinationPoint: '',
+      startName: '가천대 반도체대학',
+      destinationPoint: autoDestinationPoint || '',
       destinationName: '가천대 AI 공학관',
       time: formatTimeToSelect(new Date(new Date().setHours(1, 0, 0, 0))),
       members: [],
@@ -38,49 +48,64 @@ const ManualMatchingRegister = () => {
       expectedTotalCharge: 4800,
     },
   });
-
-  const {
-    manual: { destinationName, destinationPoint },
-    setManual: { setDestinationName, setDestinationPoint },
-  } = useLocationStore();
   const { getCurrentLocation } = useGeoLocation();
   const { openToast } = useToast();
+  const currentStartName = useWatch({
+    control: manualMatchingForm.control,
+    name: 'startName',
+  });
+  const currentDestinationName = useWatch({
+    control: manualMatchingForm.control,
+    name: 'destinationName',
+  });
+  const navigate = useNavigate();
 
-  // 목적지 좌표 설정 함수
   const updateDestinationCoordinates = useCallback(async () => {
     try {
-      const address = manualMatchingForm.getValues('destinationName');
-      const coordinates: any = await getCoordinateByAddress(address);
-      manualMatchingForm.setValue(
-        'destinationPoint',
-        `${coordinates.lat},${coordinates.lng}`,
-      );
+      const results: any = await Promise.allSettled([
+        getCoordinateByAddress(currentStartName),
+        getCoordinateByAddress(currentDestinationName),
+      ]);
+
+      const [startResult, destinationResult] = results;
+
+      if (startResult.status === 'fulfilled' && startResult.value) {
+        const { lat, lng } = startResult.value;
+        if (manualMatchingForm.getValues('startPoint') !== `${lng},${lat}`) {
+          setStartPoint(`${lng},${lat}`);
+        }
+      }
+
+      if (destinationResult.status === 'fulfilled' && destinationResult.value) {
+        const { lat, lng } = destinationResult.value;
+        if (
+          manualMatchingForm.getValues('destinationPoint') !== `${lng},${lat}`
+        ) {
+          setDestinationPoint(`${lng},${lat}`);
+          manualMatchingForm.setValue('destinationPoint', `${lng},${lat}`);
+        }
+      }
     } catch (error) {
-      console.error('목적지 좌표 로드 오류', error);
+      console.error('좌표 로드 중 오류 발생:', error);
     }
-  }, [manualMatchingForm]);
+  }, [
+    manualMatchingForm,
+    currentStartName,
+    currentDestinationName,
+    setStartPoint,
+    setDestinationPoint,
+  ]);
 
-  const currentDestinationName = manualMatchingForm.watch('destinationName');
-  const currentDestinationPoint = manualMatchingForm.watch('destinationPoint');
-
-  // 목적지 정보 업데이트
   useEffect(() => {
-    if (
-      currentDestinationName !== destinationName ||
-      (currentDestinationPoint !== destinationPoint && window.kakao?.maps)
-    ) {
-      setDestinationName(destinationName);
-      setDestinationPoint(currentDestinationPoint);
-      console.log('카카오 api 호출');
-      // window.kakao.maps.load(updateDestinationCoordinates);
+    // 목적지 이름이 변경된 경우에만 동작
+    if (currentDestinationName !== autoDestinationName && window.kakao?.maps) {
+      window.kakao.maps.load(updateDestinationCoordinates);
+      setDestinationName(currentDestinationName);
     }
   }, [
     currentDestinationName,
-    currentDestinationPoint,
-    destinationName,
-    destinationPoint,
+    autoDestinationName,
     setDestinationName,
-    setDestinationPoint,
     updateDestinationCoordinates,
   ]);
 
@@ -111,6 +136,7 @@ const ManualMatchingRegister = () => {
   > = async (data) => {
     try {
       console.log(data);
+      navigate('/home');
     } catch (e) {
       console.error(e);
     }

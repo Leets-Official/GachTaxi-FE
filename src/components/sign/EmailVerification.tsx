@@ -41,7 +41,6 @@ const EmailVerification = ({
     setPending();
     try {
       const res = await requestEmailVerification(data);
-      console.log(res);
       if (res?.code && res.code >= 200 && res.code < 300) {
         setIsEmailVerified(true);
         setSuccess();
