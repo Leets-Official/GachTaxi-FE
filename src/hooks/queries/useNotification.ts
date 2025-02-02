@@ -1,5 +1,5 @@
-import { useSuspenseInfiniteQuery } from '@tanstack/react-query';
 import getNotifications from '@/libs/apis/notification/getNotifications.api';
+import useInfiniteScroll from '@/hooks/queries/useInfiniteScroll';
 
 const fetchNotifications = async ({
   pageParam = 0,
@@ -12,14 +12,9 @@ const fetchNotifications = async ({
 };
 
 const useNotification = () => {
-  return useSuspenseInfiniteQuery({
+  return useInfiniteScroll({
     queryKey: ['notification'],
-    queryFn: ({ pageParam }: { pageParam?: number }) =>
-      fetchNotifications({ pageParam }),
-    initialPageParam: 0,
-    getNextPageParam: (lastPage) =>
-      lastPage.pageable.last ? undefined : lastPage.pageable.pageNumber + 1,
-    staleTime: 30000,
+    fetchFunction: fetchNotifications,
   });
 };
 
