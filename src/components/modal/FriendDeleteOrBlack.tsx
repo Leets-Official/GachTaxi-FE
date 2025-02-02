@@ -1,6 +1,9 @@
 import Button from '@/components/commons/Button';
 import Modal from '@/components/modal';
 import { useModal } from '@/contexts/ModalContext';
+import { useToast } from '@/contexts/ToastContext';
+import useDeleteFriend from '@/hooks/mutations/useDeleteFriend';
+import useFriendToBlack from '@/hooks/mutations/useFriendToBlack';
 
 const FriendDeleteOrBlack = ({
   id,
@@ -10,19 +13,32 @@ const FriendDeleteOrBlack = ({
   setCurrentPage: (value: 'FRIEND_LIST' | 'BLACK_LIST') => void;
 }) => {
   const { closeModal } = useModal();
+  const { openToast } = useToast();
+  const { mutate: deleteFriend } = useDeleteFriend();
+  const { mutate: addBlackList } = useFriendToBlack();
 
-  const setBlackListPage = () => {
-    closeModal();
-    setCurrentPage('BLACK_LIST');
+  const handleFriendToBlackList = () => {
+    addBlackList(id, {
+      onSuccess: (response) => {
+        openToast(response.message, 'success');
+        closeModal();
+        setCurrentPage('BLACK_LIST');
+      },
+      onError: (error) => {
+        openToast(error.message, 'error');
+      },
+    });
   };
 
-  const handleDeleteFriend = async () => {
-    try {
-      console.log(id);
-      closeModal();
-    } catch (e) {
-      console.error(e);
-    }
+  const handleDeleteFriend = () => {
+    deleteFriend(id, {
+      onSuccess: (response) => {
+        openToast(response.message, 'success');
+      },
+      onError: (error) => {
+        openToast(error.message, 'error');
+      },
+    });
   };
 
   return (
@@ -47,7 +63,7 @@ const FriendDeleteOrBlack = ({
           <Button
             variant="secondary"
             className="w-full"
-            onClick={setBlackListPage}
+            onClick={handleFriendToBlackList}
           >
             블랙리스트
           </Button>
