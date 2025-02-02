@@ -1,7 +1,12 @@
 import Modal from '@/components/modal';
 import Button from '../commons/Button';
+import { useNavigate } from 'react-router-dom';
+import { useModal } from '@/contexts/ModalContext';
 
 const CallTaxiModal = () => {
+  const nav = useNavigate();
+  const { closeModal } = useModal();
+
   return (
     <>
       <Modal.Header className="font-bold text-header mt-4 ml-2">
@@ -17,7 +22,15 @@ const CallTaxiModal = () => {
       </Modal.Header>
       <Modal.Footer>
         <div className="w-full flex flex-col gap-3">
-          <Button variant="primary" type="submit" className="w-full">
+          <Button
+            variant="primary"
+            type="submit"
+            className="w-full"
+            onClick={() => {
+              nav('/call-taxi');
+              closeModal();
+            }}
+          >
             호출하기
           </Button>
         </div>
