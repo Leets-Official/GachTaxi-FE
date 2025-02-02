@@ -17,7 +17,7 @@ export default {
       colors: {
         primary: '#08F283', // Primary 색상
         secondary: '#2A3328', // Secondary 색상
-        neutral: '#011A11', // Neutral 배경 색상
+        neutral: '#141513', // Neutral 배경 색상
         addGreen: '#05D976', // 추가 색상 1
         addDarkGreen: '#02733E', // 추가 색상 2
         textLightGray: '#D9D9D9 ', // 텍스트 연회색
