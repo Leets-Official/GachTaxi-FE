@@ -7,11 +7,11 @@ const ChatPage = () => {
   const chatMember = 3;
   const roomId = 1;
 
-  const { isSubscribed, messages, sendMessage } = useWebSocket(roomId);
+  const { messages, sendMessage } = useWebSocket(roomId);
 
   return (
-    <section className="flex-1 w-full flex flex-col">
-      <div className="sticky top-0 p-horizontal bg-darkBlack">
+    <section className="relative flex-1 w-full flex flex-col h-full max-h-1vh">
+      <div className="sticky top-0 left-0 p-horizontal bg-darkBlack">
         <BackButton />
         <div className="flex h-[48px] items-center">
           <h1 className="font-bold text-header">채팅방</h1>
@@ -20,10 +20,12 @@ const ChatPage = () => {
           </span>
         </div>
       </div>
-      <div className="flex-1 overflow-y-auto">
-        {isSubscribed ? (
+      <div className="overflow-y-auto h-fit">
+        {messages ? (
           <>
-            <MessageList messages={messages} />
+            <div className="h-full">
+              <MessageList messages={messages} />
+            </div>
           </>
         ) : (
           <div className="text-center text-gray-400">
