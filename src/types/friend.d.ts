@@ -1,6 +1,6 @@
 declare module 'gachTaxi-types' {
   interface RequestFriend {
-    nickname: string;
+    nickName: string;
   }
 
   interface AcceptFriend {
