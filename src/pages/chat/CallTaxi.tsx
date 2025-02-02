@@ -60,7 +60,7 @@ const CallTaxi = () => {
             openTaxiApp(
               'tmoneygo://',
               'https://play.google.com/store/apps/details?id=kr.co.tmoney.tia',
-              'https://apps.apple.com/kr/app/id1503035863',
+              'https://apps.apple.com/kr/app/%ED%8B%B0%EB%A8%B8%EB%8B%88go-%EA%B3%A0%EC%86%8D%EB%B2%84%EC%8A%A4-%EC%8B%9C%EC%99%B8%EB%B2%84%EC%8A%A4-%ED%83%9D%EC%8B%9C-%EB%94%B0%EB%A6%89%EC%9D%B4-%ED%82%A5%EB%B3%B4%EB%93%9C/id1483433931',
             )
           }
         />
@@ -70,7 +70,7 @@ const CallTaxi = () => {
             openTaxiApp(
               '',
               'https://play.google.com/store/apps/details?id=kr.co.vcnc.tada',
-              'https://apps.apple.com/kr/app/id1436562065',
+              'https://apps.apple.com/kr/app/%ED%83%80%EB%8B%A4/id1422751774',
             )
           }
         />
