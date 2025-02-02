@@ -1,11 +1,13 @@
 import client from '@/libs/apis/clients';
 import { AxiosResponse } from 'axios';
-import { AcceptFriend, BasicFriendResponse } from 'gachTaxi-types';
+import { BasicFriendResponse } from 'gachTaxi-types';
 
-const acceptFriendRequest = async (data: AcceptFriend) => {
+const acceptFriendRequest = async (data: number) => {
   const res: AxiosResponse<BasicFriendResponse> = await client.patch(
     '/api/friends',
-    data,
+    {
+      memberId: data,
+    },
   );
   return res.data;
 };

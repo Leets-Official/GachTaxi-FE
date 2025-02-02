@@ -26,7 +26,7 @@ declare module 'gachTaxi-types' {
     pageNum: number;
     pageSize: number;
     numberOfElements: number;
-    isLast: boolean;
+    last: boolean;
   }
 
   interface FriendListResponse {
