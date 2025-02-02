@@ -10,7 +10,6 @@ import { useToast } from '@/contexts/ToastContext';
 import useWebSocket from '@/hooks/useWebSocket';
 import CancelTaxiModal from '@/components/modal/CancelTaxiModal';
 import CloseMatchingModal from '@/components/modal/CloseMatching';
-import useTimerStore from '@/store/useTimerStore';
 
 const BottomMenu = ({
   onSendAccount,
@@ -36,14 +35,12 @@ const BottomMenu = ({
 
   const handleExitClick = async () => {
     try {
-      const { reset } = useTimerStore.getState();
       const res = await handleExitChatRoom(roomId);
-      if (res.chatExit.code === 200 && res.matchingExit.code === 200) {
+      if (res.code === 200) {
         closeModal();
-        reset();
         nav('/home');
         handleDisconnect();
-        openToast('채팅방을 나가고 매칭을 종료했습니다.', 'success');
+        openToast(res.message, 'success');
       }
     } catch (error) {
       console.error('채팅방 퇴장 중 오류 발생:', error);
