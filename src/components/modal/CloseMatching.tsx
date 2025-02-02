@@ -1,7 +1,7 @@
 import Modal from '@/components/modal';
 import Button from '../commons/Button';
 
-const CloseMatchingModal = () => {
+const CloseMatchingModal = ({ onConfirm }: { onConfirm: () => void }) => {
   return (
     <>
       <Modal.Header className="font-bold text-header mt-4 ml-2">
@@ -14,7 +14,12 @@ const CloseMatchingModal = () => {
       </Modal.Content>
       <Modal.Footer>
         <div className="w-full flex flex-col gap-3">
-          <Button variant="primary" type="submit" className="w-full">
+          <Button
+            variant="primary"
+            type="submit"
+            className="w-full"
+            onClick={onConfirm}
+          >
             매칭 마감
           </Button>
         </div>
