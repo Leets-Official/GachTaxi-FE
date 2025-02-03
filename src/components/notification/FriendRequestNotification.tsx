@@ -79,7 +79,7 @@ const FriendRequestNotification = ({
         </Button>
         <Button
           variant="secondary"
-          className="w-[92px] h-full border-primary text-pri border-[1px]"
+          className="w-[92px] h-full border-primary text-primary border-[1px]"
           onClick={rejectFriendRequest}
         >
           거절
