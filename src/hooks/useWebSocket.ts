@@ -2,6 +2,7 @@ import { CompatClient, Stomp } from '@stomp/stompjs';
 import { useState, useEffect, useRef } from 'react';
 import { getChatMessages } from '@/libs/apis/getChatMessages';
 import { getChatNumber } from '@/libs/apis/getChatNumber.api';
+import SockJS from 'sockjs-client';
 
 const useWebSocket = (roomId: number | null) => {
   const stompClientRef = useRef<CompatClient | null>(null);
@@ -19,16 +20,14 @@ const useWebSocket = (roomId: number | null) => {
       try {
         const count = await getChatNumber(roomId);
         setParticipantCount(count);
-        console.log(`채팅방 인원 수 업데이트: ${count}`);
       } catch (error) {
         console.error('채팅방 인원 수 가져오기 실패:', error);
       }
     };
     const connectWebSocket = () => {
-      const ws = new WebSocket(`${baseUrl}/ws`);
-      console.log('WebSocket 연결 시도...');
+      const socket = new SockJS(`${baseUrl}/ws`);
 
-      const client = Stomp.over(ws);
+      const client = Stomp.over(socket);
       stompClientRef.current = client;
 
       client.configure({
@@ -40,11 +39,8 @@ const useWebSocket = (roomId: number | null) => {
           Authorization: `Bearer ${accessToken}`,
         },
         () => {
-          console.log('STOMP 클라이언트 연결 성공');
-
           // eslint-disable-next-line @typescript-eslint/no-explicit-any
           client.subscribe(`/sub/chat/room/${roomId}`, async (message: any) => {
-            console.log('새로운 메시지 수신:', JSON.parse(message.body));
             const parsedMessage = JSON.parse(message.body);
             const messageType = parsedMessage.messageType;
             const chatData = await getChatMessages(roomId);
@@ -80,7 +76,6 @@ const useWebSocket = (roomId: number | null) => {
   const handleDisconnect = async () => {
     if (stompClientRef.current) {
       stompClientRef.current.disconnect();
-      console.log('WebSocket 연결 해제');
       stompClientRef.current = null;
     }
   };
@@ -92,7 +87,6 @@ const useWebSocket = (roomId: number | null) => {
         {},
         JSON.stringify(sendMessage),
       );
-      console.log('메시지 전송:', sendMessage);
     }
   };
 
