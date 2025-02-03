@@ -18,6 +18,7 @@ const EditProfilePage = () => {
       studentNumber: '',
       gender: 'MALE',
       profilePicture: undefined,
+      accountNumber: '',
     },
     mode: 'onSubmit',
   });
@@ -63,6 +64,14 @@ const EditProfilePage = () => {
           name="nickname"
           label="닉네임"
           placeholder="닉네임을 입력해주세요"
+          type="text"
+        />
+
+        <Input
+          control={profileForm.control}
+          name="accountNumber"
+          label="계좌번호"
+          placeholder="계좌번호를 입력해주세요"
           type="text"
         />
 
