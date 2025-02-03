@@ -3,23 +3,26 @@ import Timer from '@/components/matchingInfo/TImer';
 import useSSEStore from '@/store/useSSEStore';
 import useTimerStore from '@/store/useTimerStore';
 import { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 
 const MatchingInfoPage = () => {
   const { reset } = useTimerStore();
   const { initializeSSE, messages } = useSSEStore();
+  const navigate = useNavigate();
 
   const [roomCapacity, setRoomCapacity] = useState<number>(0);
   const [roomStatus, setRoomStatus] = useState<'searching' | 'matching'>(
     'searching',
   );
+  const [roomId, setRoomId] = useState<number | null>(null);
 
   useEffect(() => {
     initializeSSE();
   }, [initializeSSE]);
 
   useEffect(() => {
-    messages.forEach((message) => {
-      switch (message.topic) {
+    messages.forEach((eventMessage) => {
+      switch (eventMessage.eventType) {
         case 'match_member_joined':
           setRoomCapacity((prev) => Math.max(prev + 1, 4));
           break;
@@ -30,6 +33,7 @@ const MatchingInfoPage = () => {
 
         case 'match_room_created':
           setRoomCapacity((prev) => Math.max(prev + 1, 4));
+          setRoomId(eventMessage.message.roomId);
           setRoomStatus('matching');
           break;
 
@@ -66,7 +70,10 @@ const MatchingInfoPage = () => {
       </div>
       {roomStatus === 'matching' && (
         <div className=" w-full mb-4">
-          <Button className="w-full" onClick={() => reset()}>
+          <Button
+            className="w-full"
+            onClick={() => navigate(`/chat/${roomId!}`)}
+          >
             채팅방
           </Button>
         </div>
