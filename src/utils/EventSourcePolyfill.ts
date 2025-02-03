@@ -9,7 +9,10 @@ export class EventSourcePolyfill implements EventSource {
   readonly OPEN = 1 as const;
   readonly CLOSED = 2 as const;
 
-  constructor(url: string, options?: { headers?: Record<string, string>; withCredentials?: boolean }) {
+  constructor(
+    url: string,
+    options?: { headers?: Record<string, string>; withCredentials?: boolean },
+  ) {
     this._url = url;
     this._withCredentials = options?.withCredentials || false;
     this.headers = options?.headers || {};
@@ -21,7 +24,7 @@ export class EventSourcePolyfill implements EventSource {
   private connect() {
     this.xhr.open('GET', this._url, true);
     this.xhr.withCredentials = this._withCredentials;
-    
+
     // 헤더 설정
     Object.entries(this.headers).forEach(([key, value]) => {
       this.xhr.setRequestHeader(key, value);
@@ -35,7 +38,9 @@ export class EventSourcePolyfill implements EventSource {
         }
       } else if (this.xhr.readyState === XMLHttpRequest.LOADING) {
         if (this.onmessage) {
-          this.onmessage(new MessageEvent('message', { data: this.xhr.responseText }));
+          this.onmessage(
+            new MessageEvent('message', { data: this.xhr.responseText }),
+          );
         }
       }
     };
@@ -74,14 +79,14 @@ export class EventSourcePolyfill implements EventSource {
   public addEventListener<K extends keyof EventSourceEventMap>(
     type: K,
     listener: (this: EventSource, ev: EventSourceEventMap[K]) => any,
-    options?: boolean | AddEventListenerOptions
+    options?: boolean | AddEventListenerOptions,
   ): void;
   public addEventListener(
     type: string,
     listener: EventListenerOrEventListenerObject,
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  // @ts-expect-error - will be used later
-    options?: boolean | AddEventListenerOptions
+
+    // @ts-expect-error - will be used later
+    options?: boolean | AddEventListenerOptions,
   ): void {
     switch (type) {
       case 'open':
@@ -105,14 +110,14 @@ export class EventSourcePolyfill implements EventSource {
   public removeEventListener<K extends keyof EventSourceEventMap>(
     type: K,
     listener: (this: EventSource, ev: EventSourceEventMap[K]) => any,
-    options?: boolean | EventListenerOptions
+    options?: boolean | EventListenerOptions,
   ): void;
   public removeEventListener(
     type: string,
     listener: EventListenerOrEventListenerObject,
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  // @ts-expect-error - will be used later
-    options?: boolean | EventListenerOptions
+
+    // @ts-expect-error - will be used later
+    options?: boolean | EventListenerOptions,
   ): void {
     switch (type) {
       case 'open':
@@ -141,4 +146,4 @@ export class EventSourcePolyfill implements EventSource {
     }
     return true;
   }
-} 
+}
