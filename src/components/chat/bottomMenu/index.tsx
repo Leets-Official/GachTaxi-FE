@@ -27,7 +27,15 @@ const BottomMenu = ({
   const { openToast } = useToast();
   const [showAccountModal, setShowAccountModal] = useState(false);
   const nav = useNavigate();
-  const { isOwner } = useSSEStore();
+  const { messages } = useSSEStore();
+  const [isOwner, setIsOwner] = useState(false);
+
+  messages.forEach((message) => {
+    if (message.topic === 'match_room_created') {
+      const userId = localStorage.getItem('userId');
+      setIsOwner(userId === String(message.roomMasterId));
+    }
+  });
 
   const handleSendClick = () => {
     setShowAccountModal(true);
