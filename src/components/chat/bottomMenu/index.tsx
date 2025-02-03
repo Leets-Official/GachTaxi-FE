@@ -38,8 +38,10 @@ const BottomMenu = ({
   const handleExitClick = async () => {
     try {
       const { reset } = useTimerStore.getState();
-      const res = await getExitChatRoom(roomId);
-      const closeRes = await getCloseMatching(roomId);
+      const [res, closeRes] = await Promise.all([
+        getExitChatRoom(roomId),
+        getCloseMatching(roomId),
+      ]);
       if (res.chatExit.code === 200 && closeRes.matchingExit.code === 200) {
         closeModal();
         reset();
