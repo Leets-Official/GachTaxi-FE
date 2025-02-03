@@ -7,6 +7,7 @@ interface SSEState {
   messages: MessagesArray;
   initializeSSE: () => void;
   closeSSE: () => void;
+  isOwner: boolean;
 }
 
 const BASE_URL = import.meta.env.VITE_API_BASE_URL;
@@ -14,6 +15,7 @@ const BASE_URL = import.meta.env.VITE_API_BASE_URL;
 const useSSEStore = create<SSEState>((set, get) => ({
   sse: null,
   messages: [],
+  isOwner: false,
 
   initializeSSE: () => {
     const accessToken = localStorage.getItem('accessToken');
@@ -47,6 +49,13 @@ const useSSEStore = create<SSEState>((set, get) => ({
         const jsonString = rawData.slice(5).trim();
         try {
           const formatedData: MatchingEvent = JSON.parse(jsonString);
+
+          if (formatedData.topic === 'match_room_created') {
+            const userId = localStorage.getItem('userId');
+            const isOwner = userId === String(formatedData.roomMasterId);
+
+            set({ isOwner });
+          }
           set((state) => ({ messages: [...state.messages, formatedData] }));
         } catch (error) {
           console.error('JSON 파싱 중 오류가 발생했습니다. : ', error);
@@ -74,7 +83,7 @@ const useSSEStore = create<SSEState>((set, get) => ({
   closeSSE: () => {
     set((state) => {
       state.sse?.close();
-      return { sse: null, messages: [] };
+      return { sse: null, messages: [], isOwner: false };
     });
   },
 }));
