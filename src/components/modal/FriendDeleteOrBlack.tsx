@@ -34,6 +34,8 @@ const FriendDeleteOrBlack = ({
     deleteFriend(id, {
       onSuccess: (response) => {
         openToast(response.message, 'success');
+        closeModal();
+        setCurrentPage('FRIEND_LIST');
       },
       onError: (error) => {
         openToast(error.message, 'error');
