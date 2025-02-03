@@ -80,6 +80,7 @@ const MessageList = ({ messages }: MessageListProps) => {
                 message={msg.message}
                 timeStamp={msg.timeStamp}
                 profilePicture={msg.profilePicture}
+                senderId={msg.senderId}
               />
             )}
           </div>
