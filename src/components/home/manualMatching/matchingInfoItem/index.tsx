@@ -1,14 +1,14 @@
 import RouteSettingIcon from '@/assets/icon/smallRouteChangeIcon.svg?react';
 import Button from '@/components/commons/Button';
-import { ManualInfo } from '@/components/home/manualMatching';
 import Tags from '@/components/home/manualMatching/matchingInfoItem/Tags';
 import MatchingComplete from '@/components/modal/MatchingComplete';
 import { useModal } from '@/contexts/ModalContext';
 import { motion } from 'framer-motion';
+import { Room } from 'gachTaxi-types';
 import { useState } from 'react';
 
 interface MatchingInfoItem {
-  manualInfo: ManualInfo;
+  manualInfo: Room;
   setCurrentPage?: (value: 'MANUAL' | 'MY_MATCHING') => void;
   currentPage?: 'MANUAL' | 'MY_MATCHING';
 }
@@ -49,9 +49,11 @@ const MatchingInfoItem = ({
         className={`min-h-[144px] flex-shrink-0 bg-secondary rounded-box p-vertical flex flex-col gap-3 ${isExpand ? 'border-primary border-2' : ''}`}
       >
         <div className="flex w-full justify-between items-center">
-          <span className="text-header font-bold">{manualInfo.time}</span>
+          <span className="text-header font-bold">
+            {manualInfo.departureTime}
+          </span>
           <span className="text-body font-medium relative top-[-8px]">
-            {manualInfo.memberCount}/4
+            {manualInfo.currentMembers}/4
           </span>
         </div>
 
@@ -59,33 +61,33 @@ const MatchingInfoItem = ({
           <RouteSettingIcon />
           <div className="relative top-[-2px]">
             <p className="font-medium text-captionHeader">
-              {manualInfo.route === 'basic' ? '가천대 정문' : 'AI 공학관'}
+              {manualInfo.departure}
             </p>
             <p className="font-medium text-captionHeader">
-              {manualInfo.route === 'basic' ? 'AI 공학관' : '가천대 정문'}
+              {manualInfo.destination}
             </p>
           </div>
         </div>
 
         {isExpand && (
-          <div className="flex-1 overflow-y-scroll overflow-hidden mt-5">
+          <div className="flex-1 overflow-y-scroll scroll-hidden overflow-hidden mt-5">
             <p className="font-medium text-body">
               <span>추가 멘트 : </span>
-              {manualInfo.content}
+              {manualInfo.description}
             </p>
           </div>
         )}
 
-        <Tags manualInfo={manualInfo} />
+        <Tags tags={manualInfo.tags} />
       </motion.div>
       {isExpand && currentPage! && (
         <div className="w-full">
           <Button
             className="w-full"
-            isDisabled={manualInfo.memberCount === 4}
+            isDisabled={manualInfo.currentMembers === 4}
             onClick={handleJoinMatching}
           >
-            {manualInfo.memberCount === 4 ? '참여마감' : '참여하기'}
+            {manualInfo.currentMembers === 4 ? '참여마감' : '참여하기'}
           </Button>
         </div>
       )}

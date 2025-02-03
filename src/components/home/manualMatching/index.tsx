@@ -1,22 +1,14 @@
 import Button from '@/components/commons/Button';
-import { useState } from 'react';
+import { Suspense, useState } from 'react';
 import MatchingPage from '@/components/home/manualMatching/MatchingPage';
+import SpinnerIcon from '@/assets/icon/spinnerIcon.svg?react';
 import MyMatchingPage from '@/components/home/manualMatching/MyMatchingPage';
 
 interface ManualMatchingProps {
   isOpen: boolean;
 }
 
-export interface ManualInfo {
-  time: string;
-  memberCount: number;
-  route: string;
-  tags: string[];
-  content: string;
-}
-
 const ManualMatching = ({ isOpen }: ManualMatchingProps) => {
-  const [manualInfos, setManualInfos] = useState<ManualInfo[]>([]);
   const [currentPage, setCurrentPage] = useState<'MANUAL' | 'MY_MATCHING'>(
     'MANUAL',
   );
@@ -28,16 +20,32 @@ const ManualMatching = ({ isOpen }: ManualMatchingProps) => {
   const renderConditionalComponents = () => {
     if (currentPage === 'MANUAL') {
       return (
-        <MatchingPage
-          isOpen={isOpen}
-          manualInfos={manualInfos}
-          setManualInfos={setManualInfos}
-          currentPage={currentPage}
-          setCurrentPage={setCurrentPage}
-        />
+        <Suspense
+          fallback={
+            <div className="h-[150px] w-full flex items-center justify-center flex-1">
+              <SpinnerIcon width={36} height={36} className="mx-auto spinner" />
+            </div>
+          }
+        >
+          <MatchingPage
+            isOpen={isOpen}
+            currentPage={currentPage}
+            setCurrentPage={setCurrentPage}
+          />
+        </Suspense>
       );
     } else {
-      return <MyMatchingPage isOpen={isOpen} />;
+      return (
+        <Suspense
+          fallback={
+            <div className="h-[150px] w-full flex items-center justify-center flex-1">
+              <SpinnerIcon width={36} height={36} className="mx-auto spinner" />
+            </div>
+          }
+        >
+          <MyMatchingPage isOpen={isOpen} />
+        </Suspense>
+      );
     }
   };
 

@@ -1,9 +1,7 @@
-import { ManualInfo } from '@/components/home/manualMatching';
-
-const Tags = ({ manualInfo }: { manualInfo: ManualInfo }) => {
+const Tags = ({ tags }: { tags: string[] }) => {
   return (
     <div className="flex overflow-x-scroll scroll-hidden gap-2">
-      {manualInfo.tags.map((tag) => {
+      {tags.map((tag) => {
         return (
           <span
             key={tag}
