@@ -22,7 +22,7 @@ const MatchingInfoPage = () => {
 
   useEffect(() => {
     messages.forEach((eventMessage) => {
-      switch (eventMessage.eventType) {
+      switch (eventMessage.topic) {
         case 'match_member_joined':
           setRoomCapacity((prev) => Math.max(prev + 1, 4));
           break;
@@ -33,7 +33,7 @@ const MatchingInfoPage = () => {
 
         case 'match_room_created':
           setRoomCapacity((prev) => Math.max(prev + 1, 4));
-          setRoomId(eventMessage.message.roomId);
+          setRoomId(eventMessage.roomId);
           setRoomStatus('matching');
           break;
 
