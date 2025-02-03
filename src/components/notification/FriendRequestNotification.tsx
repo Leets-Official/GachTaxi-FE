@@ -51,7 +51,7 @@ const FriendRequestNotification = ({
       dragConstraints={{ left: 0, right: 0 }}
       animate={{ opacity: 1 }}
       transition={{ type: 'spring', stiffness: 150, damping: 30 }}
-      exit={{ opacity: 0, height: 0, margin: 0, transition: { duration: 0.6 } }}
+      exit={{ opacity: 0 }}
       layout
       onDragEnd={(_event, info) => {
         const isOverOffsetThreshold =
