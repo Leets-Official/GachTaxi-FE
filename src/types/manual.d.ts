@@ -5,7 +5,7 @@ declare module 'gachTaxi-types' {
 
   interface Room {
     roomId: number;
-    title: string;
+    description: string;
     departure: string;
     destination: string;
     departureTime: string;

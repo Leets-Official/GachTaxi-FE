@@ -10,9 +10,7 @@ declare module 'gachTaxi-types' {
   }
 
   interface ManualMatchingTypes {
-    startPoint: string;
     startName: string;
-    destinationPoint: string;
     destinationName: string;
     criteria: string[];
     members: string[];
