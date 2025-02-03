@@ -64,7 +64,7 @@ function Input<T extends FieldValues>({
                 id={name.toString()}
                 type={type}
                 placeholder={placeholder}
-                className={`border outline-none border-textDarkGray bg-transparent rounded-common p-3 pl-4 text-textDarkGray placeholder:text-body ${className ? className : ''}`}
+                className={`border outline-none border-textDarkGray bg-transparent rounded-modal p-3 pl-4 text-textDarkGray placeholder:text-body ${className ? className : ''}`}
                 {...field}
               />
               {fieldState.error && (
