@@ -50,7 +50,6 @@ const useWebSocket = (roomId: number | null) => {
               messages?.chattingMessage[messages.chattingMessage.length - 1]
                 .messageId
             ) {
-              console.log('setMessages', chatData);
               setMessages(chatData);
             }
             if (messageType === 'ENTER' || messageType === 'EXIT') {
