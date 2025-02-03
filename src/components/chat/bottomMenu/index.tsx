@@ -4,13 +4,15 @@ import { useState } from 'react';
 import SendAccountModal from '../modal/sendAccountModal';
 import CallTaxiModal from '@/components/modal/CallTaxiModal';
 import { useModal } from '@/contexts/ModalContext';
-import handleExitChatRoom from '@/libs/apis/handleExitChatRoom';
 import { useNavigate } from 'react-router-dom';
 import { useToast } from '@/contexts/ToastContext';
 import useWebSocket from '@/hooks/useWebSocket';
 import CancelTaxiModal from '@/components/modal/CancelTaxiModal';
 import CloseMatchingModal from '@/components/modal/CloseMatching';
 import useTimerStore from '@/store/useTimerStore';
+import { getCloseMatching } from '@/libs/apis/getCloseMatching.api';
+import getExitChatRoom from '@/libs/apis/getExitChatRoom';
+import useSSEStore from '@/store/useSSEStore';
 
 const BottomMenu = ({
   onSendAccount,
@@ -25,6 +27,15 @@ const BottomMenu = ({
   const { openToast } = useToast();
   const [showAccountModal, setShowAccountModal] = useState(false);
   const nav = useNavigate();
+  const { messages } = useSSEStore();
+  const [isOwner, setIsOwner] = useState(false);
+
+  messages.forEach((message) => {
+    if (message.topic === 'match_room_created') {
+      const userId = localStorage.getItem('userId');
+      setIsOwner(userId === String(message.roomMasterId));
+    }
+  });
 
   const handleSendClick = () => {
     setShowAccountModal(true);
@@ -37,8 +48,11 @@ const BottomMenu = ({
   const handleExitClick = async () => {
     try {
       const { reset } = useTimerStore.getState();
-      const res = await handleExitChatRoom(roomId);
-      if (res.chatExit.code === 200 && res.matchingExit.code === 200) {
+      const [res, closeRes] = await Promise.all([
+        getExitChatRoom(roomId),
+        getCloseMatching(roomId),
+      ]);
+      if (res.chatExit.code === 200 && closeRes.matchingExit.code === 200) {
         closeModal();
         reset();
         nav('/home');
@@ -50,19 +64,33 @@ const BottomMenu = ({
     }
   };
 
-  const handleOpenExitModal = () => {
+  const handleExitModal = () => {
     openModal(<CancelTaxiModal onConfirm={handleExitClick} />);
   };
 
+  const handleCloseClick = async () => {
+    try {
+      const { reset } = useTimerStore.getState();
+      const res = await getCloseMatching(roomId);
+      if (res.matchingExit.code === 200) {
+        closeModal();
+        reset();
+        openToast('매칭을 마감했습니다 택시를 호출해주세요!', 'success');
+      }
+    } catch (error) {
+      console.error('매칭 마감 중 오류 발생', error);
+    }
+  };
+
   const handleCloseMatching = () => {
-    openModal(<CloseMatchingModal />);
+    openModal(<CloseMatchingModal onConfirm={handleCloseClick} />);
   };
 
   const clickHandlers: Record<string, () => void> = {
-    '계좌 전송': handleSendClick,
-    '택시 호출': handleTaxiClick,
-    '매칭 마감': handleCloseMatching,
-    '매칭 취소': handleOpenExitModal,
+    '계좌 전송': isOwner ? handleSendClick : () => {},
+    '택시 호출': isOwner ? handleTaxiClick : () => {},
+    '매칭 마감': isOwner ? handleCloseMatching : () => {},
+    '매칭 취소': handleExitModal,
   };
 
   return (
@@ -71,7 +99,11 @@ const BottomMenu = ({
         <div
           key={index}
           onClick={clickHandlers[item.label] || undefined}
-          className="cursor-pointer"
+          className={`${
+            !isOwner && item.label !== '매칭 취소'
+              ? 'cursor-not-allowed opacity-50'
+              : 'cursor-pointer'
+          }`}
         >
           <MenuItem key={index} Icon={item.icon} label={item.label} />
         </div>
