@@ -29,6 +29,7 @@ declare module 'gachTaxi-types' {
     realName: string;
     studentNumber: string;
     gender: 'MALE' | 'FEMALE';
+    accountNumber?: string;
   }
 
   interface AgreementsTypes {
