@@ -7,6 +7,7 @@ interface RenderOtherMessageProps {
   message: string | null;
   timeStamp: string;
   profilePicture?: string;
+  senderId: number;
 }
 
 const RenderOtherMessage: React.FC<RenderOtherMessageProps> = ({
@@ -14,6 +15,7 @@ const RenderOtherMessage: React.FC<RenderOtherMessageProps> = ({
   message,
   timeStamp,
   profilePicture,
+  senderId,
 }) => {
   const [isReportModalOpen, setReportModalOpen] = useState(false);
 
@@ -51,7 +53,8 @@ const RenderOtherMessage: React.FC<RenderOtherMessageProps> = ({
         <ReportModal
           onClose={() => setReportModalOpen(false)}
           senderName={senderName}
-          profilePicture={profilePicture || ''}
+          senderId={senderId}
+          profilePicture={profilePicture || undefined}
         />
       )}
     </div>
