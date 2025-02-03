@@ -19,6 +19,8 @@ import TimeSelect from '@/components/manual-register/timeSelect';
 import { useToast } from '@/contexts/ToastContext';
 import { useNavigate } from 'react-router-dom';
 import useSheetStore from '@/store/useSheetStore';
+import createManualMatchingRoom from '@/libs/apis/manual/createManualMatchingRoom.api';
+import axios from 'axios';
 
 const ManualMatchingRegister = () => {
   const manualMatchingForm = useForm<z.infer<typeof manualMatchingSchema>>({
@@ -41,12 +43,23 @@ const ManualMatchingRegister = () => {
     ManualMatchingTypes
   > = async (data) => {
     try {
-      console.log(data);
-      openSheet();
-      openMatch();
-      navigate('/home');
-    } catch (e) {
-      console.error(e);
+      const res = await createManualMatchingRoom(data);
+      if (res.code >= 200 && res.code < 300) {
+        openSheet();
+        openMatch();
+        navigate('/home');
+        openToast(res.message, 'success');
+      }
+    } catch (error: unknown) {
+      if (axios.isAxiosError(error)) {
+        const errorMessage = error.response?.data?.message;
+        const errorCode = error.response?.status;
+
+        openToast(errorMessage, 'error');
+        if (errorCode === 409) {
+          navigate('/matching');
+        }
+      }
     }
   };
 

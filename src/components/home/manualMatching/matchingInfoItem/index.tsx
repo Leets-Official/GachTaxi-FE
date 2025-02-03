@@ -3,6 +3,9 @@ import Button from '@/components/commons/Button';
 import Tags from '@/components/home/manualMatching/matchingInfoItem/Tags';
 import MatchingComplete from '@/components/modal/MatchingComplete';
 import { useModal } from '@/contexts/ModalContext';
+import { useToast } from '@/contexts/ToastContext';
+import joinManualMatchingRoom from '@/libs/apis/manual/joinManualMatchingRoom.api';
+import axios from 'axios';
 import { motion } from 'framer-motion';
 import { Room } from 'gachTaxi-types';
 import { useState } from 'react';
@@ -21,16 +24,23 @@ const MatchingInfoItem = ({
   const [isExpand, setIsExpand] = useState<boolean>(false);
   const animateState = isExpand ? 'expanded' : 'collapsed';
   const { openModal } = useModal();
+  const { openToast } = useToast();
 
-  const handleJoinMatching = () => {
+  const handleJoinMatching = async () => {
     try {
       if (setCurrentPage) {
-        openModal(<MatchingComplete setCurrentPage={setCurrentPage!} />);
+        const res = await joinManualMatchingRoom(manualInfo.roomId);
+        if (res.code >= 200 && res.code < 300) {
+          openModal(<MatchingComplete setCurrentPage={setCurrentPage} />);
+        }
       } else {
         console.error('페이지 교체 setter 함수를 가져오지 못했어요!');
       }
-    } catch (e) {
-      console.error(e);
+    } catch (error: unknown) {
+      if (axios.isAxiosError(error)) {
+        const errorMessage = error.response?.data?.message;
+        openToast(errorMessage, 'error');
+      }
     }
   };
 
