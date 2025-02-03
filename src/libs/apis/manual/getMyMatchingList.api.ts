@@ -3,14 +3,14 @@ import { AxiosResponse } from 'axios';
 import { RoomResponse } from 'gachTaxi-types';
 
 const getMyMatchingList = async ({
-  pageNum = 0,
+  pageNumber = 0,
   pageSize = 10,
 }: {
-  pageNum?: number;
+  pageNumber?: number;
   pageSize?: number;
 }) => {
   const params = new URLSearchParams({
-    pageNum: pageNum.toString(),
+    pageNumber: pageNumber.toString(),
     pageSize: pageSize.toString(),
   });
 
