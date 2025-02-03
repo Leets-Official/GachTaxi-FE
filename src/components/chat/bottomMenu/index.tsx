@@ -30,10 +30,10 @@ const BottomMenu = ({
   const { messages } = useSSEStore();
   const [isOwner, setIsOwner] = useState(false);
 
-  messages.forEach((message) => {
-    if (message.topic === 'match_room_created') {
+  messages.forEach((eventMessage) => {
+    if (eventMessage.message.topic === 'match_room_created') {
       const userId = localStorage.getItem('userId');
-      setIsOwner(userId === String(message.roomMasterId));
+      setIsOwner(userId === String(eventMessage.message.roomMasterId));
     }
   });
 
