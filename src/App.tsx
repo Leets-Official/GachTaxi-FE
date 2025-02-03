@@ -16,6 +16,8 @@ import FriendRequestPage from '@/pages/friend-request';
 import NotificationPage from '@/pages/notification';
 import ProtectRoute from '@/pages/ProtectRoute';
 import GoogleLoginLoading from '@/components/landing/GoogleLoginLoading';
+import MatchingInfoPage from '@/pages/mathcing';
+import CallTaxi from '@/pages/chat/CallTaxi';
 
 function App() {
   const queryClient = new QueryClient();
@@ -92,6 +94,22 @@ function App() {
                   element={
                     <ProtectRoute isPrivate>
                       <ChatPage />
+                    </ProtectRoute>
+                  }
+                />
+                <Route
+                  path="/matching"
+                  element={
+                    <ProtectRoute isPrivate>
+                      <MatchingInfoPage />
+                    </ProtectRoute>
+                  }
+                />
+                <Route
+                  path="call-taxi"
+                  element={
+                    <ProtectRoute isPrivate>
+                      <CallTaxi />
                     </ProtectRoute>
                   }
                 />

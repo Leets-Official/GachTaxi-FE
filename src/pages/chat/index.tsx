@@ -4,10 +4,9 @@ import BackButton from '@/components/commons/BackButton';
 import useWebSocket from '@/hooks/useWebSocket';
 
 const ChatPage = () => {
-  const chatMember = 3;
   const roomId = 1;
 
-  const { messages, sendMessage } = useWebSocket(roomId);
+  const { messages, sendMessage, participantCount } = useWebSocket(roomId);
 
   return (
     <section className="relative flex-1 w-full flex flex-col h-full max-h-1vh">
@@ -16,7 +15,7 @@ const ChatPage = () => {
         <div className="flex h-[48px] items-center">
           <h1 className="font-bold text-header">채팅방</h1>
           <span className="text-captionHeader text-textDarkGray mt-[4px] ml-[3%]">
-            {chatMember}
+            {participantCount}
           </span>
         </div>
       </div>

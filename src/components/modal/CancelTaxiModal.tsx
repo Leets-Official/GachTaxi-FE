@@ -1,7 +1,15 @@
 import Modal from '@/components/modal';
 import Button from '../commons/Button';
+import { useModal } from '@/contexts/ModalContext';
 
 const CancelTaxiModal = ({ onConfirm }: { onConfirm: () => void }) => {
+  const { closeModal } = useModal();
+
+  const handleCancel = () => {
+    onConfirm();
+    closeModal();
+  };
+
   return (
     <>
       <Modal.Header className="font-bold text-header mt-4 ml-2">
@@ -15,7 +23,7 @@ const CancelTaxiModal = ({ onConfirm }: { onConfirm: () => void }) => {
       <Modal.Footer>
         <div className="w-full flex flex-col gap-3">
           <Button
-            onClick={onConfirm}
+            onClick={handleCancel}
             variant="primary"
             type="submit"
             className="w-full"

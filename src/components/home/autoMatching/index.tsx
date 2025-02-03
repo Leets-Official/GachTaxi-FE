@@ -5,25 +5,34 @@ import RouteSetting from '@/components/home/autoMatching/RouteSetting';
 import SelectTags from '@/components/home/autoMatching/selectTags';
 import { AutoMatchingTypes } from 'gachTaxi-types';
 import z from 'zod';
-import { useForm, SubmitHandler, FieldValues } from 'react-hook-form';
+import { useForm, SubmitHandler, FieldValues, useWatch } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { autoMatchingSchema } from '@/libs/schemas/match';
 import InviteMembers from '@/components/home/autoMatching/inviteMembers';
 import useGeoLocation from '@/hooks/useGeoLocation';
 import getCoordinateByAddress from '@/libs/apis/getCoordinateByAddress';
-import { useCallback, useEffect, useState } from 'react';
-import { EventSourcePolyfill } from '@/utils/EventSourcePolyfill';
-import axios from 'axios';
+import { useCallback, useEffect } from 'react';
 import { useToast } from '@/contexts/ToastContext';
 import useLocationStore from '@/store/useLocationStore';
+import startAutoMatching from '@/libs/apis/matching/startAutoMatching.api';
+import useSSEStore from '@/store/useSSEStore';
+import { useNavigate } from 'react-router-dom';
+import axios from 'axios';
 
 const AutoMatching = ({ isOpen }: { isOpen: boolean }) => {
+  const {
+    auto: {
+      destinationPoint: autoDestinationPoint,
+      destinationName: autoDestinationName,
+    },
+    setAuto: { setStartPoint, setDestinationPoint, setDestinationName },
+  } = useLocationStore();
   const autoMatchingForm = useForm<z.infer<typeof autoMatchingSchema>>({
     resolver: zodResolver(autoMatchingSchema),
     defaultValues: {
       startPoint: '',
       startName: '가천대 반도체대학',
-      destinationPoint: '',
+      destinationPoint: autoDestinationPoint || '',
       destinationName: '가천대 AI 공학관',
       members: [],
       criteria: [],
@@ -32,27 +41,18 @@ const AutoMatching = ({ isOpen }: { isOpen: boolean }) => {
     mode: 'onBlur',
   });
 
-  const {
-    auto: { destinationName: autoDestinationName },
-    setAuto: { setStartPoint, setDestinationPoint, setDestinationName },
-  } = useLocationStore();
+  const { initializeSSE } = useSSEStore();
   const { getCurrentLocation } = useGeoLocation();
   const { openToast } = useToast();
-  const [eventSource, setEventSource] = useState<EventSourcePolyfill | null>(
-    null,
-  );
-  const currentStartName = autoMatchingForm.watch('startName');
-  const currentDestinationName = autoMatchingForm.watch('destinationName');
-
-  // 컴포넌트 언마운트시 구독 종료
-  useEffect(() => {
-    return () => {
-      if (eventSource) {
-        eventSource.close();
-        setEventSource(null);
-      }
-    };
-  }, [eventSource]);
+  const currentStartName = useWatch({
+    control: autoMatchingForm.control,
+    name: 'startName',
+  });
+  const currentDestinationName = useWatch({
+    control: autoMatchingForm.control,
+    name: 'destinationName',
+  });
+  const navigate = useNavigate();
 
   const updateDestinationCoordinates = useCallback(async () => {
     try {
@@ -65,17 +65,19 @@ const AutoMatching = ({ isOpen }: { isOpen: boolean }) => {
 
       if (startResult.status === 'fulfilled' && startResult.value) {
         const { lat, lng } = startResult.value;
-        setStartPoint(`${lng},${lat}`);
-      } else {
-        console.error('출발지 좌표 로드 실패:', startResult.reason);
+        if (autoMatchingForm.getValues('startPoint') !== `${lng},${lat}`) {
+          setStartPoint(`${lng},${lat}`);
+        }
       }
 
       if (destinationResult.status === 'fulfilled' && destinationResult.value) {
         const { lat, lng } = destinationResult.value;
-        setDestinationPoint(`${lng},${lat}`);
-        autoMatchingForm.setValue('destinationPoint', `${lng},${lat}`);
-      } else {
-        console.error('목적지 좌표 로드 실패:', destinationResult.reason);
+        if (
+          autoMatchingForm.getValues('destinationPoint') !== `${lng},${lat}`
+        ) {
+          setDestinationPoint(`${lng},${lat}`);
+          autoMatchingForm.setValue('destinationPoint', `${lng},${lat}`);
+        }
       }
     } catch (error) {
       console.error('좌표 로드 중 오류 발생:', error);
@@ -89,6 +91,10 @@ const AutoMatching = ({ isOpen }: { isOpen: boolean }) => {
   ]);
 
   useEffect(() => {
+    initializeSSE();
+  }, [initializeSSE]);
+
+  useEffect(() => {
     // 목적지 이름이 변경된 경우에만 동작
     if (currentDestinationName !== autoDestinationName && window.kakao?.maps) {
       window.kakao.maps.load(updateDestinationCoordinates);
@@ -100,61 +106,6 @@ const AutoMatching = ({ isOpen }: { isOpen: boolean }) => {
     setDestinationName,
     updateDestinationCoordinates,
   ]);
-
-  const baseUrl = import.meta.env.VITE_API_BASE_URL;
-
-  // SSE 구독
-  const subscribeToSSE = useCallback(() => {
-    const sse = new EventSourcePolyfill(
-      `${baseUrl}/api/matching/auto/subscribe`,
-      {
-        headers: {
-          Authorization: `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiZW1haWwiOiJhQGEuY29tIiwicm9sZSI6Ik1FTUJFUiIsImlhdCI6MTUxNjIzOTAyMiwiZXhwIjo2MDAwMDAwMDAwMH0.40DhQGzszXAawIW6XMJ08uAaYhulOF0x-9FYk0wr8SI`,
-        },
-        withCredentials: true,
-      },
-    );
-
-    sse.onmessage = (event: MessageEvent) => {
-      const lines = event.data.split('\n');
-      const parsedEvent: { event?: string; data?: any } = {};
-
-      // SSE 메시지 파싱
-      /**
-       * {
-       *  event: "init",
-       *  data: {
-       *    message: "member 1 Connection established"
-       *  }
-       * }
-       * 위와 같은 형식이며,
-       * event는 이벤트 타입
-       * data는 이벤트 데이터(json 형식), message에 실제 데이터가 있음
-       */
-      lines.forEach((line: string) => {
-        if (line.startsWith('event:')) {
-          parsedEvent.event = line.slice(6).trim();
-        } else if (line.startsWith('data:')) {
-          try {
-            parsedEvent.data = JSON.parse(line.slice(5).trim());
-          } catch (e) {
-            console.log(e);
-            parsedEvent.data = line.slice(5).trim();
-          }
-        }
-      });
-
-      console.log('SSE 이벤트 타입:', parsedEvent.event);
-      console.log('SSE 데이터:', parsedEvent.data);
-    };
-
-    sse.onerror = (error) => {
-      console.error('SSE 에러:', error);
-      sse.close();
-    };
-
-    setEventSource(sse);
-  }, [baseUrl]);
 
   const onSubmit = async () => {
     try {
@@ -178,32 +129,21 @@ const AutoMatching = ({ isOpen }: { isOpen: boolean }) => {
   const handleSubmitToAutoMatching: SubmitHandler<AutoMatchingTypes> = async (
     data,
   ) => {
-    console.log(data);
     try {
-      subscribeToSSE();
-
-      const response = await axios.post(
-        `${baseUrl}/api/matching/auto/request`,
-        data,
-        {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-            Authorization: `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiZW1haWwiOiJhQGEuY29tIiwicm9sZSI6Ik1FTUJFUiIsImlhdCI6MTUxNjIzOTAyMiwiZXhwIjo2MDAwMDAwMDAwMH0.40DhQGzszXAawIW6XMJ08uAaYhulOF0x-9FYk0wr8SI`,
-          },
-        },
-      );
-
-      if (response.status !== 200) {
-        throw new Error('매칭 요청 실패');
+      const res = await startAutoMatching(data);
+      if (res?.code && res.code >= 200 && res.code < 300) {
+        openToast(res.message, 'success');
+        navigate('/matching');
       }
+    } catch (error: unknown) {
+      if (axios.isAxiosError(error)) {
+        const errorMessage = error.response?.data?.message;
+        const errorCode = error.response?.status;
 
-      console.log('매칭 요청 성공');
-    } catch (error) {
-      console.error('매칭 요청 중 오류:', error);
-      if (eventSource) {
-        eventSource.close();
-        setEventSource(null);
+        openToast(errorMessage, 'error');
+        if (errorCode === 409) {
+          navigate('/matching');
+        }
       }
     }
   };
@@ -235,6 +175,12 @@ const AutoMatching = ({ isOpen }: { isOpen: boolean }) => {
             <InviteMembers control={autoMatchingForm.control} />
             <SelectTags control={autoMatchingForm.control} />
           </>
+        )}
+
+        {isOpen || (
+          <p className="font-medium text-[10px] text-textDarkGray">
+            추가 설정을 통해 상세한 매칭을 할 수 있어요
+          </p>
         )}
 
         <div className="w-full">
