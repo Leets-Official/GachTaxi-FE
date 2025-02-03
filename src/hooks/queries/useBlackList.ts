@@ -1,9 +1,9 @@
 import useInfiniteScroll from '@/hooks/queries/useInfiniteScroll';
-import getFriends from '@/libs/apis/friends/getFriends.api';
+import getBlackList from '@/libs/apis/blackList/getBlackList.api';
 
 const fetchBlackList = async ({ pageParam = 0 }: { pageParam?: number }) => {
   const pageSize = 10;
-  const res = await getFriends({ pageNum: pageParam, pageSize });
+  const res = await getBlackList({ pageNum: pageParam, pageSize });
   return res.data;
 };
 
