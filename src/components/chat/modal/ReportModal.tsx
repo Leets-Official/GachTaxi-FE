@@ -23,6 +23,8 @@ const ReportModal: React.FC<ReportModalProps> = ({
 }) => {
   const [isFriend, setIsFriend] = useState(false);
   const { openToast } = useToast();
+  const validProfilePicture =
+    profilePicture && profilePicture.trim() !== '' ? profilePicture : undefined;
 
   const toggleFriend = async () => {
     try {
@@ -51,9 +53,9 @@ const ReportModal: React.FC<ReportModalProps> = ({
   return (
     <Modal onClose={onClose}>
       <div className="flex items-center gap-2 mb-7 gap-3">
-        {profilePicture ? (
+        {validProfilePicture ? (
           <img
-            src={profilePicture}
+            src={validProfilePicture}
             alt={`${senderName}의 프로필`}
             className="w-10 h-10 rounded-full"
           />

@@ -18,12 +18,14 @@ const RenderOtherMessage: React.FC<RenderOtherMessageProps> = ({
   senderId,
 }) => {
   const [isReportModalOpen, setReportModalOpen] = useState(false);
+  const validProfilePicture =
+    profilePicture && profilePicture.trim() !== '' ? profilePicture : undefined;
 
   return (
     <div className="flex items-start gap-2">
-      {profilePicture ? (
+      {validProfilePicture ? (
         <img
-          src={profilePicture}
+          src={validProfilePicture}
           alt={`${senderName}의 프로필`}
           className="w-8 h-8 rounded-full object-cover border-textDarkGray cursor-pointer"
           onClick={() => setReportModalOpen(true)}
@@ -54,7 +56,7 @@ const RenderOtherMessage: React.FC<RenderOtherMessageProps> = ({
           onClose={() => setReportModalOpen(false)}
           senderName={senderName}
           senderId={senderId}
-          profilePicture={profilePicture || undefined}
+          profilePicture={profilePicture || ''}
         />
       )}
     </div>
