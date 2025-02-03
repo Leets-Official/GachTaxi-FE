@@ -44,7 +44,7 @@ const FriendListPage = ({ isOpen, setCurrentPage }: FriendListPageProps) => {
       )}
       <div ref={ref}></div>
       {isOpen && (
-        <div className="w-full flex absolute bottom-2">
+        <div className="w-full flex absolute bottom-10">
           <Link to="/home/friend-request" className="ml-auto button-shadow">
             <LargePlusIcon />
           </Link>
