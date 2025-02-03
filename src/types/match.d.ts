@@ -77,6 +77,17 @@ declare module 'gachTaxi-types' {
     | MatchRoomCancelledEvent
     | MatchRoomCompletedEvent;
 
+  type EventType =
+    | 'init'
+    | 'match_room_completed'
+    | 'match_room_cancelled'
+    | 'match_member_cancelled'
+    | 'match_member_joined'
+    | 'match_room_created';
+
   // messages 배열 타입 정의
-  export type MessagesArray = MatchingEvent[];
+  export interface MessagesArray {
+    eventType: EventType;
+    message: MatchingEvent;
+  }
 }
