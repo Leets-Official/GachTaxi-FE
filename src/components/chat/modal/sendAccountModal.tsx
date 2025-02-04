@@ -14,8 +14,8 @@ const SendAccountModal: React.FC<SendAccountModalProps> = ({
 }) => {
   return (
     <Modal onClose={onClose}>
-      <div className="flex items-center gap-2 mb-7 gap-3">
-        <p className="text-white text-captionHeader">{account}</p>
+      <div className="flex items-center gap-2 justify-center mb-7 gap-3">
+        <p className="text-white text-captionHeader text-center">{account}</p>
       </div>
       <Button
         onClick={() => onSend(account)}

@@ -13,6 +13,7 @@ import useTimerStore from '@/store/useTimerStore';
 import { getCloseMatching } from '@/libs/apis/getCloseMatching.api';
 import getExitChatRoom from '@/libs/apis/getExitChatRoom';
 import useSSEStore from '@/store/useSSEStore';
+import useUserStore from '@/store/useUserStore';
 
 const BottomMenu = ({
   onSendAccount,
@@ -29,15 +30,27 @@ const BottomMenu = ({
   const nav = useNavigate();
   const { messages } = useSSEStore();
   const [isOwner, setIsOwner] = useState(false);
+  const { user } = useUserStore();
+  const accountNumber = user?.accountNumber || '계좌번호 없음';
 
   messages.forEach((message) => {
     if (message.topic === 'match_room_created') {
       const userId = localStorage.getItem('userId');
-      setIsOwner(userId === String(message.roomMasterId));
+      console.log('🟢 현재 로그인된 사용자 ID:', userId);
+      console.log('🟡 방장 ID:', message.roomMasterId);
+      //setIsOwner(userId === String(message.roomMasterId));
+      const isUserOwner = userId === String(message.roomMasterId);
+      console.log('🔵 isOwner 값:', isUserOwner);
+
+      setIsOwner(isUserOwner);
     }
   });
 
   const handleSendClick = () => {
+    if (!user?.accountNumber) {
+      openToast('등록된 계좌번호가 없습니다.', 'error');
+      return;
+    }
     setShowAccountModal(true);
   };
 
@@ -87,7 +100,7 @@ const BottomMenu = ({
   };
 
   const clickHandlers: Record<string, () => void> = {
-    '계좌 전송': isOwner ? handleSendClick : () => {},
+    '계좌 전송': handleSendClick,
     '택시 호출': isOwner ? handleTaxiClick : () => {},
     '매칭 마감': isOwner ? handleCloseMatching : () => {},
     '매칭 취소': handleExitModal,
@@ -100,7 +113,7 @@ const BottomMenu = ({
           key={index}
           onClick={clickHandlers[item.label] || undefined}
           className={`${
-            !isOwner && item.label !== '매칭 취소'
+            item.label !== '계좌 전송' && !isOwner && item.label !== '매칭 취소'
               ? 'cursor-not-allowed opacity-50'
               : 'cursor-pointer'
           }`}
@@ -112,7 +125,7 @@ const BottomMenu = ({
       {showAccountModal && (
         <SendAccountModal
           onClose={() => setShowAccountModal(false)}
-          account="농협 302 XXXX XXXX XX"
+          account={accountNumber}
           onSend={(accountInfo) => {
             onSendAccount(accountInfo);
             setShowAccountModal(false);
