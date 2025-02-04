@@ -7,6 +7,8 @@ import { FriendRequestTypes } from 'gachTaxi-types';
 import { useForm, SubmitHandler } from 'react-hook-form';
 import { useToast } from '@/contexts/ToastContext';
 import { z } from 'zod';
+import requestFriends from '@/libs/apis/friends/requestFriend.api';
+import useRequestStatus from '@/hooks/useRequestStatus';
 
 const FriendRequestPage = () => {
   const friendRequestForm = useForm<z.infer<typeof friendRequestSchema>>({
@@ -18,13 +20,20 @@ const FriendRequestPage = () => {
   });
 
   const { openToast } = useToast();
+  const { status, setPending, setSuccess, setError } = useRequestStatus();
 
-  const handleSubmitRequest: SubmitHandler<FriendRequestTypes> = (data) => {
+  const handleSubmitRequest: SubmitHandler<FriendRequestTypes> = async (
+    data,
+  ) => {
+    setPending();
     try {
-      console.log(data);
-      openToast('친구요청이 전송되었어요', 'success');
-      friendRequestForm.setValue('nickName', '');
+      const res = await requestFriends(data);
+      if (res.code >= 200 && res.code < 300) {
+        openToast(res.message, 'success');
+      }
+      setSuccess();
     } catch (e) {
+      setError();
       console.error(e);
     }
   };
@@ -46,7 +55,11 @@ const FriendRequestPage = () => {
           type="text"
         />
 
-        <Button type="submit" className="w-full mt-8">
+        <Button
+          type="submit"
+          className="w-full mt-8"
+          isLoading={status === 'pending'}
+        >
           요청하기
         </Button>
       </form>

@@ -1,10 +1,10 @@
 import BasicProfileIcon from '@/assets/icon/basicProfileIcon.svg?react';
 import Button from '@/components/commons/Button';
-import { Friend } from '@/components/home/FriendList';
 import FriendSendIcon from '@/assets/icon/friendSendIcon.svg?react';
 import FriendSettingIcon from '@/assets/icon/friendSettingIcon.svg?react';
 import { useModal } from '@/contexts/ModalContext';
 import FriendDeleteOrBlack from '@/components/modal/FriendDeleteOrBlack';
+import { Friend } from 'gachTaxi-types';
 
 interface FriendInfoItemProps {
   friend: Friend;
@@ -17,7 +17,10 @@ const FriendInfoItem = ({ friend, setCurrentPage }: FriendInfoItemProps) => {
   const handleFriendSetting = () => {
     if (setCurrentPage) {
       openModal(
-        <FriendDeleteOrBlack id={friend.id} setCurrentPage={setCurrentPage} />,
+        <FriendDeleteOrBlack
+          id={friend.friendId}
+          setCurrentPage={setCurrentPage}
+        />,
       );
     } else {
       return null;
@@ -28,10 +31,10 @@ const FriendInfoItem = ({ friend, setCurrentPage }: FriendInfoItemProps) => {
     <div className="bg-toastColor rounded-box p-vertical flex items-center justify-between h-[101px]">
       <div className="flex-1 flex items-center gap-4">
         <div className="flex items-center gap-[10px] cursor-pointer relative rounded-full bg-textDarkGray">
-          {friend.profileImage ? (
+          {friend.friendProfileUrl ? (
             <img
               className="w-[48px] h-[48px] rounded-full object-cover"
-              src={friend.profileImage}
+              src={friend.friendProfileUrl}
               alt="친구 프로필 이미지"
             />
           ) : (
@@ -39,7 +42,9 @@ const FriendInfoItem = ({ friend, setCurrentPage }: FriendInfoItemProps) => {
           )}
         </div>
         <div className="flex flex-col gap-[8px]">
-          <p className="font-semibold text-captionHeader">{friend.nickName}</p>
+          <p className="font-semibold text-captionHeader">
+            {friend.friendNickName}
+          </p>
           <span className="font-medium text-body text-textDarkGray">
             {friend.gender === 'MALE' ? '남자' : '여자'}
           </span>
