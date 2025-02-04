@@ -4,6 +4,8 @@ import useSSEStore from '@/store/useSSEStore';
 import useTimerStore from '@/store/useTimerStore';
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import CircleIcon from '@/assets/icon/matching-loading/circleIcon.svg?react';
+import TaxiIcon from '@/assets/icon/matching-loading/taxiSideIcon.svg?react';
 
 const MatchingInfoPage = () => {
   const { reset } = useTimerStore();
@@ -56,17 +58,20 @@ const MatchingInfoPage = () => {
               가치 탈 사람 <br />
               찾는중...
             </p>
-            <span className="font-medium text-captionHeader">
+            <p className="font-medium text-captionHeader text-center">
               {roomCapacity}/4
-            </span>
+            </p>
           </div>
         )}
       </div>
       <div
-        className={` w-full flex justify-center flex-col gap-2 items-center ${roomStatus === 'searching' ? 'flex-grow' : ''}`}
+        className={` w-full flex justify-center flex-col gap-2 items-center ${roomStatus === 'searching' ? 'flex-grow mb-[100px]' : 'mb-20'}`}
       >
         <Timer />
-        <>택시아이콘자리</>
+        <div className="relative">
+          <CircleIcon className="spinner" />
+          <TaxiIcon className="z-10 absolute top-10 right-5" />
+        </div>
       </div>
       {roomStatus === 'matching' && (
         <div className=" w-full mb-4">
