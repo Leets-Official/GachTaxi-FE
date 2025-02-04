@@ -34,7 +34,11 @@ const Toast = ({ type, children, fn }: ToastProps) => {
         damping: 14,
       }}
       onAnimationStart={handleFnByAnimationStateExit}
-      className={`p-vertical h-full w-fit max-h-[48px] max-w-[400px] z-[1000] bg-toastColor absolute bottom-20 rounded-[10px] text-white text-captionHeader font-medium truncate flex items-center justify-center`}
+      className={`
+        p-vertical h-full w-fit max-h-[48px] max-w-[400px] 
+        z-[1000] bg-toastColor fixed bottom-20 left-1/2 transform -translate-x-1/2 
+        rounded-[10px] text-white text-captionHeader font-medium truncate flex items-center justify-center
+      `}
     >
       {type === 'success' ? '✅ ' : '🚫 '}
       {children}
