@@ -2,9 +2,11 @@ import ChatInput from '@/components/chat/MessageInput';
 import MessageList from '@/components/chat/messageList/index';
 import BackButton from '@/components/commons/BackButton';
 import useWebSocket from '@/hooks/useWebSocket';
+import { useParams } from 'react-router-dom';
 
 const ChatPage = () => {
-  const roomId = 1;
+  const { id } = useParams<{ id: string }>();
+  const roomId = Number(id);
 
   const { messages, sendMessage, participantCount } = useWebSocket(roomId);
 
