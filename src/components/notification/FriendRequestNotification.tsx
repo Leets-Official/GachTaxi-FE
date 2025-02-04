@@ -1,5 +1,7 @@
 import Button from '@/components/commons/Button';
 import { useToast } from '@/contexts/ToastContext';
+import useAcceptFriend from '@/hooks/mutations/useAcceptFriend';
+import useDeleteFriend from '@/hooks/mutations/useDeleteFriend';
 import useDeleteNotification from '@/hooks/mutations/useDeleteNotification';
 import { motion } from 'framer-motion';
 
@@ -16,7 +18,30 @@ const FriendRequestNotification = ({
 }: FriendRequestNotificationProps) => {
   const { openToast } = useToast();
   const { mutate: deleteNotification } = useDeleteNotification();
-  console.log(senderId);
+  const { mutate: acceptFriend } = useAcceptFriend();
+  const { mutate: rejectFriend } = useDeleteFriend();
+
+  const acceptFriendRequest = () => {
+    acceptFriend(senderId, {
+      onSuccess: (response) => {
+        openToast(response.message, 'success');
+      },
+      onError: (error) => {
+        openToast(error.message, 'error');
+      },
+    });
+  };
+
+  const rejectFriendRequest = () => {
+    rejectFriend(senderId, {
+      onSuccess: (response) => {
+        openToast(response.message, 'success');
+      },
+      onError: (error) => {
+        openToast(error.message, 'error');
+      },
+    });
+  };
 
   return (
     <motion.div
@@ -26,7 +51,7 @@ const FriendRequestNotification = ({
       dragConstraints={{ left: 0, right: 0 }}
       animate={{ opacity: 1 }}
       transition={{ type: 'spring', stiffness: 150, damping: 30 }}
-      exit={{ opacity: 0, height: 0, margin: 0, transition: { duration: 0.6 } }}
+      exit={{ opacity: 0 }}
       layout
       onDragEnd={(_event, info) => {
         const isOverOffsetThreshold =
@@ -49,10 +74,13 @@ const FriendRequestNotification = ({
     >
       <p className="font-bold text-captionHeader">{content}</p>
       <div className="flex justify-end h-[30px] gap-2">
-        <Button className="w-[92px] h-full">수락</Button>
+        <Button className="w-[92px] h-full" onClick={acceptFriendRequest}>
+          수락
+        </Button>
         <Button
           variant="secondary"
-          className="w-[92px] h-full border-primary text-pri border-[1px]"
+          className="w-[92px] h-full border-primary text-primary border-[1px]"
+          onClick={rejectFriendRequest}
         >
           거절
         </Button>
