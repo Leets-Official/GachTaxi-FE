@@ -1,10 +1,10 @@
 import { EventSourcePolyfill } from '@/utils/EventSourcePolyfill';
-import { MatchingEvent, MessagesArray } from 'gachTaxi-types';
+import { MatchingEvent, MessagesArray, EventType } from 'gachTaxi-types';
 import { create } from 'zustand';
 
 interface SSEState {
   sse: EventSourcePolyfill | null;
-  messages: MessagesArray;
+  messages: MessagesArray[];
   initializeSSE: () => void;
   closeSSE: () => void;
 }
@@ -19,14 +19,14 @@ const useSSEStore = create<SSEState>((set, get) => ({
     const accessToken = localStorage.getItem('accessToken');
 
     if (!accessToken) {
-      console.error('엑세스 토큰이 없습니다!');
+      console.error('❌ 엑세스 토큰이 없습니다! SSE를 시작할 수 없습니다.');
       return;
     }
 
     set((state): Partial<SSEState> => {
       if (state.sse) {
-        console.log('이미 구독 중이므로 재구독을 방지합니다.');
-        return state; // 기존 상태 유지
+        console.log('🔄 이미 SSE 구독 중이므로 재구독을 방지합니다.');
+        return state;
       }
 
       const sse = new EventSourcePolyfill(
@@ -39,25 +39,36 @@ const useSSEStore = create<SSEState>((set, get) => ({
 
       sse.onmessage = (event: MessageEvent) => {
         const rawData = event.data.trim();
+        const eventLines = rawData.split('\n');
 
-        if (!rawData.startsWith('data:')) {
-          return;
-        }
+        let eventType: EventType = 'init'; // 기본값 설정
+        let jsonData = '';
 
-        const jsonString = rawData.slice(5).trim();
+        eventLines.forEach((line: string) => {
+          if (line.startsWith('event:')) {
+            eventType = line.slice(6).trim() as EventType;
+          } else if (line.startsWith('data:')) {
+            jsonData = line.slice(5).trim();
+          }
+        });
+
+        if (!jsonData) return;
+
         try {
-          const formatedData: MatchingEvent = JSON.parse(jsonString);
-          set((state) => ({ messages: [...state.messages, formatedData] }));
+          const parsedData: MatchingEvent = JSON.parse(jsonData);
+          set((state) => ({
+            messages: [...state.messages, { eventType, message: parsedData }],
+          }));
         } catch (error) {
-          console.error('JSON 파싱 중 오류가 발생했습니다. : ', error);
+          console.error('⚠️ JSON 파싱 오류 발생:', error);
         }
       };
 
       sse.onerror = () => {
-        console.error('SSE 에러 발생, 연결 종료 후 재연결 시도');
+        console.error(
+          '🚨 SSE 연결 오류 발생! 연결을 종료하고 5초 후 재연결을 시도합니다.',
+        );
         sse.close();
-
-        // ✅ 상태 업데이트 (재연결 가능하도록 sse: null 설정)
         set({ sse: null });
 
         setTimeout(() => {
@@ -68,13 +79,16 @@ const useSSEStore = create<SSEState>((set, get) => ({
       return { sse };
     });
 
-    console.log('SSE 구독 시작');
+    console.log('✅ SSE 구독 시작');
   },
 
   closeSSE: () => {
     set((state) => {
-      state.sse?.close();
-      return { sse: null, messages: [] };
+      if (state.sse) {
+        console.log('🔌 SSE 연결 종료');
+        state.sse.close();
+      }
+      return { sse: null, messages: [] }; // messages 초기화 유지 필요 시 수정 가능
     });
   },
 }));

@@ -12,7 +12,7 @@ const useInfiniteScroll = <T>({
   queryKey,
   fetchFunction,
   initialPageParam = 0,
-  staleTime = 30000,
+  staleTime = 1000,
 }: UseInfiniteScrollQueryProps<T>) => {
   return useSuspenseInfiniteQuery({
     queryKey,

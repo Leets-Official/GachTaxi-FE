@@ -3,6 +3,8 @@ import { useToast } from '@/contexts/ToastContext';
 import useAcceptFriend from '@/hooks/mutations/useAcceptFriend';
 import useDeleteFriend from '@/hooks/mutations/useDeleteFriend';
 import useDeleteNotification from '@/hooks/mutations/useDeleteNotification';
+import { NotificationResponse } from '@gachTaxi-types';
+import { InfiniteData, useQueryClient } from '@tanstack/react-query';
 import { motion } from 'framer-motion';
 
 interface FriendRequestNotificationProps {
@@ -20,8 +22,27 @@ const FriendRequestNotification = ({
   const { mutate: deleteNotification } = useDeleteNotification();
   const { mutate: acceptFriend } = useAcceptFriend();
   const { mutate: rejectFriend } = useDeleteFriend();
+  const queryClient = useQueryClient();
+
+  // 낙관적 업데이트용 함수
+  const handleQueryData = () => {
+    queryClient.setQueryData(
+      ['notification'],
+      (oldData: InfiniteData<NotificationResponse['data']>) => ({
+        ...oldData,
+        pages: oldData.pages.map((page) => ({
+          ...page,
+          response: page.response.filter(
+            (notification) => notification.notificationId !== notificationId,
+          ),
+        })),
+      }),
+    );
+  };
 
   const acceptFriendRequest = () => {
+    handleQueryData();
+
     acceptFriend(senderId, {
       onSuccess: (response) => {
         openToast(response.message, 'success');
@@ -32,7 +53,22 @@ const FriendRequestNotification = ({
     });
   };
 
+  const handleDeleteNotification = () => {
+    handleQueryData();
+
+    deleteNotification(notificationId, {
+      onSuccess: (response) => {
+        openToast(response.message, 'success');
+      },
+      onError: (error) => {
+        openToast(error.message, 'error');
+      },
+    });
+  };
+
   const rejectFriendRequest = () => {
+    handleQueryData();
+
     rejectFriend(senderId, {
       onSuccess: (response) => {
         openToast(response.message, 'success');
@@ -61,14 +97,7 @@ const FriendRequestNotification = ({
         if (!isOverThreshold) return;
 
         if (isOverThreshold) {
-          deleteNotification(notificationId, {
-            onSuccess: (response) => {
-              openToast(response.message, 'success');
-            },
-            onError: (error) => {
-              openToast(error.message, 'error');
-            },
-          });
+          handleDeleteNotification();
         }
       }}
     >
