@@ -1,6 +1,4 @@
 import RouteSettingIcon from '@/assets/icon/smallRouteChangeIcon.svg?react';
-import LinkIcon from '@/assets/icon/agreeLinkIcon.svg?react';
-import { Link } from 'react-router-dom';
 import { MatchStartPayload } from '@gachTaxi-types';
 import formatToKoreanTime from '@/utils/formatToKoreanTIme';
 import { motion } from 'framer-motion';
@@ -25,7 +23,7 @@ const MatchingNotification = ({
 
   return (
     <motion.div
-      className="min-h-[144px] h-[144px] bg-secondary rounded-box p-vertical flex flex-col gap-2 w-full"
+      className="min-h-[120px] h-[120spx] bg-secondary rounded-box p-vertical flex flex-col gap-2 w-full"
       drag="x"
       dragElastic={0.4}
       dragConstraints={{ left: 0, right: 0 }}
@@ -69,16 +67,6 @@ const MatchingNotification = ({
             {payload.endLocationName}
           </p>
         </div>
-      </div>
-
-      <div className="w-full flex justify-end items-center">
-        <Link
-          to=""
-          className="underline font-medium text-captionHeader flex gap-2 items-center text-primary"
-        >
-          자세히보기
-          <LinkIcon fill="#08F283" />
-        </Link>
       </div>
     </motion.div>
   );
