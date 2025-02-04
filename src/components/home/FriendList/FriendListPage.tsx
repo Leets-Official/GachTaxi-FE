@@ -23,18 +23,21 @@ const FriendListPage = ({ isOpen, setCurrentPage }: FriendListPageProps) => {
   return (
     <>
       <div
-        className={`flex flex-col gap-[16px] ${isOpen ? '' : 'pb-[calc(100dvh-430px)]'} h-[calc(100dvh-225px)] max-h-[calc(100dvh-225px)] overflow-y-scroll scroll-hidden`}
+        className={`flex flex-col gap-4 ${isOpen ? '' : 'pb-[calc(100dvh-430px)]'} h-[calc(100dvh-225px)] max-h-[calc(100dvh-225px)] overflow-y-scroll scroll-hidden`}
       >
         {friendList.length > 0 ? (
-          friendList.map((friend) => {
-            return (
-              <FriendInfoItem
-                key={friend.friendId}
-                setCurrentPage={setCurrentPage}
-                friend={friend}
-              />
-            );
-          })
+          <>
+            {friendList.map((friend) => {
+              return (
+                <FriendInfoItem
+                  key={friend.friendId}
+                  setCurrentPage={setCurrentPage}
+                  friend={friend}
+                />
+              );
+            })}
+            <div ref={ref}></div>
+          </>
         ) : (
           <EmptyView>친구를 추가해보세요!</EmptyView>
         )}
@@ -42,9 +45,8 @@ const FriendListPage = ({ isOpen, setCurrentPage }: FriendListPageProps) => {
       {isFetchingNextPage && (
         <SpinnerIcon width={36} height={36} className="mx-auto spinner mt-5" />
       )}
-      <div ref={ref}></div>
       {isOpen && (
-        <div className="w-full flex absolute bottom-10">
+        <div className="w-full flex absolute bottom-2">
           <Link to="/home/friend-request" className="ml-auto button-shadow">
             <LargePlusIcon />
           </Link>

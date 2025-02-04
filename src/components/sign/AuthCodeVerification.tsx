@@ -11,6 +11,7 @@ import { verifyAuthCode } from '@/libs/apis/auth';
 import { useToast } from '@/contexts/ToastContext';
 import handleAxiosError from '@/libs/apis/axiosError.api';
 import useRequestStatus from '@/hooks/useRequestStatus';
+import ERROR_MESSAGE from '@/constants/errorMessage.constant';
 
 const AuthCodeVerification = ({ emailInfo }: { emailInfo: string }) => {
   const { openModal } = useModal();
@@ -38,7 +39,8 @@ const AuthCodeVerification = ({ emailInfo }: { emailInfo: string }) => {
     } catch (error: unknown) {
       setError();
       const errorMessage = handleAxiosError(error);
-      openToast(errorMessage, 'error');
+      console.error(errorMessage);
+      openToast(ERROR_MESSAGE, 'error');
     }
   };
 

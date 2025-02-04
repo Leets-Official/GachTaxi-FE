@@ -13,6 +13,8 @@ import handleAxiosError from '@/libs/apis/axiosError.api';
 import useUploadImage from '@/hooks/useUploadImage';
 import useRequestStatus from '@/hooks/useRequestStatus';
 import useUserStore from '@/store/useUserStore';
+import ERROR_MESSAGE from '@/constants/errorMessage.constant';
+import { useNavigate } from 'react-router-dom';
 
 const UserInfoVerification = () => {
   const userInfoForm = useForm<z.infer<typeof userInfoVerificationSchema>>({
@@ -34,6 +36,7 @@ const UserInfoVerification = () => {
   const { openToast } = useToast();
   const { status, setSuccess, setError, setPending } = useRequestStatus();
   const { setUser } = useUserStore();
+  const navigate = useNavigate();
 
   const handleSubmitToUserInfo: SubmitHandler<
     UserInfoVerificationTypes
@@ -52,6 +55,7 @@ const UserInfoVerification = () => {
           setUser(userData);
           setSuccess();
           openToast(res.message, 'success');
+          navigate('/home');
         }
       } else {
         const res = await requestUserInfo(data);
@@ -68,7 +72,8 @@ const UserInfoVerification = () => {
     } catch (error: unknown) {
       setError();
       const errorMessage = handleAxiosError(error);
-      openToast(errorMessage, 'error');
+      console.log(errorMessage);
+      openToast(ERROR_MESSAGE, 'error');
     }
   };
 

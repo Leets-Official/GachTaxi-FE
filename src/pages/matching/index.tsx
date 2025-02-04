@@ -6,17 +6,18 @@ import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import CircleIcon from '@/assets/icon/matching-loading/circleIcon.svg?react';
 import TaxiIcon from '@/assets/icon/matching-loading/taxiSideIcon.svg?react';
+import useChattingRoomIdStore from '@/store/useChattingRoomId';
 
 const MatchingInfoPage = () => {
   const { reset } = useTimerStore();
   const { initializeSSE, messages } = useSSEStore();
+  const { chattingRoomId, setChattingRoomId } = useChattingRoomIdStore();
   const navigate = useNavigate();
 
   const [roomCapacity, setRoomCapacity] = useState<number>(0);
   const [roomStatus, setRoomStatus] = useState<'searching' | 'matching'>(
     'searching',
   );
-  const [roomId, setRoomId] = useState<number | null>(null);
 
   useEffect(() => {
     initializeSSE();
@@ -24,7 +25,7 @@ const MatchingInfoPage = () => {
 
   useEffect(() => {
     messages.forEach((eventMessage) => {
-      switch (eventMessage.eventType) {
+      switch (eventMessage.message.topic) {
         case 'match_member_joined':
           setRoomCapacity((prev) => Math.max(prev + 1, 4));
           break;
@@ -35,7 +36,7 @@ const MatchingInfoPage = () => {
 
         case 'match_room_created':
           setRoomCapacity((prev) => Math.max(prev + 1, 4));
-          setRoomId(eventMessage.message.roomId);
+          setChattingRoomId(eventMessage.message.roomId.toString());
           setRoomStatus('matching');
           break;
 
@@ -43,7 +44,7 @@ const MatchingInfoPage = () => {
           break;
       }
     });
-  }, [messages, reset]);
+  }, [messages, reset, setChattingRoomId]);
 
   return (
     <section className="flex-1 flex flex-col justify-between p-4">
@@ -77,7 +78,7 @@ const MatchingInfoPage = () => {
         <div className=" w-full mb-4">
           <Button
             className="w-full"
-            onClick={() => navigate(`/chat/${roomId!}`)}
+            onClick={() => navigate(`/chat/${chattingRoomId!}`)}
           >
             채팅방
           </Button>

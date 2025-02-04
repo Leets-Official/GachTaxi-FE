@@ -11,6 +11,7 @@ import { useToast } from '@/contexts/ToastContext';
 import { requestEmailVerification } from '@/libs/apis/auth';
 import handleAxiosError from '@/libs/apis/axiosError.api';
 import useRequestStatus from '@/hooks/useRequestStatus';
+import ERROR_MESSAGE from '@/constants/errorMessage.constant';
 
 const TIMER_DURATION = 300;
 
@@ -50,7 +51,8 @@ const EmailVerification = ({
     } catch (error: unknown) {
       const errorMessage = handleAxiosError(error);
       setError();
-      openToast(errorMessage, 'error');
+      console.error(errorMessage);
+      openToast(ERROR_MESSAGE, 'error');
     }
   };
 

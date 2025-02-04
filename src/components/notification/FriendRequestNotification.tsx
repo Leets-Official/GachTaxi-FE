@@ -1,8 +1,9 @@
 import Button from '@/components/commons/Button';
+import ERROR_MESSAGE from '@/constants/errorMessage.constant';
 import { useToast } from '@/contexts/ToastContext';
-import useAcceptFriend from '@/hooks/mutations/useAcceptFriend';
-import useDeleteFriend from '@/hooks/mutations/useDeleteFriend';
 import useDeleteNotification from '@/hooks/mutations/useDeleteNotification';
+import useFriendReply from '@/hooks/mutations/useFriendReply';
+import useInviteReply from '@/hooks/mutations/useInviteReply';
 import { NotificationResponse } from '@gachTaxi-types';
 import { InfiniteData, useQueryClient } from '@tanstack/react-query';
 import { motion } from 'framer-motion';
@@ -10,18 +11,22 @@ import { motion } from 'framer-motion';
 interface FriendRequestNotificationProps {
   senderId: number;
   content: string;
+  matchingRoomId: number;
   notificationId: string;
+  type: 'FRIEND_REQUEST' | 'MATCH_INVITE';
 }
 
 const FriendRequestNotification = ({
   senderId,
   content,
+  matchingRoomId,
   notificationId,
+  type,
 }: FriendRequestNotificationProps) => {
   const { openToast } = useToast();
   const { mutate: deleteNotification } = useDeleteNotification();
-  const { mutate: acceptFriend } = useAcceptFriend();
-  const { mutate: rejectFriend } = useDeleteFriend();
+  const { mutate: replyFriend } = useFriendReply();
+  const { mutate: replyInite } = useInviteReply();
   const queryClient = useQueryClient();
 
   // 낙관적 업데이트용 함수
@@ -43,12 +48,17 @@ const FriendRequestNotification = ({
   const acceptFriendRequest = () => {
     handleQueryData();
 
-    acceptFriend(senderId, {
+    const data = {
+      memberId: senderId,
+      notificationId,
+      status: 'ACCEPTED' as const,
+    };
+    replyFriend(data, {
       onSuccess: (response) => {
         openToast(response.message, 'success');
       },
-      onError: (error) => {
-        openToast(error.message, 'error');
+      onError: () => {
+        openToast(ERROR_MESSAGE, 'error');
       },
     });
   };
@@ -60,8 +70,36 @@ const FriendRequestNotification = ({
       onSuccess: (response) => {
         openToast(response.message, 'success');
       },
-      onError: (error) => {
-        openToast(error.message, 'error');
+      onError: () => {
+        openToast(ERROR_MESSAGE, 'error');
+      },
+    });
+  };
+
+  const handleAcceptInvite = () => {
+    handleQueryData();
+
+    const data = { matchingRoomId, notificationId, status: 'ACCEPT' as const };
+    replyInite(data, {
+      onSuccess: (response) => {
+        openToast(response.message, 'success');
+      },
+      onError: () => {
+        openToast(ERROR_MESSAGE, 'error');
+      },
+    });
+  };
+
+  const handleRejectInvite = () => {
+    handleQueryData();
+
+    const data = { matchingRoomId, notificationId, status: 'REJECT' as const };
+    replyInite(data, {
+      onSuccess: (response) => {
+        openToast(response.message, 'success');
+      },
+      onError: () => {
+        openToast(ERROR_MESSAGE, 'error');
       },
     });
   };
@@ -69,12 +107,17 @@ const FriendRequestNotification = ({
   const rejectFriendRequest = () => {
     handleQueryData();
 
-    rejectFriend(senderId, {
+    const data = {
+      memberId: senderId,
+      notificationId,
+      status: 'REJECTED' as const,
+    };
+    replyFriend(data, {
       onSuccess: (response) => {
         openToast(response.message, 'success');
       },
-      onError: (error) => {
-        openToast(error.message, 'error');
+      onError: () => {
+        openToast(ERROR_MESSAGE, 'error');
       },
     });
   };
@@ -103,13 +146,20 @@ const FriendRequestNotification = ({
     >
       <p className="font-bold text-captionHeader">{content}</p>
       <div className="flex justify-end h-[30px] gap-2">
-        <Button className="w-[92px] h-full" onClick={acceptFriendRequest}>
+        <Button
+          className="w-[92px] h-full"
+          onClick={
+            type === 'FRIEND_REQUEST' ? acceptFriendRequest : handleAcceptInvite
+          }
+        >
           수락
         </Button>
         <Button
           variant="secondary"
           className="w-[92px] h-full border-primary text-primary border-[1px]"
-          onClick={rejectFriendRequest}
+          onClick={
+            type === 'FRIEND_REQUEST' ? rejectFriendRequest : handleRejectInvite
+          }
         >
           거절
         </Button>

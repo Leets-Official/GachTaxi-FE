@@ -9,6 +9,11 @@ declare module '@gachTaxi-types' {
     senderId: number;
   }
 
+  interface MatchingRequestPayload {
+    senderNickname: string;
+    matchingRoomId: number;
+  }
+
   type Notification =
     | {
         notificationId: string;
@@ -24,6 +29,14 @@ declare module '@gachTaxi-types' {
         type: 'FRIEND_REQUEST';
         content: string;
         payload: FriendRequestPayload;
+        createdAt: string;
+      }
+    | {
+        notificationId: string;
+        receiverId: number;
+        type: 'MATCH_INVITE';
+        content: string;
+        payload: MatchingRequestPayload;
         createdAt: string;
       };
 

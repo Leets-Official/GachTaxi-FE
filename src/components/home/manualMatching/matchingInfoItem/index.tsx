@@ -5,10 +5,12 @@ import MatchingComplete from '@/components/modal/MatchingComplete';
 import { useModal } from '@/contexts/ModalContext';
 import { useToast } from '@/contexts/ToastContext';
 import joinManualMatchingRoom from '@/libs/apis/manual/joinManualMatchingRoom.api';
+import formatToKoreanTime from '@/utils/formatToKoreanTIme';
 import axios from 'axios';
 import { motion } from 'framer-motion';
 import { Room } from 'gachTaxi-types';
 import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 
 interface MatchingInfoItem {
   manualInfo: Room;
@@ -25,6 +27,7 @@ const MatchingInfoItem = ({
   const animateState = isExpand ? 'expanded' : 'collapsed';
   const { openModal } = useModal();
   const { openToast } = useToast();
+  const navigate = useNavigate();
 
   const handleJoinMatching = async () => {
     try {
@@ -44,6 +47,10 @@ const MatchingInfoItem = ({
     }
   };
 
+  const handleJoinChatting = () => {
+    navigate(`/chat/${manualInfo.chattingRoomId}`);
+  };
+
   return (
     <>
       <motion.div
@@ -60,7 +67,7 @@ const MatchingInfoItem = ({
       >
         <div className="flex w-full justify-between items-center">
           <span className="text-header font-bold">
-            {manualInfo.departureTime}
+            {formatToKoreanTime(manualInfo.departureTime)}
           </span>
           <span className="text-body font-medium relative top-[-8px]">
             {manualInfo.currentMembers}/4
@@ -88,16 +95,29 @@ const MatchingInfoItem = ({
           </div>
         )}
 
-        <Tags tags={manualInfo.tags} />
+        {manualInfo.tags.length > 0 ? (
+          <Tags tags={manualInfo.tags} />
+        ) : (
+          <p className="font-medium text-captionheader text-textDarkGray">
+            - 등록된 태그가 없어요!
+          </p>
+        )}
       </motion.div>
-      {isExpand && currentPage! && (
+
+      {isExpand && (
         <div className="w-full">
           <Button
             className="w-full"
             isDisabled={manualInfo.currentMembers === 4}
-            onClick={handleJoinMatching}
+            onClick={
+              currentPage === 'MANUAL' ? handleJoinMatching : handleJoinChatting
+            }
           >
-            {manualInfo.currentMembers === 4 ? '참여마감' : '참여하기'}
+            {currentPage === 'MANUAL'
+              ? manualInfo.currentMembers === 4
+                ? '참여마감'
+                : '참여하기'
+              : '채팅방 참가'}
           </Button>
         </div>
       )}

@@ -1,5 +1,6 @@
 import Button from '@/components/commons/Button';
 import Modal from '@/components/modal';
+import ERROR_MESSAGE from '@/constants/errorMessage.constant';
 import { useModal } from '@/contexts/ModalContext';
 import { useToast } from '@/contexts/ToastContext';
 import useDeleteFriend from '@/hooks/mutations/useDeleteFriend';
@@ -24,8 +25,8 @@ const FriendDeleteOrBlack = ({
         closeModal();
         setCurrentPage('BLACK_LIST');
       },
-      onError: (error) => {
-        openToast(error.message, 'error');
+      onError: () => {
+        openToast(ERROR_MESSAGE, 'error');
       },
     });
   };
@@ -37,8 +38,8 @@ const FriendDeleteOrBlack = ({
         closeModal();
         setCurrentPage('FRIEND_LIST');
       },
-      onError: (error) => {
-        openToast(error.message, 'error');
+      onError: () => {
+        openToast(ERROR_MESSAGE, 'error');
       },
     });
   };

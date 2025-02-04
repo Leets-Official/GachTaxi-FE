@@ -11,7 +11,7 @@ interface BlackListPageProps {
 const BlackListPage = ({ isOpen }: BlackListPageProps) => {
   const { data, hasNextPage, fetchNextPage, isFetchingNextPage } =
     useBlackList();
-  const blackList = data.pages.flatMap((page) => page.response || []);
+  const blackList = data.pages.flatMap((page) => page.blacklists || []);
   const { isIntersecting, ref } = useIntersectionObserver({ threshold: 0.5 });
 
   if (isIntersecting && hasNextPage && !isFetchingNextPage) {
@@ -24,14 +24,17 @@ const BlackListPage = ({ isOpen }: BlackListPageProps) => {
         className={`flex flex-col gap-[16px] ${isOpen ? '' : 'pb-[calc(100dvh-430px)]'} h-[calc(100dvh-225px)] max-h-[calc(100dvh-225px)] overflow-y-scroll scroll-hidden`}
       >
         {blackList.length > 0 ? (
-          blackList.map((blackMember) => {
-            return (
-              <BlackInfoItem
-                key={blackMember.receiverId}
-                blackMember={blackMember}
-              />
-            );
-          })
+          <>
+            {blackList.map((blackMember) => {
+              return (
+                <BlackInfoItem
+                  key={blackMember.receiverId}
+                  blackMember={blackMember}
+                />
+              );
+            })}
+            <div ref={ref}></div>
+          </>
         ) : (
           <EmptyView>블랙리스트에 추가한 사람이 없어요!</EmptyView>
         )}
@@ -39,7 +42,6 @@ const BlackListPage = ({ isOpen }: BlackListPageProps) => {
       {isFetchingNextPage && (
         <SpinnerIcon width={36} height={36} className="mx-auto spinner mt-5" />
       )}
-      <div ref={ref}></div>
     </>
   );
 };

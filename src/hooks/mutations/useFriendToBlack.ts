@@ -1,4 +1,4 @@
-import addBlackList from '@/libs/apis/blackList/addBlackList.api';
+import addBlackList from '@/libs/apis/blacklist/addBlackList.api';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 
 const useFriendToBlack = () => {
@@ -9,13 +9,8 @@ const useFriendToBlack = () => {
       const res = await addBlackList(friendId);
       return res;
     },
-    onSettled: (_, error) => {
-      if (error) {
-        queryClient.invalidateQueries({ queryKey: ['blackList'] });
-        return error;
-      } else {
-        queryClient.invalidateQueries({ queryKey: ['blackList'] });
-      }
+    onSettled: () => {
+      queryClient.invalidateQueries({ queryKey: ['blackList'] });
     },
   });
 };

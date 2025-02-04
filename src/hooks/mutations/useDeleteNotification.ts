@@ -9,13 +9,8 @@ const useDeleteNotification = () => {
       const res = await deleteNotification(notificationId);
       return res;
     },
-    onSettled: (_, error) => {
-      if (error) {
-        queryClient.invalidateQueries({ queryKey: ['notification'] });
-        return error;
-      } else {
-        queryClient.invalidateQueries({ queryKey: ['notification'] });
-      }
+    onSettled: () => {
+      queryClient.invalidateQueries({ queryKey: ['notification'] });
     },
   });
 };

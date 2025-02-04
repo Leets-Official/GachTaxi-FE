@@ -9,12 +9,8 @@ const getFriends = async ({
   pageNum?: number;
   pageSize?: number;
 }) => {
-  const params = new URLSearchParams({
-    pageNum: pageNum.toString(),
-    pageSize: pageSize.toString(),
-  });
   const res: AxiosResponse<FriendListResponse> = await client.get(
-    `/api/friends?${params}`,
+    `/api/friends?pageNum=${pageNum}&pageSize=${pageSize}`,
   );
   return res.data;
 };

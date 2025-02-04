@@ -22,18 +22,22 @@ const MyMatchingPage = ({ isOpen }: { isOpen: boolean }) => {
         <p className="mb-3 font-medium text-body">
           참여중인 매칭 리스트를 확인할 수 있어요!
         </p>
-        {myMatchingList.length > 0 ? (
-          myMatchingList.map((myInfo) => {
-            return <MatchingInfoItem key={myInfo.roomId} manualInfo={myInfo} />;
-          })
-        ) : (
-          <EmptyView>매칭 내역이 없어요!</EmptyView>
-        )}
+        <>
+          {myMatchingList.length > 0 ? (
+            myMatchingList.map((myInfo) => {
+              return (
+                <MatchingInfoItem key={myInfo.roomId} manualInfo={myInfo} />
+              );
+            })
+          ) : (
+            <EmptyView>매칭 내역이 없어요!</EmptyView>
+          )}
+          <div ref={ref}></div>
+        </>
       </div>
       {isFetchingNextPage && (
         <SpinnerIcon width={36} height={36} className="mx-auto spinner mt-5" />
       )}
-      <div ref={ref}></div>
     </>
   );
 };

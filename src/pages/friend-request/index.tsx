@@ -9,6 +9,7 @@ import { useToast } from '@/contexts/ToastContext';
 import { z } from 'zod';
 import requestFriends from '@/libs/apis/friends/requestFriend.api';
 import useRequestStatus from '@/hooks/useRequestStatus';
+import ERROR_MESSAGE from '@/constants/errorMessage.constant';
 
 const FriendRequestPage = () => {
   const friendRequestForm = useForm<z.infer<typeof friendRequestSchema>>({
@@ -35,6 +36,7 @@ const FriendRequestPage = () => {
     } catch (e) {
       setError();
       console.error(e);
+      openToast(ERROR_MESSAGE, 'error');
     }
   };
 
