@@ -1,4 +1,11 @@
 declare module 'gachTaxi-types' {
+  interface BasicMatchingResponse {
+    code: number;
+    message: string;
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    data: any;
+  }
+
   interface AutoMatchingTypes {
     startPoint: string;
     startName: string;
@@ -10,9 +17,7 @@ declare module 'gachTaxi-types' {
   }
 
   interface ManualMatchingTypes {
-    startPoint: string;
     startName: string;
-    destinationPoint: string;
     destinationName: string;
     criteria: string[];
     members: string[];

@@ -25,9 +25,7 @@ const expectedTotalChargeSchema = z.number();
 
 // 복합 스키마
 export const manualMatchingSchema = z.object({
-  startPoint: startPointSchema,
   startName: startNameSchema,
-  destinationPoint: destinationPointSchema,
   destinationName: destinationNameSchema,
   criteria: criteriaSchema,
   members: membersSchema,
