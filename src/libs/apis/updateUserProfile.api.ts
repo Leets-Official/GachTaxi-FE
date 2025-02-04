@@ -1,8 +1,10 @@
 import client from './clients';
+import { ProfileEditVerificationTypes } from 'gachTaxi-types';
 
-export const updateUserProfile = async (formData: FormData) => {
+export const updateUserProfile = async (data: ProfileEditVerificationTypes) => {
   try {
-    const res = await client.patch('api/members/info', formData);
+    console.log(data);
+    const res = await client.patch('/api/members/info', data);
     console.log(res.data);
     return res.data;
   } catch (error) {
