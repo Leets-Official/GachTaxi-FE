@@ -36,13 +36,7 @@ const BottomMenu = ({
   messages.forEach((message) => {
     if (message.topic === 'match_room_created') {
       const userId = localStorage.getItem('userId');
-      console.log('🟢 현재 로그인된 사용자 ID:', userId);
-      console.log('🟡 방장 ID:', message.roomMasterId);
-      //setIsOwner(userId === String(message.roomMasterId));
-      const isUserOwner = userId === String(message.roomMasterId);
-      console.log('🔵 isOwner 값:', isUserOwner);
-
-      setIsOwner(isUserOwner);
+      setIsOwner(userId === String(message.roomMasterId));
     }
   });
 
