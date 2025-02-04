@@ -29,6 +29,11 @@ declare module 'gachTaxi-types' {
     realName: string;
     studentNumber: string;
     gender: 'MALE' | 'FEMALE';
+  }
+
+  interface ProfileEditVerificationTypes {
+    profilePicture?: file | string | undefined;
+    nickName?: string;
     accountNumber?: string;
   }
 
