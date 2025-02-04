@@ -31,6 +31,12 @@ declare module 'gachTaxi-types' {
     gender: 'MALE' | 'FEMALE';
   }
 
+  interface ProfileEditVerificationTypes {
+    profilePicture?: file | string | undefined;
+    nickName?: string;
+    accountNumber?: string;
+  }
+
   interface AgreementsTypes {
     termsAgreement: boolean;
     privacyAgreement: boolean;
@@ -46,6 +52,7 @@ declare module 'gachTaxi-types' {
     email: string;
     role: string;
     gender: string;
+    accountNumber?: string;
   }
 
   // 회원가입 또는 로그인 시 반환되는 유저 정보

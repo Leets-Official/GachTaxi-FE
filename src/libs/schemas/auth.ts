@@ -18,6 +18,19 @@ const realNameSchema = z.string().min(1, '본명을 입력해주세요!');
 
 const genderSchema = z.enum(['MALE', 'FEMALE']).default('MALE');
 
+const accountNumberSchema = z
+  .string()
+  .min(10, '올바른 계좌번호를 입력해주세요!')
+  .refine((value) => !isNaN(Number(value)), {
+    message: '계좌번호는 숫자로만 입력해야 합니다!',
+  })
+  .optional();
+
+const editNickNameSchema = z
+  .string()
+  .min(1, '닉네임을 입력해주세요!')
+  .optional();
+
 const profileImageSchema = z.optional(
   z
     .union([
@@ -98,6 +111,12 @@ export const userInfoVerificationSchema = z.object({
   realName: realNameSchema,
   studentNumber: studentIdSchema,
   gender: genderSchema,
+});
+
+export const profileEditVerificationSchema = z.object({
+  profilePicture: profileImageSchema,
+  nickName: editNickNameSchema,
+  accountNumber: accountNumberSchema,
 });
 
 export const agreementsSchema = z.object({
