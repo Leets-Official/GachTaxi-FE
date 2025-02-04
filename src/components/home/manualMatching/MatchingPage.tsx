@@ -31,9 +31,6 @@ const MatchingPage = ({
       <div
         className={`flex flex-col gap-4 ${isOpen ? '' : 'pb-[calc(100dvh-430px)]'} h-[calc(100dvh-225px)] max-h-[calc(100dvh-225px)] overflow-y-scroll scroll-hidden`}
       >
-        <p className="mb-4 font-medium text-body">
-          함께하고 싶은 매칭이 있나요?
-        </p>
         {manualMatchingList.length > 0 ? (
           manualMatchingList.map((manualInfo) => {
             return (

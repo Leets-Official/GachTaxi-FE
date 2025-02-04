@@ -1,20 +1,10 @@
 import Button from '@/components/commons/Button';
 import BlackListPage from '@/components/home/FriendList/BlackListPage';
 import FriendListPage from '@/components/home/FriendList/FriendListPage';
-import { useState } from 'react';
-
-export interface Friend {
-  id: number;
-  profileImage?: string;
-  nickName: string;
-  gender: 'MALE' | 'FEMALE';
-}
+import SpinnerIcon from '@/assets/icon/spinnerIcon.svg?react';
+import { Suspense, useState } from 'react';
 
 const FriendList = ({ isOpen }: { isOpen: boolean }) => {
-  const [friendList, setFriendList] = useState<Friend[]>([]);
-
-  const [blackList, setBlackList] = useState<Friend[]>([]);
-
   const [currentPage, setCurrentPage] = useState<'FRIEND_LIST' | 'BLACK_LIST'>(
     'FRIEND_LIST',
   );
@@ -28,20 +18,27 @@ const FriendList = ({ isOpen }: { isOpen: boolean }) => {
   const renderConditionalComponents = () => {
     if (currentPage === 'FRIEND_LIST') {
       return (
-        <FriendListPage
-          friendList={friendList}
-          setFriendList={setFriendList}
-          isOpen={isOpen}
-          setCurrentPage={setCurrentPage}
-        />
+        <Suspense
+          fallback={
+            <div className="h-[150px] w-full flex items-center justify-center">
+              <SpinnerIcon width={36} height={36} className="mx-auto spinner" />
+            </div>
+          }
+        >
+          <FriendListPage isOpen={isOpen} setCurrentPage={setCurrentPage} />
+        </Suspense>
       );
     } else {
       return (
-        <BlackListPage
-          blackList={blackList}
-          setBlackList={setBlackList}
-          isOpen={isOpen}
-        />
+        <Suspense
+          fallback={
+            <div className="h-[150px] w-full flex items-center justify-center">
+              <SpinnerIcon width={36} height={36} className="mx-auto spinner" />
+            </div>
+          }
+        >
+          <BlackListPage isOpen={isOpen} />
+        </Suspense>
       );
     }
   };
