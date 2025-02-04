@@ -1,26 +1,24 @@
-import { Control, Controller } from 'react-hook-form';
-import { userInfoVerificationSchema } from '@/libs/schemas/auth';
-import { z } from 'zod';
+import { Control, Controller, FieldValues, Path } from 'react-hook-form';
 import BasicProfileIcon from '@/assets/icon/basicProfileIcon.svg?react';
 import CameraIcon from '@/assets/icon/cameraIcon.svg?react';
 import ImageCancelIcon from '@/assets/icon/imageCancelIcon.svg?react';
 import Button from '@/components/commons/Button';
 
-interface ProfileImageUploadProps {
-  control: Control<z.infer<typeof userInfoVerificationSchema>>;
+interface ProfileImageUploadProps<T extends FieldValues> {
+  control: Control<T>;
   imagePreview: string | undefined;
   setImagePreview: (value: string | undefined) => void;
 }
 
-const ProfileImageUpload = ({
+const ProfileImageUpload = <T extends FieldValues>({
   control,
   imagePreview,
   setImagePreview,
-}: ProfileImageUploadProps) => {
+}: ProfileImageUploadProps<T>) => {
   return (
     <Controller
       control={control}
-      name="profilePicture"
+      name={'profilePicture' as Path<T>}
       render={({ field: { onChange, ...field } }) => (
         <>
           <div className="flex items-center justify-center my-6">
