@@ -3,7 +3,7 @@ import { Controller, Control, FieldValues, Path } from 'react-hook-form';
 interface InputProps<T extends FieldValues> {
   control: Control<T>;
   name: Path<T>;
-  label: string | React.ReactNode;
+  label?: string | React.ReactNode;
   type: string;
   autoFocus?: boolean;
   maxLength?: number;

@@ -34,7 +34,10 @@ declare module 'gachTaxi-types' {
   interface ProfileEditVerificationTypes {
     profilePicture?: file | string | undefined;
     nickName?: string;
-    accountNumber?: string;
+  }
+
+  interface AccountNumberVerificationTypes {
+    accountNumber: string;
   }
 
   interface AgreementsTypes {

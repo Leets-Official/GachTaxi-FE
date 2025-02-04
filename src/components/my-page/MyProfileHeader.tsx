@@ -31,7 +31,7 @@ const MyProfileHeader = () => {
           />
         </p>
         <p className="text-captionBody text-textLightGray mt-[8px]">
-          추가 정보
+          {user?.studentNumber}
         </p>
       </div>
     </div>
