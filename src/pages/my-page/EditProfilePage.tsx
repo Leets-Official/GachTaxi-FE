@@ -34,7 +34,6 @@ const EditProfilePage = () => {
     ProfileEditVerificationTypes
   > = async (data) => {
     try {
-      console.log('제출 데이터:', data);
       const updateData = profileForm.getValues();
       if (
         data.profilePicture !== uploadedImage &&
@@ -48,7 +47,6 @@ const EditProfilePage = () => {
           openToast(res.message, 'success');
         }
       } else {
-        console.log('제출 데이터2:', data);
         const res = await updateUserProfile(data);
 
         if (res?.code === 200) {
