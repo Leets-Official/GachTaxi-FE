@@ -14,12 +14,14 @@ import useUserStore from '@/store/useUserStore';
 import handleAxiosError from '@/libs/apis/axiosError.api';
 
 const EditProfilePage = () => {
+  const { user } = useUserStore();
+
   const profileForm = useForm<z.infer<typeof profileEditVerificationSchema>>({
     resolver: zodResolver(profileEditVerificationSchema),
     defaultValues: {
-      nickName: '',
-      profilePicture: undefined,
-      accountNumber: '',
+      nickName: user?.nickName || '',
+      profilePicture: user?.profilePicture || undefined,
+      accountNumber: user?.accountNumber || '',
     },
     mode: 'onSubmit',
   });
