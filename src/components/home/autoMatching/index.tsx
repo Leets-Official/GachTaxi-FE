@@ -19,6 +19,7 @@ import useSSEStore from '@/store/useSSEStore';
 import SpinnerIcon from '@/assets/icon/spinnerIcon.svg?react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
+import useRequestStatus from '@/hooks/useRequestStatus';
 
 const AutoMatching = ({ isOpen }: { isOpen: boolean }) => {
   const {
@@ -55,6 +56,7 @@ const AutoMatching = ({ isOpen }: { isOpen: boolean }) => {
     name: 'destinationName',
   });
   const navigate = useNavigate();
+  const { status, setPending, setSuccess, setError } = useRequestStatus();
 
   const updateDestinationCoordinates = useCallback(async () => {
     try {
@@ -131,9 +133,11 @@ const AutoMatching = ({ isOpen }: { isOpen: boolean }) => {
   const handleSubmitToAutoMatching: SubmitHandler<AutoMatchingTypes> = async (
     data,
   ) => {
+    setPending();
     try {
       const res = await startAutoMatching(data);
       if (res?.code && res.code >= 200 && res.code < 300) {
+        setSuccess();
         openToast(res.message, 'success');
         navigate('/matching');
       }
@@ -145,6 +149,7 @@ const AutoMatching = ({ isOpen }: { isOpen: boolean }) => {
         openToast(errorMessage, 'error');
         if (errorCode === 409) {
           openToast('이미 매칭에 참가한 멤버에요!', 'error');
+          setError();
           navigate('/matching');
         }
       }
@@ -199,7 +204,12 @@ const AutoMatching = ({ isOpen }: { isOpen: boolean }) => {
         )}
 
         <div className="w-full">
-          <Button variant="primary" className="w-full mt-[16px]" type="submit">
+          <Button
+            variant="primary"
+            className="w-full mt-[16px]"
+            type="submit"
+            isLoading={status === 'pending'}
+          >
             매칭 시작
           </Button>
         </div>
