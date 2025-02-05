@@ -21,13 +21,10 @@ const InviteMembers = <T extends MatchingSchema>({
   }
 
   // safeValue 친구 리스트에 선택된 값이 포함되어 있는지 검사하고 업데이트시키는 함수
-  const handleUpdateMembers = (
-    safeValue: string[],
-    selectedMembers: string,
-  ) => {
-    const updatedMembers = safeValue.includes(selectedMembers)
-      ? safeValue.filter((member) => member !== selectedMembers)
-      : [...safeValue, selectedMembers];
+  const handleUpdateMembers = (safeValue: number[], selectedId: number) => {
+    const updatedMembers = safeValue.includes(selectedId)
+      ? safeValue.filter((member) => member !== selectedId)
+      : [...safeValue, selectedId];
 
     return updatedMembers;
   };
@@ -37,7 +34,9 @@ const InviteMembers = <T extends MatchingSchema>({
       control={control}
       name={'members' as Path<T>}
       render={({ field: { value = [], onChange } }) => {
-        const safeValue: string[] = Array.isArray(value) ? value : [];
+        const safeValue: number[] = Array.isArray(value)
+          ? (value as number[])
+          : [];
 
         return (
           <div className="h-[101px] flex-shrink-0 bg-secondary rounded-box p-vertical flex flex-col justify-between">
@@ -49,11 +48,11 @@ const InviteMembers = <T extends MatchingSchema>({
                     <MemberItem
                       key={member.friendsId}
                       tag={member.friendsNickName}
-                      isSelected={safeValue.includes(member.friendsNickName)}
-                      onClick={(selectedMembers) => {
+                      isSelected={safeValue.includes(member.friendsId)}
+                      onClick={() => {
                         const updatedMembers = handleUpdateMembers(
                           safeValue,
-                          selectedMembers,
+                          member.friendsId,
                         );
                         onChange(updatedMembers);
                       }}

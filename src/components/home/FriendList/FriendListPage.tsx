@@ -30,7 +30,7 @@ const FriendListPage = ({ isOpen, setCurrentPage }: FriendListPageProps) => {
             {friendList.map((friend) => {
               return (
                 <FriendInfoItem
-                  key={friend.friendId}
+                  key={friend.friendsId}
                   setCurrentPage={setCurrentPage}
                   friend={friend}
                 />
