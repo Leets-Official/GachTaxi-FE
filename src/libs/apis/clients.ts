@@ -1,12 +1,6 @@
-import axios, { AxiosError } from 'axios';
+import axios from 'axios';
 
 const BASE_URL = import.meta.env.VITE_API_BASE_URL;
-
-// 쿠키 추출해줄 함수
-const getCookieValue = (key: string) => {
-  const match = document.cookie.split('; ').find((row) => row.startsWith(key));
-  return match ? match.split('=')[1] : null;
-};
 
 const client = axios.create({
   baseURL: BASE_URL,
@@ -20,39 +14,21 @@ const client = axios.create({
 // refresh 사용해서 aceess 교체
 const refreshAccessToken = async () => {
   try {
-    const refreshToken = getCookieValue('refreshToken');
-    if (!refreshToken) {
-      throw new Error('리프레쉬 토큰이 쿠키에 없습니다!');
-    }
+    const response = await client.post('/auth/refresh');
 
-    const response = await client.post(
-      '/auth/refresh',
-      {},
-      {
-        headers: {
-          Authorization: `Bearer ${refreshToken}`,
-        },
-      },
-    );
+    // 직접 헤더에서 가져와야 함
+    const newAccessToken = response.headers['authorization'];
 
-    if (response) {
-      const newAccessToken = response.headers['authorization'];
-
-      if (!newAccessToken) {
-        console.error('재설정할 쿠키가 포함되지 않았습니다!');
-        return null;
-      }
-
-      return newAccessToken;
-    }
-  } catch (error: unknown) {
-    if (error instanceof AxiosError) {
-      throw new Error(
-        `리프레쉬 토큰 요청에 문제가 발생했습니다! ${error.message}`,
-      );
+    if (newAccessToken) {
+      localStorage.setItem('accessToken', newAccessToken);
     } else {
-      throw new Error(`axios 인스턴스에 포함되지 않는 에러입니다!`);
+      throw new Error('새로운 액세스 토큰을 받아오지 못했습니다.');
     }
+
+    return newAccessToken;
+  } catch (error) {
+    console.error('리프레시 토큰 요청 실패:', error);
+    throw error;
   }
 };
 
