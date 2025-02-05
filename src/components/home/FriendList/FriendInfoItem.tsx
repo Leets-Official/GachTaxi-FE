@@ -18,7 +18,7 @@ const FriendInfoItem = ({ friend, setCurrentPage }: FriendInfoItemProps) => {
     if (setCurrentPage) {
       openModal(
         <FriendDeleteOrBlack
-          id={friend.friendId}
+          id={friend.friendsId}
           setCurrentPage={setCurrentPage}
         />,
       );
@@ -31,10 +31,10 @@ const FriendInfoItem = ({ friend, setCurrentPage }: FriendInfoItemProps) => {
     <div className="bg-toastColor rounded-box p-vertical flex items-center justify-between h-[101px]">
       <div className="flex-1 flex items-center gap-4">
         <div className="flex items-center gap-[10px] cursor-pointer relative rounded-full bg-textDarkGray">
-          {friend.friendProfileUrl ? (
+          {friend.friendsProfileUrl ? (
             <img
               className="w-[48px] h-[48px] rounded-full object-cover"
-              src={friend.friendProfileUrl}
+              src={friend.friendsProfileUrl}
               alt="친구 프로필 이미지"
             />
           ) : (
@@ -43,7 +43,7 @@ const FriendInfoItem = ({ friend, setCurrentPage }: FriendInfoItemProps) => {
         </div>
         <div className="flex flex-col gap-[8px]">
           <p className="font-semibold text-captionHeader">
-            {friend.friendNickName}
+            {friend.friendsNickName}
           </p>
           <span className="font-medium text-body text-textDarkGray">
             {friend.gender === 'MALE' ? '남자' : '여자'}

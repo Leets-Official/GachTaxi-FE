@@ -19,7 +19,7 @@ const membersSchema = z.string().array().default([]);
 
 const criteriaSchema = z.string().array().default([]);
 
-const contentSchema = z.string().optional();
+const descriptionSchema = z.string().optional();
 
 const expectedTotalChargeSchema = z.number();
 
@@ -31,7 +31,7 @@ export const manualMatchingSchema = z.object({
   members: membersSchema,
   expectedTotalCharge: expectedTotalChargeSchema,
   time: timeSchema,
-  content: contentSchema,
+  description: descriptionSchema,
 });
 
 export const autoMatchingSchema = z.object({

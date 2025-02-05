@@ -31,9 +31,11 @@ const NotificationList = () => {
               {notification.type === 'FRIEND_REQUEST' ||
               notification.type === 'MATCH_INVITE' ? (
                 <FriendRequestNotification
+                  type={notification.type}
                   notificationId={notification.notificationId}
                   senderId={notification.payload.senderId}
                   content={notification.content}
+                  matchingRoomId={notification.payload.matchingRoomId}
                 />
               ) : (
                 <MatchingNotification

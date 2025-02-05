@@ -15,9 +15,9 @@ declare module 'gachTaxi-types' {
 
   // FriendListResponse 종속
   interface Friend {
-    friendId: number;
-    friendNickName: string;
-    friendProfileUrl: string;
+    friendsId: number;
+    friendsNickName: string;
+    friendsProfileUrl: string;
     gender: 'MALE' | 'FEMALE';
   }
 

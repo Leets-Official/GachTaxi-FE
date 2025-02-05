@@ -14,6 +14,7 @@ import requestAgreement from '@/libs/apis/auth/requestAgreement';
 import { useToast } from '@/contexts/ToastContext';
 import handleAxiosError from '@/libs/apis/axiosError.api';
 import useRequestStatus from '@/hooks/useRequestStatus';
+import ERROR_MESSAGE from '@/constants/errorMessage.constant';
 
 const AgreementModal = () => {
   const navigate = useNavigate();
@@ -60,7 +61,8 @@ const AgreementModal = () => {
     } catch (error: unknown) {
       setError();
       const errorMessage = handleAxiosError(error);
-      openToast(errorMessage, 'error');
+      console.error(errorMessage);
+      openToast(ERROR_MESSAGE, 'error');
     } finally {
       closeModal();
     }

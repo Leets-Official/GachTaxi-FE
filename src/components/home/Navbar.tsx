@@ -116,7 +116,7 @@ const Navbar = ({ modalContent }: NavbarProps) => {
             <img
               src={user.profilePicture}
               alt="네비바 유저 프로필 이미지"
-              className="w-full h-full object-cover"
+              className="w-full h-full object-cover rounded-full"
             />
           ) : (
             <BasicProfileIcon className="text-[#AEAEAE]" />

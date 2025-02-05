@@ -14,6 +14,8 @@ import { getCloseMatching } from '@/libs/apis/getCloseMatching.api';
 import getExitChatRoom from '@/libs/apis/getExitChatRoom';
 import useSSEStore from '@/store/useSSEStore';
 import useUserStore from '@/store/useUserStore';
+import useChattingRoomIdStore from '@/store/useChattingRoomId';
+import exitManualMatchingRoom from '@/libs/apis/manual/exitManualMatchingRoom.api';
 
 const BottomMenu = ({
   onSendAccount,
@@ -31,6 +33,7 @@ const BottomMenu = ({
   const { messages } = useSSEStore();
   const [isOwner, setIsOwner] = useState(false);
   const { user } = useUserStore();
+  const { setChattingRoomId } = useChattingRoomIdStore();
   const accountNumber = user?.accountNumber || '계좌번호 없음';
 
   messages.forEach((eventMessage) => {
@@ -55,15 +58,21 @@ const BottomMenu = ({
   const handleExitClick = async () => {
     try {
       const { reset } = useTimerStore.getState();
-      const [res, closeRes] = await Promise.all([
+      const [res, closeRes, closeManual] = await Promise.all([
         getExitChatRoom(roomId),
         getCloseMatching(roomId),
+        exitManualMatchingRoom(roomId),
       ]);
-      if (res.chatExit.code === 200 && closeRes.matchingExit.code === 200) {
+      if (
+        res.chatExit.code === 200 &&
+        closeRes.matchingExit.code === 200 &&
+        closeManual.code === 200
+      ) {
         closeModal();
         reset();
         nav('/home');
         handleDisconnect();
+        setChattingRoomId('');
         openToast('채팅방을 나가고 매칭을 종료했습니다.', 'success');
       }
     } catch (error) {

@@ -11,11 +11,12 @@ import { autoMatchingSchema } from '@/libs/schemas/match';
 import InviteMembers from '@/components/home/autoMatching/inviteMembers';
 import useGeoLocation from '@/hooks/useGeoLocation';
 import getCoordinateByAddress from '@/libs/apis/getCoordinateByAddress';
-import { useCallback, useEffect } from 'react';
+import { Suspense, useCallback, useEffect } from 'react';
 import { useToast } from '@/contexts/ToastContext';
 import useLocationStore from '@/store/useLocationStore';
 import startAutoMatching from '@/libs/apis/matching/startAutoMatching.api';
 import useSSEStore from '@/store/useSSEStore';
+import SpinnerIcon from '@/assets/icon/spinnerIcon.svg?react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 
@@ -32,7 +33,8 @@ const AutoMatching = ({ isOpen }: { isOpen: boolean }) => {
     defaultValues: {
       startPoint: '',
       startName: '가천대 반도체대학',
-      destinationPoint: autoDestinationPoint || '',
+      destinationPoint:
+        autoDestinationPoint || '127.134247729944,37.45524157529484',
       destinationName: '가천대 AI 공학관',
       members: [],
       criteria: [],
@@ -172,7 +174,19 @@ const AutoMatching = ({ isOpen }: { isOpen: boolean }) => {
         <RouteSetting control={autoMatchingForm.control} />
         {isOpen && (
           <>
-            <InviteMembers control={autoMatchingForm.control} />
+            <Suspense
+              fallback={
+                <div className="h-[150px] w-full flex items-center justify-center">
+                  <SpinnerIcon
+                    width={36}
+                    height={36}
+                    className="mx-auto spinner"
+                  />
+                </div>
+              }
+            >
+              <InviteMembers control={autoMatchingForm.control} />
+            </Suspense>
             <SelectTags control={autoMatchingForm.control} />
           </>
         )}

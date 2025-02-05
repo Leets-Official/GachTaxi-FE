@@ -45,7 +45,7 @@ const FriendList = ({ isOpen }: { isOpen: boolean }) => {
 
   return (
     <div className="flex flex-col gap-[32px] justify-between relative">
-      <div className="flex items-center justify-start gap-3">
+      <div className="flex items-center justify-start gap-3 ">
         <h2 className="text-header font-bold">
           {currentPage === 'FRIEND_LIST' ? '친구 목록' : '블랙리스트'}
         </h2>

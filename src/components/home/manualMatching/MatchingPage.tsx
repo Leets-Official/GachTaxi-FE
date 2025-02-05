@@ -32,16 +32,17 @@ const MatchingPage = ({
         className={`flex flex-col gap-4 ${isOpen ? '' : 'pb-[calc(100dvh-430px)]'} h-[calc(100dvh-225px)] max-h-[calc(100dvh-225px)] overflow-y-scroll scroll-hidden`}
       >
         {manualMatchingList.length > 0 ? (
-          manualMatchingList.map((manualInfo) => {
-            return (
+          <>
+            {manualMatchingList.map((manualInfo) => (
               <MatchingInfoItem
                 key={manualInfo.roomId}
                 setCurrentPage={setCurrentPage}
                 manualInfo={manualInfo}
                 currentPage={currentPage}
               />
-            );
-          })
+            ))}
+            <div ref={ref} className="h-0" />
+          </>
         ) : (
           <EmptyView>현재 등록된 매칭이 없어요!</EmptyView>
         )}
@@ -49,9 +50,8 @@ const MatchingPage = ({
       {isFetchingNextPage && (
         <SpinnerIcon width={36} height={36} className="mx-auto spinner mt-5" />
       )}
-      <div ref={ref}></div>
       {isOpen && (
-        <div className="w-full flex absolute bottom-10">
+        <div className="w-full flex absolute bottom-2">
           <Link to="/home/manual-register" className="ml-auto button-shadow">
             <LargePlusIcon />
           </Link>

@@ -1,5 +1,5 @@
-import deleteBlackList from '@/libs/apis/blackList/deleteBlackList.api';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
+import deleteBlackList from '@/libs/apis/deleteBlackList.api';
 
 const useDeleteBlackList = () => {
   const queryClient = useQueryClient();
@@ -9,13 +9,8 @@ const useDeleteBlackList = () => {
       const res = await deleteBlackList(receiverId);
       return res;
     },
-    onSettled: (_, error) => {
-      if (error) {
-        queryClient.invalidateQueries({ queryKey: ['blackList'] });
-        return error;
-      } else {
-        queryClient.invalidateQueries({ queryKey: ['blackList'] });
-      }
+    onSettled: () => {
+      queryClient.invalidateQueries({ queryKey: ['blackList'] });
     },
   });
 };

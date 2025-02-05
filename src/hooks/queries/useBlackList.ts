@@ -1,5 +1,5 @@
 import useInfiniteScroll from '@/hooks/queries/useInfiniteScroll';
-import getBlackList from '@/libs/apis/blackList/getBlackList.api';
+import getBlackList from '@/libs/apis/getBlackList.api';
 
 const fetchBlackList = async ({ pageParam = 0 }: { pageParam?: number }) => {
   const pageSize = 10;
