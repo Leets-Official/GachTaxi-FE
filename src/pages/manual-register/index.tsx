@@ -30,7 +30,9 @@ const ManualMatchingRegister = () => {
     defaultValues: {
       startName: '가천대 반도체대학',
       destinationName: '가천대 AI 공학관',
-      time: formatTimeToSelect(new Date(new Date().setHours(1, 0, 0, 0))),
+      departureTime: formatTimeToSelect(
+        new Date(new Date().setHours(1, 0, 0, 0)),
+      ),
       members: [],
       criteria: [],
       description: '',
@@ -86,7 +88,7 @@ const ManualMatchingRegister = () => {
       >
         <RouteSetting control={manualMatchingForm.control} />
         <Controller
-          name="time"
+          name="departureTime"
           control={manualMatchingForm.control}
           render={({ field }) => (
             <TimeSelect timeVal={field.value} onChange={field.onChange} />
