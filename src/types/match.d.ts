@@ -12,7 +12,7 @@ declare module 'gachTaxi-types' {
     destinationPoint: string;
     destinationName: string;
     criteria: string[];
-    members: string[];
+    members: number[];
     expectedTotalCharge: number;
   }
 
@@ -20,9 +20,9 @@ declare module 'gachTaxi-types' {
     startName: string;
     destinationName: string;
     criteria: string[];
-    members: string[];
+    members: number[];
     expectedTotalCharge: number;
-    time: string;
+    departureTime: string;
     description?: string;
   }
 

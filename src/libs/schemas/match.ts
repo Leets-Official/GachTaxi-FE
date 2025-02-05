@@ -15,7 +15,7 @@ const destinationNameSchema = z.string().min(1, '종료 지점을 설정해주�
 
 const timeSchema = z.string();
 
-const membersSchema = z.string().array().default([]);
+const membersSchema = z.number().array().default([]);
 
 const criteriaSchema = z.string().array().default([]);
 
@@ -30,7 +30,7 @@ export const manualMatchingSchema = z.object({
   criteria: criteriaSchema,
   members: membersSchema,
   expectedTotalCharge: expectedTotalChargeSchema,
-  time: timeSchema,
+  departureTime: timeSchema,
   description: descriptionSchema,
 });
 
