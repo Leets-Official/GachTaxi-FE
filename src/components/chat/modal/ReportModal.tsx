@@ -5,7 +5,7 @@ import EmptyPlus from '@/assets/icon/chatPlusTouchFriend.svg?react';
 import { useState } from 'react';
 import DefaultProfileImage from '@/assets/icon/basicProfileIcon.svg?react';
 import postFriends from '@/libs/apis/friend/postFriends.api';
-import postBlacklist from '@/libs/apis/blacklist/postBlackList.api';
+import postBlacklist from '@/libs/apis/blackList/postBlackList.api';
 import { useToast } from '@/contexts/ToastContext';
 
 interface ReportModalProps {
