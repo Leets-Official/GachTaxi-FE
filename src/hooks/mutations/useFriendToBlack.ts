@@ -1,5 +1,5 @@
-import addBlackList from '@/libs/apis/blacklist/addBlackList.api';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
+import addBlackList from '@/libs/apis/blacklist/addBlackList.api';
 
 const useFriendToBlack = () => {
   const queryClient = useQueryClient();

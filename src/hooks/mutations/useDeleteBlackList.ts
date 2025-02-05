@@ -1,5 +1,5 @@
-import deleteBlackList from '@/libs/apis/blacklist/deleteBlackList.api';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
+import deleteBlackList from '@/libs/apis/blacklist/deleteBlackList.api';
 
 const useDeleteBlackList = () => {
   const queryClient = useQueryClient();
