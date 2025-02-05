@@ -1,7 +1,6 @@
 import Button from '@/components/commons/Button';
 import Timer from '@/components/matchingInfo/TImer';
 import useSSEStore from '@/store/useSSEStore';
-import useTimerStore from '@/store/useTimerStore';
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import CircleIcon from '@/assets/icon/matching-loading/circleIcon.svg?react';
@@ -9,7 +8,6 @@ import TaxiIcon from '@/assets/icon/matching-loading/taxiSideIcon.svg?react';
 import useChattingRoomIdStore from '@/store/useChattingRoomId';
 
 const MatchingInfoPage = () => {
-  const { reset } = useTimerStore();
   const { initializeSSE, messages } = useSSEStore();
   const { chattingRoomId, setChattingRoomId } = useChattingRoomIdStore();
   const navigate = useNavigate();
@@ -44,7 +42,7 @@ const MatchingInfoPage = () => {
           break;
       }
     });
-  }, [messages, reset, setChattingRoomId]);
+  }, [messages, setChattingRoomId]);
 
   return (
     <section className="flex-1 flex flex-col justify-between p-4">
