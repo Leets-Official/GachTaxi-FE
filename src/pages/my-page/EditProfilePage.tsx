@@ -12,10 +12,11 @@ import { updateUserProfile } from '@/libs/apis/updateUserProfile.api';
 import { useToast } from '@/contexts/ToastContext';
 import useUserStore from '@/store/useUserStore';
 import handleAxiosError from '@/libs/apis/axiosError.api';
+import { useNavigate } from 'react-router-dom';
 
 const EditProfilePage = () => {
   const { user } = useUserStore();
-
+  const navigate = useNavigate();
   const profileForm = useForm<z.infer<typeof profileEditVerificationSchema>>({
     resolver: zodResolver(profileEditVerificationSchema),
     defaultValues: {
@@ -46,6 +47,7 @@ const EditProfilePage = () => {
           const userData = res?.data;
           setUser(userData);
           openToast(res.message, 'success');
+          navigate('/mypage');
         }
       } else {
         const res = await updateUserProfile(data);
@@ -54,8 +56,9 @@ const EditProfilePage = () => {
           if (res?.data) {
             const userData = res.data;
             setUser(userData);
+            openToast(res.message, 'success');
+            navigate('/mypage');
           }
-          openToast(res.message, 'success');
         }
       }
     } catch (error) {

@@ -64,9 +64,10 @@ const UserInfoVerification = () => {
           if (res?.data?.memberResponseDto) {
             const userData = res.data.memberResponseDto;
             setUser(userData);
+            setSuccess();
+            openToast(res.message, 'success');
+            navigate('/home');
           }
-          setSuccess();
-          openToast(res.message, 'success');
         }
       }
     } catch (error: unknown) {
