@@ -23,8 +23,7 @@ const accountNumberSchema = z
   .min(10, '올바른 계좌번호를 입력해주세요!')
   .refine((value) => !isNaN(Number(value)), {
     message: '계좌번호는 숫자로만 입력해야 합니다!',
-  })
-  .optional();
+  });
 
 const editNickNameSchema = z
   .string()
@@ -116,6 +115,9 @@ export const userInfoVerificationSchema = z.object({
 export const profileEditVerificationSchema = z.object({
   profilePicture: profileImageSchema,
   nickName: editNickNameSchema,
+});
+
+export const accountNumberVerificationSchema = z.object({
   accountNumber: accountNumberSchema,
 });
 
