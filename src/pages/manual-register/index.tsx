@@ -18,9 +18,11 @@ import { formatTimeToSelect } from '@/utils';
 import TimeSelect from '@/components/manual-register/timeSelect';
 import { useToast } from '@/contexts/ToastContext';
 import { useNavigate } from 'react-router-dom';
+import SpinnerIcon from '@/assets/icon/spinnerIcon.svg?react';
 import useSheetStore from '@/store/useSheetStore';
 import createManualMatchingRoom from '@/libs/apis/manual/createManualMatchingRoom.api';
 import axios from 'axios';
+import { Suspense } from 'react';
 
 const ManualMatchingRegister = () => {
   const manualMatchingForm = useForm<z.infer<typeof manualMatchingSchema>>({
@@ -31,7 +33,7 @@ const ManualMatchingRegister = () => {
       time: formatTimeToSelect(new Date(new Date().setHours(1, 0, 0, 0))),
       members: [],
       criteria: [],
-      content: '',
+      description: '',
       expectedTotalCharge: 4800,
     },
   });
@@ -90,7 +92,15 @@ const ManualMatchingRegister = () => {
             <TimeSelect timeVal={field.value} onChange={field.onChange} />
           )}
         />
-        <InviteMembers control={manualMatchingForm.control} />
+        <Suspense
+          fallback={
+            <div className="h-[150px] w-full flex items-center justify-center">
+              <SpinnerIcon width={36} height={36} className="mx-auto spinner" />
+            </div>
+          }
+        >
+          <InviteMembers control={manualMatchingForm.control} />
+        </Suspense>
         <SelectTags control={manualMatchingForm.control} />
         <AddContent control={manualMatchingForm.control} />
       </form>

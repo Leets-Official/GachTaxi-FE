@@ -23,7 +23,7 @@ declare module 'gachTaxi-types' {
     members: string[];
     expectedTotalCharge: number;
     time: string;
-    content?: string;
+    description?: string;
   }
 
   type MatchingSchema = AutoMatchingTypes | ManualMatchingTypes;
