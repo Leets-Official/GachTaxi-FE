@@ -1,12 +1,12 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
-import addBlackList from '@/libs/apis/blacklist/addBlackList.api';
+import addToBlackList from '@/libs/apis/blacklist/addToBlackList.api';
 
 const useFriendToBlack = () => {
   const queryClient = useQueryClient();
 
   return useMutation({
     mutationFn: async (friendId: number) => {
-      const res = await addBlackList(friendId);
+      const res = await addToBlackList(friendId);
       return res;
     },
     onSettled: () => {
