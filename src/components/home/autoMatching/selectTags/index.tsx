@@ -24,7 +24,9 @@ const SelectTags = <T extends MatchingSchema>({
       control={control}
       name={'criteria' as Path<T>}
       render={({ field: { value = [], onChange } }) => {
-        const safeValue: string[] = Array.isArray(value) ? value : [];
+        const safeValue: string[] = Array.isArray(value)
+          ? value.filter((v): v is string => typeof v === 'string')
+          : [];
 
         return (
           <div className="h-[101px] flex-shrink-0 bg-secondary rounded-box p-vertical flex flex-col justify-between">
