@@ -12,6 +12,8 @@ const BackButton = ({ usedPage }: BackButtonProps) => {
   const handleBack = () => {
     if (usedPage === 'signUpPage') {
       navigate('/');
+    } else if (usedPage === 'chat') {
+      navigate('/home');
     } else {
       navigate(-1);
     }
