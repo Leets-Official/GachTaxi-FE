@@ -1,12 +1,12 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
-import deleteToBlackList from '@/libs/apis/blacklist/deleteToBlackList.api';
+import deleteBlackList from '@/libs/apis/deleteBlackList.api';
 
 const useDeleteBlackList = () => {
   const queryClient = useQueryClient();
 
   return useMutation({
     mutationFn: async (receiverId: number) => {
-      const res = await deleteToBlackList(receiverId);
+      const res = await deleteBlackList(receiverId);
       return res;
     },
     onSettled: () => {
