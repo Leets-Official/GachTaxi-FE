@@ -5,10 +5,7 @@ export const getCloseMatching = async (roomId: number) => {
     const res = await client.post(`/api/matching/auto/cancel`, {
       roomId,
     });
-    console.log(res);
-    return {
-      matchingExit: res.data,
-    };
+    return res.data;
   } catch (error) {
     throw new Error(`Error in handleExitMatch: ${error}`);
   }
