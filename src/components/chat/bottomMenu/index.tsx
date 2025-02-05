@@ -54,10 +54,14 @@ const BottomMenu = ({
         user
       ) {
         console.log(eventMessage);
-        setIsOwner(user.userId === eventMessage.message.roomMasterId);
+        if (isAutoMatchingChat) {
+          setIsOwner(user.userId === eventMessage.message.roomMasterId);
+        } else {
+          setIsOwner(true);
+        }
       }
     }
-  }, [messages, user]);
+  }, [messages, user, isAutoMatchingChat]);
 
   const handleSendClick = () => {
     if (!user?.accountNumber) {
