@@ -2,7 +2,7 @@ import client from '@/libs/apis/clients';
 import { AxiosResponse } from 'axios';
 import { BlackListResponse } from 'gachTaxi-types';
 
-const getBlackList = async ({
+const getToBlackList = async ({
   pageNum = 0,
   pageSize = 10,
 }: {
@@ -19,4 +19,4 @@ const getBlackList = async ({
   return res.data;
 };
 
-export default getBlackList;
+export default getToBlackList;
