@@ -29,7 +29,7 @@ const ChatPage = () => {
             </div>
           </>
         ) : (
-          <div className="text-center text-gray-400">
+          <div className="h-[calc(100dvh-162px)] text-center text-gray-400">
             메시지를 불러오는 중...
           </div>
         )}
