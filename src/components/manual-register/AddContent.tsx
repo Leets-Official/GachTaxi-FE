@@ -11,7 +11,7 @@ const AddContent = <T extends MatchingSchema>({
   return (
     <Controller
       control={control}
-      name={'content' as Path<T>}
+      name={'description' as Path<T>}
       render={({ field: { onChange } }) => (
         <div className="h-[312px] flex-shrink-0 bg-secondary rounded-box p-vertical gap-3 flex flex-col justify-between">
           <p className="font-medium text-captionHeader">추가 내용</p>

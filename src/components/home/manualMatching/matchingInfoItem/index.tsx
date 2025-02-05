@@ -48,7 +48,7 @@ const MatchingInfoItem = ({
   };
 
   const handleJoinChatting = () => {
-    navigate(`/chat/${manualInfo.chattingRoomId}`);
+    navigate(`/chat/manual/${manualInfo.chattingRoomId}`);
   };
 
   return (
