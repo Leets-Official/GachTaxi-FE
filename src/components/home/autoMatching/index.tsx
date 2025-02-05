@@ -144,6 +144,7 @@ const AutoMatching = ({ isOpen }: { isOpen: boolean }) => {
 
         openToast(errorMessage, 'error');
         if (errorCode === 409) {
+          openToast('이미 매칭에 참가한 멤버에요!', 'error');
           navigate('/matching');
         }
       }
