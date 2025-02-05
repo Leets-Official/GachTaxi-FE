@@ -14,6 +14,7 @@ const MatchingInfoPage = () => {
   const navigate = useNavigate();
 
   const [roomCapacity, setRoomCapacity] = useState<number>(0);
+  const [maxCapacity, setMaxCapacity] = useState<number>(0);
   const [roomStatus, setRoomStatus] = useState<'searching' | 'matching'>(
     'searching',
   );
@@ -35,8 +36,9 @@ const MatchingInfoPage = () => {
 
     switch (latestMessage.message.topic) {
       case 'match_member_joined':
-        setRoomCapacity((prev) => Math.min(prev + 1, 4)); // 최대 4명 제한
+        setRoomCapacity(latestMessage.message.nowMemberCount); // 최대 4명 제한
         setChattingRoomId(latestMessage.message.roomId.toString());
+        setMaxCapacity(latestMessage.message.maxCapacity);
         setRoomStatus('matching');
         break;
 
@@ -47,6 +49,7 @@ const MatchingInfoPage = () => {
       case 'match_room_created':
         setRoomCapacity((prev) => Math.min(prev + 1, 4));
         setChattingRoomId(latestMessage.message.roomId.toString());
+        setMaxCapacity(latestMessage.message.maxCapacity);
         setRoomStatus('matching');
         break;
 
@@ -71,7 +74,7 @@ const MatchingInfoPage = () => {
               찾는중...
             </p>
             <p className="font-medium text-captionHeader text-center">
-              {roomCapacity}/4
+              {roomCapacity}/{maxCapacity}
             </p>
           </div>
         )}

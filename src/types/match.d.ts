@@ -54,6 +54,8 @@ declare module 'gachTaxi-types' {
     topic: 'match_member_joined';
     roomId: number;
     memberId: number;
+    nowMemberCount: number;
+    maxCapacity: number;
     joinedAt: string | null; // ISO 형식 문자열
   }
 
