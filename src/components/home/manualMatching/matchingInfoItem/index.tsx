@@ -108,7 +108,9 @@ const MatchingInfoItem = ({
         <div className="w-full">
           <Button
             className="w-full"
-            isDisabled={manualInfo.currentMembers === 4}
+            isDisabled={
+              currentPage === 'MANUAL' && manualInfo.currentMembers === 4
+            }
             onClick={
               currentPage === 'MANUAL' ? handleJoinMatching : handleJoinChatting
             }
