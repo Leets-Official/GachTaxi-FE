@@ -36,6 +36,8 @@ const MatchingInfoPage = () => {
     switch (latestMessage.message.topic) {
       case 'match_member_joined':
         setRoomCapacity((prev) => Math.min(prev + 1, 4)); // 최대 4명 제한
+        setChattingRoomId(latestMessage.message.roomId.toString());
+        setRoomStatus('matching');
         break;
 
       case 'match_member_cancelled':
