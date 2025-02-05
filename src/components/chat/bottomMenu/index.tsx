@@ -4,7 +4,7 @@ import { useEffect, useState } from 'react';
 import SendAccountModal from '../modal/sendAccountModal';
 import CallTaxiModal from '@/components/modal/CallTaxiModal';
 import { useModal } from '@/contexts/ModalContext';
-import { useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import { useToast } from '@/contexts/ToastContext';
 import useWebSocket from '@/hooks/useWebSocket';
 import CancelTaxiModal from '@/components/modal/CancelTaxiModal';
@@ -16,6 +16,7 @@ import useSSEStore from '@/store/useSSEStore';
 import useUserStore from '@/store/useUserStore';
 import useChattingRoomIdStore from '@/store/useChattingRoomId';
 import { MessagesArray } from 'gachTaxi-types';
+import exitManualMatchingRoom from '@/libs/apis/manual/exitManualMatchingRoom.api';
 //import exitManualMatchingRoom from '@/libs/apis/manual/exitManualMatchingRoom.api';
 
 const BottomMenu = ({
@@ -31,14 +32,15 @@ const BottomMenu = ({
   const { openToast } = useToast();
   const [showAccountModal, setShowAccountModal] = useState(false);
   const nav = useNavigate();
-  const { messages } = useSSEStore();
+  const { messages, closeSSE } = useSSEStore();
   const [isOwner, setIsOwner] = useState(false);
   const { user } = useUserStore();
   const { setChattingRoomId } = useChattingRoomIdStore();
   const accountNumber = user?.accountNumber || '계좌번호 없음';
-  const { reset } = useTimerStore.getState();
-  console.log(user?.userId);
-  console.log(isOwner);
+  const { reset } = useTimerStore();
+  const { pathname } = useLocation();
+
+  const isAutoMatchingChat = pathname.includes('auto');
 
   useEffect(() => {
     if (messages) {
@@ -69,12 +71,11 @@ const BottomMenu = ({
     openModal(<CallTaxiModal />);
   };
 
-  const handleExitClick = async () => {
+  const handleExitClickFromManual = async () => {
     try {
       const [res1, res2] = await Promise.all([
         getExitChatRoom(roomId),
-        getCloseMatching(roomId),
-        // exitManualMatchingRoom(roomId),
+        exitManualMatchingRoom(roomId),
       ]);
       if (
         res1.code >= 200 &&
@@ -94,8 +95,41 @@ const BottomMenu = ({
     }
   };
 
+  const handleExitClickFromAuto = async () => {
+    try {
+      const [res1, res2] = await Promise.all([
+        getExitChatRoom(roomId),
+        getCloseMatching(roomId),
+      ]);
+      if (
+        res1.code >= 200 &&
+        res1.code < 300 &&
+        res2.code >= 200 &&
+        res2.code < 300
+      ) {
+        closeModal();
+        reset();
+        closeSSE();
+        nav('/home');
+        handleDisconnect();
+        setChattingRoomId('');
+        openToast('채팅방을 나가고 매칭을 종료했습니다.', 'success');
+      }
+    } catch (error) {
+      console.error('채팅방 퇴장 중 오류 발생:', error);
+    }
+  };
+
   const handleExitModal = () => {
-    openModal(<CancelTaxiModal onConfirm={handleExitClick} />);
+    openModal(
+      <CancelTaxiModal
+        onConfirm={
+          isAutoMatchingChat
+            ? handleExitClickFromAuto
+            : handleExitClickFromManual
+        }
+      />,
+    );
   };
 
   const handleCloseClick = async () => {

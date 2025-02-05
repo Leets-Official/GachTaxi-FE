@@ -4,7 +4,7 @@ import { BasicBlackListResponse } from 'gachTaxi-types';
 
 const deleteBlackList = async (receiverId: number) => {
   const res: AxiosResponse<BasicBlackListResponse> = await client.delete(
-    `/api/blacklists?receiverId=${receiverId}`,
+    `/api/blacklists/${receiverId}`,
   );
   return res.data;
 };

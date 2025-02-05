@@ -90,7 +90,15 @@ function App() {
                   }
                 />
                 <Route
-                  path="chat/:id"
+                  path="chat/auto/:id"
+                  element={
+                    <ProtectRoute isPrivate>
+                      <ChatPage />
+                    </ProtectRoute>
+                  }
+                />
+                <Route
+                  path="chat/manual/:id"
                   element={
                     <ProtectRoute isPrivate>
                       <ChatPage />
