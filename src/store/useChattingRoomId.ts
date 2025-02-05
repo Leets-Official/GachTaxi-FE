@@ -6,7 +6,7 @@ interface ChattingRoomIdState {
 }
 
 const useChattingRoomIdStore = create<ChattingRoomIdState>((set) => ({
-  chattingRoomId: '1',
+  chattingRoomId: '',
   setChattingRoomId: (roomId: string) => set({ chattingRoomId: roomId }),
 }));
 

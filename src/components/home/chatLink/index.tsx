@@ -4,7 +4,7 @@ import ChatIcon from '@/assets/icon/chattingRoomIcon.svg?react';
 const ChatLinkButton = ({ chattingRoomId }: { chattingRoomId: string }) => {
   return (
     <Link
-      className="px-4 py-2 flex items-center justify-center rounded-full bg-white text-black"
+      className="px-4 py-3 flex items-center justify-center rounded-full bg-black text-white"
       to={`/chat/${chattingRoomId}`}
     >
       <ChatIcon className="mr-5" />
