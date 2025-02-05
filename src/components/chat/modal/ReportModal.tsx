@@ -5,7 +5,7 @@ import EmptyPlus from '@/assets/icon/chatPlusTouchFriend.svg?react';
 import { useState } from 'react';
 import DefaultProfileImage from '@/assets/icon/basicProfileIcon.svg?react';
 import postFriends from '@/libs/apis/friend/postFriends.api';
-import postBlacklist from '@/libs/apis/blacklist/postBlackList.api';
+import postBlacklist from '@/libs/apis/blackList/postBlackList.api';
 import { useToast } from '@/contexts/ToastContext';
 
 interface ReportModalProps {
@@ -32,6 +32,8 @@ const ReportModal: React.FC<ReportModalProps> = ({
       if (res.code === 200) {
         setIsFriend((prev) => !prev);
         openToast(`${senderName}님이 친구로 추가되었습니다.`, 'success');
+      } else {
+        openToast(res.message, 'error');
       }
     } catch (error) {
       console.error('친구 추가 실패:', error);
@@ -44,6 +46,8 @@ const ReportModal: React.FC<ReportModalProps> = ({
       const res = await postBlacklist(senderId);
       if (res.code === 201) {
         openToast(`${senderName}님이 블랙리스트에 추가되었습니다.`, 'success');
+      } else {
+        openToast(res.message, 'error');
       }
     } catch (error) {
       console.error('블랙리스트 등록 실패', error);
