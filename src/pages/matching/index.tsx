@@ -1,11 +1,12 @@
+import { useEffect, useState } from 'react';
 import Button from '@/components/commons/Button';
 import Timer from '@/components/matchingInfo/TImer';
 import useSSEStore from '@/store/useSSEStore';
-import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import CircleIcon from '@/assets/icon/matching-loading/circleIcon.svg?react';
 import TaxiIcon from '@/assets/icon/matching-loading/taxiSideIcon.svg?react';
 import useChattingRoomIdStore from '@/store/useChattingRoomId';
+import { MessagesArray } from 'gachTaxi-types';
 
 const MatchingInfoPage = () => {
   const { initializeSSE, messages } = useSSEStore();
@@ -17,32 +18,42 @@ const MatchingInfoPage = () => {
     'searching',
   );
 
+  const [lastProcessedMessageId, setLastProcessedMessageId] = useState<
+    string | null
+  >(null);
+
   useEffect(() => {
     initializeSSE();
   }, [initializeSSE]);
 
   useEffect(() => {
-    messages.forEach((eventMessage) => {
-      switch (eventMessage.message.topic) {
-        case 'match_member_joined':
-          setRoomCapacity((prev) => Math.max(prev + 1, 4));
-          break;
+    if (messages.length === 0) return;
 
-        case 'match_member_cancelled':
-          setRoomCapacity((prev) => Math.max(prev - 1, 0));
-          break;
+    const latestMessage: MessagesArray = messages[messages.length - 1];
 
-        case 'match_room_created':
-          setRoomCapacity((prev) => Math.max(prev + 1, 4));
-          setChattingRoomId(eventMessage.message.roomId.toString());
-          setRoomStatus('matching');
-          break;
+    if (latestMessage.message.topic === lastProcessedMessageId) return;
 
-        default:
-          break;
-      }
-    });
-  }, [messages, setChattingRoomId]);
+    switch (latestMessage.message.topic) {
+      case 'match_member_joined':
+        setRoomCapacity((prev) => Math.min(prev + 1, 4)); // 최대 4명 제한
+        break;
+
+      case 'match_member_cancelled':
+        setRoomCapacity((prev) => Math.max(prev - 1, 0)); // 최소 0명 제한
+        break;
+
+      case 'match_room_created':
+        setRoomCapacity((prev) => Math.min(prev + 1, 4));
+        setChattingRoomId(latestMessage.message.roomId.toString());
+        setRoomStatus('matching');
+        break;
+
+      default:
+        break;
+    }
+
+    setLastProcessedMessageId(latestMessage.message.topic); // 처리한 메시지 ID 저장
+  }, [messages, setChattingRoomId, lastProcessedMessageId]);
 
   return (
     <section className="flex-1 flex flex-col justify-between p-4">
@@ -64,7 +75,7 @@ const MatchingInfoPage = () => {
         )}
       </div>
       <div
-        className={` w-full flex justify-center flex-col gap-2 items-center ${roomStatus === 'searching' ? 'flex-grow mb-[100px]' : 'mb-20'}`}
+        className={`w-full flex justify-center flex-col gap-2 items-center ${roomStatus === 'searching' ? 'flex-grow mb-[100px]' : 'mb-20'}`}
       >
         <Timer />
         <div className="relative">
@@ -73,10 +84,10 @@ const MatchingInfoPage = () => {
         </div>
       </div>
       {roomStatus === 'matching' && (
-        <div className=" w-full mb-4">
+        <div className="w-full mb-4">
           <Button
             className="w-full"
-            onClick={() => navigate(`/chat/${chattingRoomId!}`)}
+            onClick={() => navigate(`/chat/auto/${chattingRoomId!}`)}
           >
             채팅방
           </Button>
