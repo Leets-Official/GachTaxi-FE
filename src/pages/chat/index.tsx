@@ -13,7 +13,7 @@ const ChatPage = () => {
   return (
     <section className="relative flex-1 w-full flex flex-col h-full max-h-1vh">
       <div className="sticky top-0 left-0 p-horizontal bg-darkBlack">
-        <BackButton />
+        <BackButton usedPage="chat" />
         <div className="flex h-[48px] items-center">
           <h1 className="font-bold text-header">채팅방</h1>
           <span className="text-captionHeader text-textDarkGray mt-[4px] ml-[3%]">

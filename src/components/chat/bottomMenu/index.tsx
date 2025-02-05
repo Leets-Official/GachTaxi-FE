@@ -1,6 +1,6 @@
 import MenuItem from './MenuItem';
 import { MENUITEMS } from '@/constants';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import SendAccountModal from '../modal/sendAccountModal';
 import CallTaxiModal from '@/components/modal/CallTaxiModal';
 import { useModal } from '@/contexts/ModalContext';
@@ -15,7 +15,8 @@ import getExitChatRoom from '@/libs/apis/getExitChatRoom';
 import useSSEStore from '@/store/useSSEStore';
 import useUserStore from '@/store/useUserStore';
 import useChattingRoomIdStore from '@/store/useChattingRoomId';
-import exitManualMatchingRoom from '@/libs/apis/manual/exitManualMatchingRoom.api';
+import { MessagesArray } from 'gachTaxi-types';
+//import exitManualMatchingRoom from '@/libs/apis/manual/exitManualMatchingRoom.api';
 
 const BottomMenu = ({
   onSendAccount,
@@ -35,13 +36,26 @@ const BottomMenu = ({
   const { user } = useUserStore();
   const { setChattingRoomId } = useChattingRoomIdStore();
   const accountNumber = user?.accountNumber || '계좌번호 없음';
+  const { reset } = useTimerStore.getState();
+  console.log(user?.userId);
+  console.log(isOwner);
 
-  messages.forEach((eventMessage) => {
-    if (eventMessage.message.topic === 'match_room_created') {
-      const userId = localStorage.getItem('userId');
-      setIsOwner(userId === String(eventMessage.message.roomMasterId));
+  useEffect(() => {
+    if (messages) {
+      const eventMessage: MessagesArray | undefined = messages.find(
+        (event) => event.message.topic === 'match_room_created',
+      );
+
+      if (
+        eventMessage &&
+        eventMessage.message.topic === 'match_room_created' &&
+        user
+      ) {
+        console.log(eventMessage);
+        setIsOwner(user.userId === eventMessage.message.roomMasterId);
+      }
     }
-  });
+  }, [messages, user]);
 
   const handleSendClick = () => {
     if (!user?.accountNumber) {
@@ -57,16 +71,16 @@ const BottomMenu = ({
 
   const handleExitClick = async () => {
     try {
-      const { reset } = useTimerStore.getState();
-      const [res, closeRes, closeManual] = await Promise.all([
+      const [res1, res2] = await Promise.all([
         getExitChatRoom(roomId),
         getCloseMatching(roomId),
-        exitManualMatchingRoom(roomId),
+        // exitManualMatchingRoom(roomId),
       ]);
       if (
-        res.chatExit.code === 200 &&
-        closeRes.matchingExit.code === 200 &&
-        closeManual.code === 200
+        res1.code >= 200 &&
+        res1.code < 300 &&
+        res2.code >= 200 &&
+        res2.code < 300
       ) {
         closeModal();
         reset();
