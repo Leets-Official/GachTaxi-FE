@@ -5,7 +5,7 @@ const ChatLinkButton = ({ chattingRoomId }: { chattingRoomId: string }) => {
   return (
     <Link
       className="px-4 py-3 flex items-center justify-center rounded-full bg-black text-white"
-      to={`/chat/${chattingRoomId}`}
+      to={`/chat/auto/${chattingRoomId}`}
     >
       <ChatIcon className="mr-5" />
       <p className="mr-5 font-medium text-captionHeader">
