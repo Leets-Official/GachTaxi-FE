@@ -1,6 +1,6 @@
 import client from '../clients';
 
-const postBlacklist = async (senderId: number) => {
+const postToBlacklist = async (senderId: number) => {
   try {
     const res = await client.post(`/api/blacklists?receiverId=${senderId}`);
     return res.data;
@@ -9,4 +9,4 @@ const postBlacklist = async (senderId: number) => {
   }
 };
 
-export default postBlacklist;
+export default postToBlacklist;
