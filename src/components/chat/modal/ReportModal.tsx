@@ -5,7 +5,7 @@ import EmptyPlus from '@/assets/icon/chatPlusTouchFriend.svg?react';
 import { useState } from 'react';
 import DefaultProfileImage from '@/assets/icon/basicProfileIcon.svg?react';
 import postFriends from '@/libs/apis/friend/postFriends.api';
-import postBlacklist from '@/libs/apis/blackList/postBlackList.api';
+import postToBlacklist from '@/libs/apis/blackList/postToBlackList.api';
 import { useToast } from '@/contexts/ToastContext';
 
 interface ReportModalProps {
@@ -43,7 +43,7 @@ const ReportModal: React.FC<ReportModalProps> = ({
 
   const handleBlacklist = async () => {
     try {
-      const res = await postBlacklist(senderId);
+      const res = await postToBlacklist(senderId);
       if (res.code === 201) {
         openToast(`${senderName}님이 블랙리스트에 추가되었습니다.`, 'success');
       } else {
