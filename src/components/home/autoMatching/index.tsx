@@ -16,10 +16,10 @@ import { useToast } from '@/contexts/ToastContext';
 import useLocationStore from '@/store/useLocationStore';
 import startAutoMatching from '@/libs/apis/matching/startAutoMatching.api';
 import useSSEStore from '@/store/useSSEStore';
-import SpinnerIcon from '@/assets/icon/spinnerIcon.svg?react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import useRequestStatus from '@/hooks/useRequestStatus';
+import InviteMembersLoading from '@/components/loading/InviteMembersLoading';
 
 const AutoMatching = ({ isOpen }: { isOpen: boolean }) => {
   const {
@@ -180,17 +180,7 @@ const AutoMatching = ({ isOpen }: { isOpen: boolean }) => {
         <RouteSetting control={autoMatchingForm.control} />
         {isOpen && (
           <>
-            <Suspense
-              fallback={
-                <div className="h-[150px] w-full flex items-center justify-center">
-                  <SpinnerIcon
-                    width={36}
-                    height={36}
-                    className="mx-auto spinner"
-                  />
-                </div>
-              }
-            >
+            <Suspense fallback={<InviteMembersLoading />}>
               <InviteMembers control={autoMatchingForm.control} />
             </Suspense>
             <SelectTags control={autoMatchingForm.control} />

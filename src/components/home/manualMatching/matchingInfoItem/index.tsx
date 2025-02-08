@@ -90,7 +90,7 @@ const MatchingInfoItem = ({
           <div className="flex-1 overflow-y-scroll scroll-hidden overflow-hidden mt-5">
             <p className="font-medium text-body">
               <span>추가 멘트 : </span>
-              {manualInfo.description}
+              {manualInfo.description ? manualInfo.description : 'X'}
             </p>
           </div>
         )}

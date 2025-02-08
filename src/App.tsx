@@ -18,6 +18,7 @@ import ProtectRoute from '@/pages/ProtectRoute';
 import GoogleLoginLoading from '@/components/landing/GoogleLoginLoading';
 import MatchingInfoPage from '@/pages/matching';
 import CallTaxi from '@/pages/chat/CallTaxi';
+import ReactErrorBoundary from '@/components/error/ReactErrorBoundary';
 
 function App() {
   const queryClient = new QueryClient();
@@ -28,103 +29,108 @@ function App() {
         <ReactQueryDevtools initialIsOpen={false} />
       )}
       <BrowserRouter>
-        <ToastProvider>
-          <ModalProvider>
-            <Routes>
-              <Route path="/" element={<Layout />}>
-                {/** 로그인 불필요 라우트 */}
-                <Route index element={<LandingPage />} />
-                <Route path="*" element={<NotFoundPage />} />
-                <Route path="/kakao/callback" element={<KakaoLoginLoading />} />
-                <Route
-                  path="/google/callback"
-                  element={<GoogleLoginLoading />}
-                />
-                {/** 로그인이 필요한 라우트 */}
-                <Route
-                  path="home/manual-register"
-                  element={
-                    <ProtectRoute isPrivate>
-                      <ManualMatchingRegister />
-                    </ProtectRoute>
-                  }
-                />
-                <Route
-                  path="/signup/*"
-                  element={
-                    <ProtectRoute>
-                      <SignUpPage />
-                    </ProtectRoute>
-                  }
-                />
-                <Route
-                  path="/home"
-                  element={
-                    <ProtectRoute isPrivate>
-                      <HomePage />
-                    </ProtectRoute>
-                  }
-                />
-                <Route
-                  path="/mypage/*"
-                  element={
-                    <ProtectRoute isPrivate>
-                      <MyPage />
-                    </ProtectRoute>
-                  }
-                />
-                <Route
-                  path="home/friend-request"
-                  element={
-                    <ProtectRoute isPrivate>
-                      <FriendRequestPage />
-                    </ProtectRoute>
-                  }
-                />
-                <Route
-                  path="/notification"
-                  element={
-                    <ProtectRoute isPrivate>
-                      <NotificationPage />
-                    </ProtectRoute>
-                  }
-                />
-                <Route
-                  path="chat/auto/:id"
-                  element={
-                    <ProtectRoute isPrivate>
-                      <ChatPage />
-                    </ProtectRoute>
-                  }
-                />
-                <Route
-                  path="chat/manual/:id"
-                  element={
-                    <ProtectRoute isPrivate>
-                      <ChatPage />
-                    </ProtectRoute>
-                  }
-                />
-                <Route
-                  path="/matching"
-                  element={
-                    <ProtectRoute isPrivate>
-                      <MatchingInfoPage />
-                    </ProtectRoute>
-                  }
-                />
-                <Route
-                  path="call-taxi"
-                  element={
-                    <ProtectRoute isPrivate>
-                      <CallTaxi />
-                    </ProtectRoute>
-                  }
-                />
-              </Route>
-            </Routes>
-          </ModalProvider>
-        </ToastProvider>
+        <ReactErrorBoundary>
+          <ToastProvider>
+            <ModalProvider>
+              <Routes>
+                <Route path="/" element={<Layout />}>
+                  {/** 로그인 불필요 라우트 */}
+                  <Route index element={<LandingPage />} />
+                  <Route path="*" element={<NotFoundPage />} />
+                  <Route
+                    path="/kakao/callback"
+                    element={<KakaoLoginLoading />}
+                  />
+                  <Route
+                    path="/google/callback"
+                    element={<GoogleLoginLoading />}
+                  />
+                  {/** 로그인이 필요한 라우트 */}
+                  <Route
+                    path="home/manual-register"
+                    element={
+                      <ProtectRoute isPrivate>
+                        <ManualMatchingRegister />
+                      </ProtectRoute>
+                    }
+                  />
+                  <Route
+                    path="/signup/*"
+                    element={
+                      <ProtectRoute>
+                        <SignUpPage />
+                      </ProtectRoute>
+                    }
+                  />
+                  <Route
+                    path="/home"
+                    element={
+                      <ProtectRoute isPrivate>
+                        <HomePage />
+                      </ProtectRoute>
+                    }
+                  />
+                  <Route
+                    path="/mypage/*"
+                    element={
+                      <ProtectRoute isPrivate>
+                        <MyPage />
+                      </ProtectRoute>
+                    }
+                  />
+                  <Route
+                    path="home/friend-request"
+                    element={
+                      <ProtectRoute isPrivate>
+                        <FriendRequestPage />
+                      </ProtectRoute>
+                    }
+                  />
+                  <Route
+                    path="/notification"
+                    element={
+                      <ProtectRoute isPrivate>
+                        <NotificationPage />
+                      </ProtectRoute>
+                    }
+                  />
+                  <Route
+                    path="chat/auto/:id"
+                    element={
+                      <ProtectRoute isPrivate>
+                        <ChatPage />
+                      </ProtectRoute>
+                    }
+                  />
+                  <Route
+                    path="chat/manual/:id"
+                    element={
+                      <ProtectRoute isPrivate>
+                        <ChatPage />
+                      </ProtectRoute>
+                    }
+                  />
+                  <Route
+                    path="/matching"
+                    element={
+                      <ProtectRoute isPrivate>
+                        <MatchingInfoPage />
+                      </ProtectRoute>
+                    }
+                  />
+                  <Route
+                    path="call-taxi"
+                    element={
+                      <ProtectRoute isPrivate>
+                        <CallTaxi />
+                      </ProtectRoute>
+                    }
+                  />
+                </Route>
+              </Routes>
+            </ModalProvider>
+          </ToastProvider>
+        </ReactErrorBoundary>
       </BrowserRouter>
     </QueryClientProvider>
   );

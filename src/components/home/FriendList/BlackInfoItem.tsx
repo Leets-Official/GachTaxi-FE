@@ -4,6 +4,7 @@ import BlackListDeleteIcon from '@/assets/icon/blackListDeleteIcon.svg?react';
 import { useToast } from '@/contexts/ToastContext';
 import { BlackMember } from 'gachTaxi-types';
 import useDeleteBlackList from '@/hooks/mutations/useDeleteBlackList';
+import XIcon from '@/assets/icon/xIcon.svg?react';
 
 interface BlackInfoItemProps {
   blackMember: BlackMember;
@@ -27,16 +28,21 @@ const BlackInfoItem = ({ blackMember }: BlackInfoItemProps) => {
   return (
     <div className="bg-toastColor rounded-box p-vertical flex items-center justify-between h-[101px]">
       <div className="flex-1 flex items-center gap-[16px]">
-        <div className="flex items-center gap-[10px] cursor-pointer relative rounded-full bg-textDarkGray">
-          {blackMember.profilePicture ? (
+        <div className="flex items-center gap-[10px] cursor-pointer relative rounded-full bg-textDarkGray opacity-80">
+          {blackMember.receiverProfilePicture ? (
             <img
               className="w-[48px] h-[48px] rounded-full object-cover"
-              src={blackMember.profilePicture}
+              src={blackMember.receiverProfilePicture}
               alt="친구 프로필 이미지"
             />
           ) : (
             <BasicProfileIcon width={48} height={48} />
           )}
+          <XIcon
+            width={32}
+            height={32}
+            className="absolute translate-x-1/2 right-1/2"
+          />
         </div>
         <div className="flex flex-col gap-[8px]">
           <p className="font-semibold text-captionHeader">

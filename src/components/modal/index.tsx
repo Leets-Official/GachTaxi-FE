@@ -20,7 +20,7 @@ export const Modal = ({ children }: ModalProps) => {
         type: 'keyframes',
       }}
       role="dialog"
-      className="flex flex-col gap-[16px] p-[16px] h-fit max-w-[430px] w-full z-[1000] bg-secondary absolute left-1/2 -translate-x-1/2 bottom-0 rounded-t-box text-white"
+      className="flex flex-col gap-[16px] p-[16px] h-fit max-w-[430px] w-full z-[1000] bg-secondary fixed left-1/2 -translate-x-1/2 bottom-0 rounded-t-box text-white"
     >
       {children}
     </motion.div>,
