@@ -8,7 +8,7 @@ declare module 'gachTaxi-types' {
   // BlackListResponse 종속
   interface BlackMember {
     receiverId: number;
-    profilePicture: string;
+    receiverProfilePicture: string;
     receiverNickname: string;
     gender: 'MALE' | 'FEMALE';
   }
